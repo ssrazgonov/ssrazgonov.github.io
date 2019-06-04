@@ -1,3 +1,38 @@
-#game {
-    background-color: black;
+@font-face {
+    font-family: '9852';
+    src:  url(fonts/9852.otf) format('otf');
+  }
+section {
+    /* display: none; */
+    transition: all .5s ease-in-out;
+}
+.main {
+    display: block;
+    font-family: "9852";
+    width: 760px;
+    margin: auto;
+    background: #01021b;
+    padding: 20px;
+    color: #00c13d;
+    font-size: 20px;
+    height: 600px;
+    overflow: hidden;
+}
+.intro {
+    position: relative;
+    height: 100%;
+}
+.intro-sub {
+    position: absolute;
+    top: 110%;
+    
+}
+
+.intro-play {
+    animation: moveIntro 10s linear 0s 1 normal forwards;
+}
+
+@keyframes moveIntro {
+    from { top: 110%}
+    to { top: 10%}
 }
