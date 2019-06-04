@@ -2,10 +2,11 @@
     font-family: '9852';
     src:  url(fonts/9852.otf) format('otf');
   }
+
 section {
-    /* display: none; */
     transition: all .5s ease-in-out;
 }
+
 .main {
     display: block;
     font-family: "9852";
@@ -18,40 +19,58 @@ section {
     height: 600px;
     overflow: hidden;
 }
+
+.state {
+    display: none;
+}
+
+/* INTRO SECTION */
 .intro {
     position: relative;
     height: 100%;
+    display: none;
 }
+
 .intro-sub {
     position: absolute;
     top: 110%;
-    
-}
-
-.intro-play {
     animation: moveIntro 15s linear 0s 1 normal forwards;
 }
 
 .intro-title {
-    position: absolute;
     width: 100%;
     text-align: center;
     font-size: 25px;
     text-align: center;
-    
 }
 
 .intro-title h1 {
-    animation: introH1 8s linear 0s 1 normal forwards;
+    animation: introTitle 8s linear 0s 1 normal forwards;
     font-size: 65px;
 }
 
 .intro-title h2 {
-    animation: introH1 10s linear 0s 1 normal forwards;
+    animation: introTitle 10s linear 0s 1 normal forwards;
     font-size: 65px;
 }
 
-@keyframes introH1{
+.introBtn {
+    color: #00c13d;
+    opacity: 0;
+    background: #01021b;
+    border: 1px dashed #00c13d;
+    animation: showIntroBtn 2s linear 15s 1 normal forwards;
+    transition: all 1.5s ease;
+}
+.introBtn:hover, .introBtn:focus {
+    color: #00c13d !important;
+    background: #01021b !important;
+    border: 1px solid #00c13d !important;
+    box-shadow: none !important;
+}
+
+
+@keyframes introTitle{
     from {
         opacity: 0;
     }
@@ -63,8 +82,12 @@ section {
     }
 }
 
-
 @keyframes moveIntro {
     from { top: 110%}
     to { top: 10%}
+}
+
+@keyframes showIntroBtn {
+    from { opacity: 0;}
+    to { opacity: 1;}
 }
