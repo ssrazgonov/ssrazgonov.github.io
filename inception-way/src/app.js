@@ -1,6 +1,6 @@
 $(document).ready(function(){
     
-    let state = localStorage.getItem('state') ? localStorage.getItem('state') : "day1";
+    let state = localStorage.getItem('state') ? localStorage.getItem('state') : "intro";
 
     saveState(state);
 
