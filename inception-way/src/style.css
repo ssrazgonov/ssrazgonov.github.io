@@ -29,8 +29,40 @@ section {
 }
 
 .intro-play {
-    animation: moveIntro 10s linear 0s 1 normal forwards;
+    animation: moveIntro 15s linear 0s 1 normal forwards;
 }
+
+.intro-title {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    text-align: center;
+    
+}
+
+.intro-title h1 {
+    animation: introH1 8s linear 0s 1 normal forwards;
+    font-size: 65px;
+}
+
+.intro-title h2 {
+    animation: introH1 10s linear 0s 1 normal forwards;
+    font-size: 65px;
+}
+
+@keyframes introH1{
+    from {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 
 @keyframes moveIntro {
     from { top: 110%}
