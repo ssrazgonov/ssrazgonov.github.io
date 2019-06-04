@@ -7,6 +7,11 @@ section {
     transition: all .5s ease-in-out;
 }
 
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .main {
     display: block;
     font-family: "9852";
@@ -90,4 +95,27 @@ section {
 @keyframes showIntroBtn {
     from { opacity: 0;}
     to { opacity: 1;}
+}
+
+
+/* Day1 */
+
+.terminal {
+    background: #00ac27;
+    color: black;
+    padding: 20px;
+}
+
+.choose {
+    margin-top: 25px;
+}
+.choose li {
+    list-style: none;
+}
+.choose button:hover {
+    background: #00ac27;
+    color: #01021b;
+}
+.chooseClearSignalUl {
+    display: none;
 }
