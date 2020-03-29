@@ -407,7 +407,7 @@ php artisan route:list
 use App\Company;
 ```
 
-##### **Методы index и show.**
+##### **Методы index, show, store, destroy, update**
 
 метод index :
 
