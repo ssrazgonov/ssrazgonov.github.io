@@ -432,12 +432,14 @@ return response()->json($companiesList, 200);
 
 <details>
     <summary>Пример ответа при пустом результате:</summary>
-    ![](assets/img/empty_list_response.png)
+    
+![](assets/img/empty_list_response.png)
 </details>
 
 <details>
     <summary>Пример ответа при найденых записях:</summary>
-    ![](assets/img/list_response.png)
+    
+![](assets/img/list_response.png)
 </details>
 
 метод show :
@@ -462,12 +464,14 @@ return response()->json($company, 200);
 
 <details>
     <summary>Пример ответа при пустом результате:</summary>
-    ![](assets/img/empty_show_response.png)
+    
+![](assets/img/empty_show_response.png)
 </details>
 
 <details>
     <summary>пример ответа найденой записи</summary>
-    ![](assets/img/show_response.png)
+    
+![](assets/img/show_response.png)
 </details>
 
 метод store :
@@ -493,7 +497,8 @@ return response()->json($newCompany, 200);
 
 <details>
     <summary>Пример ответа:</summary>
-    ![](assets/img/create.png)
+    
+![](assets/img/create.png)
 </details>
 
 
@@ -518,7 +523,8 @@ public function update(Request $request, $id)
 
 <details>
     <summary>Пример ответа:</summary>
-    ![](assets/img/update.png)
+    
+![](assets/img/update.png)
 </details>
 
 метод destroy :
@@ -538,7 +544,8 @@ public function destroy($id)
 
 <details>
     <summary>Пример ответа:</summary>
-    ![](assets/img/delete.png)
+    
+![](assets/img/delete.png)
 </details>
 
 
