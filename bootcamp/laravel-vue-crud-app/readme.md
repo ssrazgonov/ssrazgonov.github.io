@@ -431,10 +431,6 @@ return response()->json($companiesList, 200);
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
 
 <details>
-    <summary>пример CompaniesController.php</summary>
-</details>
-
-<details>
     <summary>Пример ответа при пустом результате:</summary>
     ![](assets/img/empty_list_response.png)
 </details>
@@ -463,6 +459,11 @@ return response()->json($company, 200);
 возвращает ответ, который содержит список полей обьекта класса Company, который представляет собой строку
 из таблицы companies в базе данных, либо пустой обьект {}, если записи не обнаружено. Ответ возвращается в формате json,
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
+
+<details>
+    <summary>Пример ответа при пустом результате:</summary>
+    ![](assets/img/empty_show_response.png)
+</details>
 
 <details>
     <summary>пример ответа найденой записи</summary>
