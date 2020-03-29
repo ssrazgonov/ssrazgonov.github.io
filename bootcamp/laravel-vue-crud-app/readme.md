@@ -39,7 +39,7 @@ Laravel Framework 7.3.0
     ```
 - Настройки подключение базы данных:
     - Создайте пустую базу данных любым удобным вам способом (HeidiSQL, phpmyadmin, workbench, cli)
-    - Пример:
+    - Укажите параметры подключения к ней:
     ```apacheconfig
     DB_CONNECTION=mysql # драйвер
     DB_HOST=127.0.0.1 # адрес
