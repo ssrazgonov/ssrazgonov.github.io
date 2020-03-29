@@ -407,7 +407,7 @@ php artisan route:list
 use App\Company;
 ```
 
-##### **Методы index, show, store, destroy, update**
+## Методы index, show, store, destroy, update
 
 ### Метод index :
 
@@ -527,7 +527,7 @@ public function update(Request $request, $id)
 ![](assets/img/update.png)
 </details>
 
-###Метод destroy :
+### Метод destroy :
 
 ```php
 
