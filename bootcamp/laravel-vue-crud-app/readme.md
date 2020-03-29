@@ -82,7 +82,7 @@ php artisan make:model Company -m
 ```
 
 
-Данная команда создала файл Company.php
+Данная команда создала файл App/Company.php
 
 <details>
     <summary>Код Company.php</summary>
@@ -102,3 +102,281 @@ class Company extends Model
 ```
    
 </details>  
+
+
+и файл миграции database/{datetime}_create_companies_table.php
+
+<details>
+    <summary>create_companies_table.php</summary>
+    
+```php
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateCompaniesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('companies', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('companies');
+    }
+}
+
+```
+   
+</details>
+
+
+Изменим метод up в миграции:
+
+```php
+
+public function up()
+{
+    Schema::create('companies', function (Blueprint $table) {
+        // создаст поле id с типом int, автоинкрементное
+        $table->id();
+    
+        // создаст простые текстовые поля
+        $table->string('name')->nullable();
+        $table->string('address')->nullable();
+        $table->string('website')->nullable();
+        $table->string('email')->nullable();
+    
+        // создаст 2 поля created_at, updated_at типа timestamp
+        $table->timestamps();
+    });
+}
+
+```
+
+Обьявим переменную в классе Company, которая отвечает за доступность записи определенные полей в базе данных
+
+```php
+protected $fillable = ['name', 'address', 'website', 'email'];
+
+```
+
+Общий вид файлов:
+
+<details>
+    <summary>create_companies_table.php</summary>
+    
+```php
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateCompaniesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('companies', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('website')->nullable();
+            $table->string('email')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('companies');
+    }
+}
+
+
+```
+   
+</details>
+
+<details>
+    <summary>Company.php</summary>
+    
+```php
+
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Company extends Model
+{
+    protected $fillable = ['name', 'address', 'website', 'email'];
+}
+
+
+```
+   
+</details>
+
+**Часть 2.1. Создание front контроллера и маршрута**
+
+Laravel использует маршруты для определения того какое действие необходимо выполнить с текущем http запросом и контроллеры для
+выполнения конкретных действий.
+
+Для автоматической генерации файла контроллера выполнить:
+
+```shell script
+php artisan make:controller Api/V1/CompaniesController --api
+```
+
+Команда создаст заготовку контроллера APP/Http/Controllers/Api/V1/CompaniesController.php
+
+<details>
+    <summary>пример CompaniesController.php</summary>
+    
+```php
+
+<?php
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class CompaniesController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}
+
+
+
+```
+   
+</details>
+
+Днный класс содержит методы которые будут отвечать на соотвествующие http запросы
+
+ - index - GET:  /api/v1/companies
+ - show - GET: /api/v1/companies/{company_id}
+ - store - POST: /api/v1/companies
+ - update - PUT: /api/v1/companies/{company_id}
+ - delete - DELETE: /api/v1/companies/{company_id}
+ 
+Данные пути нужно прописать в файле routes/api.php:
+
+```php
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/v1/companies', 'Api\v1\CompaniesController@index');
+Route::get('/v1/companies/{company}', 'Api\v1\CompaniesController@show');
+Route::post('/v1/companies', 'Api\v1\CompaniesController@store');
+Route::put('/v1/companies/{company}', 'Api\v1\CompaniesController@update');
+Route::delete('/v1/companies/{company}', 'Api\v1\CompaniesController@delete');
+
+```
+
+Просмотрим пути выполнив команду
+```shell script
+php artisan route:list
+```
+Список доступных путей
+```shell script
++--------+----------+----------------------------+------+--------------------------------------------------------+------------+
+| Domain | Method   | URI                        | Name | Action                                                 | Middleware |
++--------+----------+----------------------------+------+--------------------------------------------------------+------------+
+|        | GET|HEAD | /                          |      | Closure                                                | web        |
+|        | GET|HEAD | api/v1/companies           |      | App\Http\Controllers\Api\v1\CompaniesController@index  | api        |
+|        | POST     | api/v1/companies           |      | App\Http\Controllers\Api\v1\CompaniesController@store  | api        |
+|        | GET|HEAD | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@show   | api        |
+|        | PUT      | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@update | api        |
+|        | DELETE   | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@delete | api        |
++--------+----------+----------------------------+------+--------------------------------------------------------+------------+
+
+```
+
+
