@@ -519,3 +519,69 @@ public function destroy($id)
 
 Пример ответа:
 ![](assets/img/delete.png)
+
+
+**Часть 3.1. Установка и подготовка vue js, bootstrap**
+
+В последних версий laravel фреймворк vue js, как и bootstrap вынесен в отдельный пакет, и по умолчанию не установлен.
+Для установки данных пакетов выполнить.
+
+```shell script
+composer require laravel/ui
+```
+
+Далее выполнив команду
+
+```shell script
+php artisan ui vue
+```
+
+vue автоматически пропишется как зависимоть проекта в файл package.json
+
+осталось выполнить комнаду
+```shell script
+npm install
+```
+для установки всех библиотке в папку node_modules
+
+Следующим шагом удалить содержимое файлов в папке resources/js/:
+    - app.js
+    - bootstrap.js
+    - удалить файл components/ExampleComponent.vue
+    - очистить файл resources/views/layouts/app.blade.php
+    
+**Часть 3.2. Редактирование шаблона**
+
+Данное приложение является SPA (single page application), это означает что все http запросы должны обрабатываться
+на одной странице.
+
+За отображение данной страницы будет выступать шаблон /resources/layouts/app.blade.php
+
+```blade
+<!doctype html>
+<html lang="en">
+<head>
+    <title>SPA</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="{{mix('js/app.js')}}"></script>
+</body>
+</html>
+
+```
+
+
+Далее файл /routes/web.php приведем к следующему виду:
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/{any}', function () {
+    return view('layouts.app');
+})->where('any', '.*');
+
+```
+Тем самым мы отображаем все запросы внтури шаблона /resources/layouts/app.blade.php
