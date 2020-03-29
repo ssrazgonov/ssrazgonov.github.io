@@ -613,3 +613,149 @@ Route::get('/{any}', function () {
 
 ```
 Тем самым мы отображаем все запросы внтури шаблона /resources/layouts/app.blade.php
+
+
+## Часть 3.2. Пишем приложение.
+
+Инициализируем приложение Vue в файле /resources/js/app.js
+
+```javascript
+import Vue from 'vue';
+import AppComponent from "./components/AppComponent";
+
+const app = new Vue({
+    render: h => h(AppComponent)
+}).$mount('#app');
+
+```
+
+Создадим необходимый компонент, который будет представлять наше приложение, для этого нужно создать файл
+AppComponent.vue и поместить его в /resources/js/components
+
+<details>
+    <summary>содержимое AppComponent.vue</summary>
+    
+```vue
+<template>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Companies</div>
+
+                        <div class="panel-body">
+                            <!-- Сюда будут подставляться динамически компоненты в зависимости от url-->
+                            <router-view></router-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "AppComponent"
+    }
+</script>
+
+<style scoped lang="scss">
+// Импорт css бутстрапа
+@import "node_modules/bootstrap/scss/bootstrap";
+</style>
+
+```
+</details>
+
+## Часть 3.3. Установка Vue Router.
+
+https://router.vuejs.org/ru/
+
+модуль vue-router позволяет легко подключать компоненты в зависимости от запрашиваемого адреса в браузере.
+По сути логика работы такая же как и у laravel router, только вместо вызова метода у контроллера, будет вызван указанный
+компонент.
+
+Для установки модуля выполнить:
+
+```shell script
+npm install vue-router
+```
+
+Для инициализации необходимо выполнить импорт, создать список маршрутов и создать новый объект vue-router, который мы
+подлкючим в наше приложение.
+
+1. Создать файл router.js в корне /resources/js
+2. содержимое файла router.js:
+   ```javascript
+    import Vue from 'vue';
+    import Router from 'vue-router';
+    
+    import CompaniesListComponent from "./components/pages/CompaniesListComponent";
+    
+    const routes = [
+        {
+            path: '/',
+            component: CompaniesListComponent
+        }
+    ];
+    
+    Vue.use(Router)
+    
+    const router = new Router({
+        mode: 'history',
+        routes
+    });
+    
+    export default router;
+
+   
+    ```
+3. Создадим директорию pages в директории /resources/js
+В ней будут хранится компоненты-страницы
+4. Создадим CompaniesListComponent.vue в директории /resources/js/components/pages, данный компонент является страницей
+со списком компаний.
+5. Пример
+    <details>
+           <summary>CompaniesListComponent.vue</summary>
+           
+    ```vue
+    <template>
+        <h1>Список компаний</h1>
+    </template>
+    
+    <script>
+        export default {
+            name: "CompaniesListComponent"
+        }
+    </script>
+    
+    <style scoped>
+    
+    </style>
+    
+    ```
+    </details>
+6. После необходимо подключить router.js в наш app.js
+7. <details>
+       <summary>содержимое App.js</summary>
+       
+   ```javascript
+   import Vue from 'vue';
+   import router from './router'; //подключили наш router.js
+   
+   import AppComponent from "./components/AppComponent";
+   
+   const app = new Vue({
+       render: h => h(AppComponent),
+       router //добавили новое свойство, понадобится позже
+   }).$mount('#app');
+   
+   ```
+   </details>
+
+
+После чего в приложении будет доступен для использования тег <router-view></router-view>
+куда будет динамически подключатся запрашиваемый компонент
+
