@@ -171,6 +171,11 @@ public function up()
 
 ```
 
+И выполним команду миграции:
+```shell script
+php artisn migrate
+```
+
 Обьявим переменную в классе Company, которая отвечает за доступность записи определенные полей в базе данных
 
 ```php
@@ -339,10 +344,10 @@ class CompaniesController extends Controller
 Днный класс содержит методы которые будут отвечать на соотвествующие http запросы
 
  - index - GET:  /api/v1/companies
- - show - GET: /api/v1/companies/{company_id}
+ - show - GET: /api/v1/companies/{id}
  - store - POST: /api/v1/companies
- - update - PUT: /api/v1/companies/{company_id}
- - delete - DELETE: /api/v1/companies/{company_id}
+ - update - PUT: /api/v1/companies/{id}
+ - delete - DELETE: /api/v1/companies/{id}
  
 Данные пути нужно прописать в файле routes/api.php:
 
@@ -353,10 +358,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/v1/companies', 'Api\v1\CompaniesController@index');
-Route::get('/v1/companies/{company}', 'Api\v1\CompaniesController@show');
+Route::get('/v1/companies/{id}', 'Api\v1\CompaniesController@show');
 Route::post('/v1/companies', 'Api\v1\CompaniesController@store');
-Route::put('/v1/companies/{company}', 'Api\v1\CompaniesController@update');
-Route::delete('/v1/companies/{company}', 'Api\v1\CompaniesController@delete');
+Route::put('/v1/companies/{id}', 'Api\v1\CompaniesController@update');
+Route::delete('/v1/companies/{id}', 'Api\v1\CompaniesController@delete');
 
 ```
 
@@ -372,11 +377,82 @@ php artisan route:list
 |        | GET|HEAD | /                          |      | Closure                                                | web        |
 |        | GET|HEAD | api/v1/companies           |      | App\Http\Controllers\Api\v1\CompaniesController@index  | api        |
 |        | POST     | api/v1/companies           |      | App\Http\Controllers\Api\v1\CompaniesController@store  | api        |
-|        | GET|HEAD | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@show   | api        |
-|        | PUT      | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@update | api        |
-|        | DELETE   | api/v1/companies/{company} |      | App\Http\Controllers\Api\v1\CompaniesController@delete | api        |
+|        | GET|HEAD | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@show   | api        |
+|        | PUT      | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@update | api        |
+|        | DELETE   | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@delete | api        |
 +--------+----------+----------------------------+------+--------------------------------------------------------+------------+
 
 ```
 
+Обратит внимание на то что все пути идут с префиксом /api/ хотя мы это и не писали, laravel автоматически добавляет
+префикс для всех путей в файле api.php
 
+Если мы хотим сделать наше api версионным, то указывать версию нашего api удобно прямо в путях. например:
+ - api/v1/companies  
+ - api/v2/companies
+ - ...
+ 
+Это позволяет нам обновлять наше приложение не поломав работу тех клиентов что уже пользуются более старой версией нашего api.
+
+В конце статьи будет пример как можно улучшить текущую схему описания путей, но пока что нам хватит и этого.
+
+
+**Часть 2.2. Создание логики обработки действий в контроллере.**
+
+***В этом разделе пропишем все необходимые дейтсвия create, read, update, delete с нашей моделью Company.***
+
+Перед всеми действиями выполнить импорт модели Company в классе CompaniesController:
+
+```php
+use App\Company;
+```
+
+##### **Методы index и show.**
+
+метод index :
+
+```php
+
+public function index()
+{
+    $companiesList = Company::all();
+
+    return response()->json($companiesList, 200);
+}
+
+```
+
+Данный код
+```php
+return response()->json($companiesList, 200);
+```
+возвращает ответ, который содержит массив (коллекцию) обьектов класса Company, каждый из которых представляет собой строку
+из таблицы companies в базе данных, либо пустой массив если записей не обнаружено. Ответ возвращается в формате json,
+дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
+
+Пример ответа при пустом результате:
+![](assets/img/empty_list_response.png)
+
+
+метод show :
+
+```php
+
+public function show($id)
+{
+    $company = Company::find($id);
+    return response()->json($company, 200);
+}
+
+```
+
+Данный код
+```php
+return response()->json($company, 200);
+```
+возвращает ответ, который содержит список полей обьекта класса Company, который представляет собой строку
+из таблицы companies в базе данных, либо пустой обьект {}, если записи не обнаружено. Ответ возвращается в формате json,
+дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
+
+Пример ответа при пустом результате:
+![](assets/img/empty_show_response.png)
