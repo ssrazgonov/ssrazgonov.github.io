@@ -86,7 +86,6 @@ php artisan make:model Company -m
 
 <details>
     <summary>Код Company.php</summary>
-    <p>
     
 ```php
 
@@ -101,6 +100,5 @@ class Company extends Model
     //
 }
 ```
-    
-    </p>
+   
 </details>  
