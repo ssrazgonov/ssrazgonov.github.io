@@ -409,7 +409,7 @@ use App\Company;
 
 ##### **Методы index, show, store, destroy, update**
 
-метод index :
+#### метод index :
 
 ```php
 
@@ -442,7 +442,7 @@ return response()->json($companiesList, 200);
 ![](assets/img/list_response.png)
 </details>
 
-метод show :
+#### метод show :
 
 ```php
 
@@ -474,7 +474,7 @@ return response()->json($company, 200);
 ![](assets/img/show_response.png)
 </details>
 
-метод store :
+#### метод store :
 
 ```php
 
@@ -502,7 +502,7 @@ return response()->json($newCompany, 200);
 </details>
 
 
-метод update :
+#### метод update :
 
 ```php
 
@@ -527,7 +527,7 @@ public function update(Request $request, $id)
 ![](assets/img/update.png)
 </details>
 
-метод destroy :
+#### **Метод destroy :**
 
 ```php
 
