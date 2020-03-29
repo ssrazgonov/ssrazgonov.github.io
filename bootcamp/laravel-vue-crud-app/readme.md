@@ -465,11 +465,6 @@ return response()->json($company, 200);
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
 
 <details>
-    <summary>Пример ответа при пустом результате:</summary>
-    ![](assets/img/empty_show_response.png)
-</details>
-
-<details>
     <summary>пример ответа найденой записи</summary>
     ![](assets/img/show_response.png)
 </details>
