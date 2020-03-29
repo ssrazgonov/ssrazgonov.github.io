@@ -433,6 +433,9 @@ return response()->json($companiesList, 200);
 Пример ответа при пустом результате:
 ![](assets/img/empty_list_response.png)
 
+Пример ответа при найденых записях:
+![](assets/img/list_response.png)
+
 
 метод show :
 
@@ -456,6 +459,10 @@ return response()->json($company, 200);
 
 Пример ответа при пустом результате:
 ![](assets/img/empty_show_response.png)
+
+Пример ответа при пустом результате:
+![](assets/img/show_response.png)
+
 
 метод store :
 
@@ -490,6 +497,10 @@ return response()->json($newCompany, 200);
 public function update(Request $request, $id)
 {
     $company = Company::find($id);
+
+    if (!$company) {
+        return response()->json(null, 404);
+    }
 
     $company->update($request->all());
 
