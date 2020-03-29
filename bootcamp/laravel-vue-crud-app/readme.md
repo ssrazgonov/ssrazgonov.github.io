@@ -347,7 +347,7 @@ class CompaniesController extends Controller
  - show - GET: /api/v1/companies/{id}
  - store - POST: /api/v1/companies
  - update - PUT: /api/v1/companies/{id}
- - delete - DELETE: /api/v1/companies/{id}
+ - destroy - DELETE: /api/v1/companies/{id}
  
 Данные пути нужно прописать в файле routes/api.php:
 
@@ -361,7 +361,7 @@ Route::get('/v1/companies', 'Api\v1\CompaniesController@index');
 Route::get('/v1/companies/{id}', 'Api\v1\CompaniesController@show');
 Route::post('/v1/companies', 'Api\v1\CompaniesController@store');
 Route::put('/v1/companies/{id}', 'Api\v1\CompaniesController@update');
-Route::delete('/v1/companies/{id}', 'Api\v1\CompaniesController@delete');
+Route::delete('/v1/companies/{id}', 'Api\v1\CompaniesController@destroy');
 
 ```
 
@@ -379,7 +379,7 @@ php artisan route:list
 |        | POST     | api/v1/companies           |      | App\Http\Controllers\Api\v1\CompaniesController@store  | api        |
 |        | GET|HEAD | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@show   | api        |
 |        | PUT      | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@update | api        |
-|        | DELETE   | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@delete | api        |
+|        | DELETE   | api/v1/companies/{id}      |      | App\Http\Controllers\Api\v1\CompaniesController@destroy | api        |
 +--------+----------+----------------------------+------+--------------------------------------------------------+------------+
 
 ```
@@ -456,3 +456,66 @@ return response()->json($company, 200);
 
 Пример ответа при пустом результате:
 ![](assets/img/empty_show_response.png)
+
+метод store :
+
+```php
+
+public function store(Request $request)
+{
+    $newCompany = Company::create($request->all());
+
+    return response()->json($newCompany, 200);
+}
+
+```
+
+Данный код
+```php
+return response()->json($newCompany, 200);
+```
+возвращает ответ, который содержит список полей нового обьекта класса Company, который представляет собой новую строку
+из таблицы companies в базе данных. Ответ возвращается в формате json,
+дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
+
+Пример ответа:
+![](assets/img/create.png)
+
+
+
+метод update :
+
+```php
+
+public function update(Request $request, $id)
+{
+    $company = Company::find($id);
+
+    $company->update($request->all());
+
+    return response()->json($company, 200);
+}
+
+```
+
+Пример ответа:
+![](assets/img/update.png)
+
+
+метод destroy :
+
+```php
+
+public function destroy($id)
+{
+    $company = Company::find($id);
+
+    $company->delete();
+
+    return response()->json([], 200);
+}
+
+```
+
+Пример ответа:
+![](assets/img/delete.png)
