@@ -81,18 +81,26 @@ php artisan make:model Company -m
 
 ```
 
+
 Данная команда создала файл Company.php
 
 <details>
     <summary>Код Company.php</summary>
+    <p>
     
-    ```php
-    public class Order
-    {
-        public int OrderId { get; set; }
-        public int CustomerId { get; set; }
+```php
+
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Company extends Model
+{
+    //
+}
+```
     
-        public List<int> Products { get; set; }
-    }
-    ```
+    </p>
 </details>  
