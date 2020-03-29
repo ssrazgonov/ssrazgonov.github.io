@@ -430,12 +430,19 @@ return response()->json($companiesList, 200);
 из таблицы companies в базе данных, либо пустой массив если записей не обнаружено. Ответ возвращается в формате json,
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
 
-Пример ответа при пустом результате:
-![](assets/img/empty_list_response.png)
+<details>
+    <summary>пример CompaniesController.php</summary>
+</details>
 
-Пример ответа при найденых записях:
-![](assets/img/list_response.png)
+<details>
+    <summary>Пример ответа при пустом результате:</summary>
+    ![](assets/img/empty_list_response.png)
+</details>
 
+<details>
+    <summary>Пример ответа при найденых записях:</summary>
+    ![](assets/img/list_response.png)
+</details>
 
 метод show :
 
@@ -457,12 +464,15 @@ return response()->json($company, 200);
 из таблицы companies в базе данных, либо пустой обьект {}, если записи не обнаружено. Ответ возвращается в формате json,
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
 
-Пример ответа при пустом результате:
-![](assets/img/empty_show_response.png)
+<details>
+    <summary>Пример ответа при пустом результате:</summary>
+    ![](assets/img/empty_show_response.png)
+</details>
 
-Пример ответа при пустом результате:
-![](assets/img/show_response.png)
-
+<details>
+    <summary>пример ответа найденой записи</summary>
+    ![](assets/img/show_response.png)
+</details>
 
 метод store :
 
@@ -485,9 +495,10 @@ return response()->json($newCompany, 200);
 из таблицы companies в базе данных. Ответ возвращается в формате json,
 дополнительно устанавливается код ответа 200, что свидетельствует об успешности запроса.
 
-Пример ответа:
-![](assets/img/create.png)
-
+<details>
+    <summary>Пример ответа:</summary>
+    ![](assets/img/create.png)
+</details>
 
 
 метод update :
@@ -509,9 +520,10 @@ public function update(Request $request, $id)
 
 ```
 
-Пример ответа:
-![](assets/img/update.png)
-
+<details>
+    <summary>Пример ответа:</summary>
+    ![](assets/img/update.png)
+</details>
 
 метод destroy :
 
@@ -528,8 +540,10 @@ public function destroy($id)
 
 ```
 
-Пример ответа:
-![](assets/img/delete.png)
+<details>
+    <summary>Пример ответа:</summary>
+    ![](assets/img/delete.png)
+</details>
 
 
 **Часть 3.1. Установка и подготовка vue js, bootstrap**
