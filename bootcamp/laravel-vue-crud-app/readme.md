@@ -14,6 +14,8 @@
 Установим последнюю версию через composer:
 ```shell script
 composer require laravel/laravel
+
+composer create-project --prefer-dist laravel/laravel blog
 ```
 
 _**Все команды будут выполняться из директории созданного проекта!**_
@@ -665,7 +667,6 @@ AppComponent.vue и поместить его в /resources/js/components
 // Импорт css бутстрапа
 @import "node_modules/bootstrap/scss/bootstrap";
 </style>
-
 ```
 </details>
 
@@ -742,20 +743,120 @@ npm install vue-router
        <summary>содержимое App.js</summary>
        
    ```javascript
-   import Vue from 'vue';
-   import router from './router'; //подключили наш router.js
-   
-   import AppComponent from "./components/AppComponent";
-   
-   const app = new Vue({
-       render: h => h(AppComponent),
-       router //добавили новое свойство, понадобится позже
-   }).$mount('#app');
-   
+    import Vue from 'vue';
+    import router from './router';
+    
+    import AppComponent from "./components/AppComponent";
+    
+    const app = new Vue({
+      render: h => h(AppComponent),
+      router
+    }).$mount('#app');
    ```
    </details>
 
 
 После чего в приложении будет доступен для использования тег <router-view></router-view>
 куда будет динамически подключатся запрашиваемый компонент
+
+## 4.1. Отображение списка компаний
+
+_Предварительно можно создать список компаний в базе данных в ручную, либо выполнив api запрос через postman._
+
+Отредактируйте компонент CompaniesListComponent:
+
+<details>
+    <summary>CompaniesListComponent.vue</summary>
+    
+    ```vue
+    <template>
+        <div>
+            <div class="form-group">
+                <router-link :to="{name: 'createCompany'}" class="btn btn-success">Создать новую компанию</router-link>
+            </div>
+    
+            <div class="panel panel-default">
+                <div class="panel-heading">Список компаний</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Адрес</th>
+                            <th>Сайт</th>
+                            <th>Email</th>
+                            <th width="100">&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(company, index) in companies" :key="index">
+                            <td>{{ company.name }}</td>
+                            <td>{{ company.address }}</td>
+                            <td>{{ company.website }}</td>
+                            <td>{{ company.email }}</td>
+                            <td>
+                                <router-link :to="{name: 'editCompany', params: {id: company.id}}" class="btn btn-xs btn-default">
+                                    Редактировать
+                                </router-link>
+                                <a href="#"
+                                   class="btn btn-xs btn-danger"
+                                   v-on:click="deleteCompany(company.id)">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script>
+        import axios from 'axios';
+    
+        export default {
+            data: function () {
+                return {
+                    companies: []
+                }
+            },
+            mounted() {
+                this.getCompanies()
+            },
+            methods: {
+                getCompanies() {
+                    axios.get('/api/v1/companies')
+                        .then( (resp) => {
+                            this.companies = resp.data;
+                        })
+                },
+                deleteCompany(id) {
+                    axios.delete(`/api/v1/companies/${id}`).then((resp) => {
+                        this.getCompanies();
+                    })
+                }
+            }
+        }
+    </script>
+    
+    ```
+
+</details>
+
+Из нового здесь:
+1.  router-link :to="{name: 'createCompany'}" class="btn btn-success">Создать новую компанию</router-link>
+Данный код использует router-link для генерации тега <a> с ссылкой на маршрут создания компании, который мы обьявим чуть позже
+2. Сделали импорт библиотеки http запросов axios
+
+    ```javascript
+    import axios from 'axios';
+    ```
+3. Axios позволяет совершать http запросы к api сервисам. В данном случае мы делаем запрос на свое backend приложение:
+    ```javascript
+    axios.get('/api/v1/companies').then( (resp) => {this.companies = resp.data;})
+    ```
+4. После запроса, тело ответа сохраняется в переменной resp, откуда мы передаем его в наше приложение  в переменную this.companies
+
+## 4.1. Создание компании
 
