@@ -1,0 +1,13 @@
+{
+"companyName": "DefaultCompany",
+"productName": "Tutorial1",
+"dataUrl": "Game Dev.data.unityweb",
+"wasmCodeUrl": "Game Dev.wasm.code.unityweb",
+"wasmFrameworkUrl": "Game Dev.wasm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"}
+}
