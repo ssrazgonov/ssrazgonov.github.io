@@ -214,6 +214,10 @@ input:placeholder-shown {
   display: inline-block;
 }
 
+.auth-form__actions-link:last-child {
+  padding: 0;
+}
+
 @media screen and (max-width: 960px) {
   input::-moz-placeholder {
     color: #005660;
@@ -291,6 +295,14 @@ input:placeholder-shown {
   }
 }
 @media screen and (max-height: 480px) {
+  .auth-page {
+    height: auto;
+  }
+
+  html, body {
+    overflow: scroll;
+  }
+
   .auth-form__container {
     width: 100%;
     padding: 10px 40px;
