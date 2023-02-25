@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Распознование позы</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
+</head>
+<body>
+<input type="file" accept="image/*" onchange="loadImage(event)"><br>
+<canvas id="canvas"></canvas>
+<script src="script.js"></script>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let image;
+
+    function loadImage(event) {
+        const file = event.target.files[0];
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function() {
+            image = new Image();
+            image.src = reader.result;
+            image.onload = function() {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                detectPose();
+            }
+        }
+    }
+
+    function detectPose() {
+        const pose = new Pose({
+            locateFile: (file) => {
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+            }
+        });
+
+        pose.setOptions({
+            modelComplexity: 1,
+            smoothLandmarks: true,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        pose.onResults((results) => {
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            drawLandmarks(ctx, results.poseLandmarks, {color: 'red', fillColor: 'blue', radius: 5});
+            drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {color: 'blue', lineWidth: 2});
+        });
+
+        pose.initialize().then(() => {
+            pose.send({image: image});
+        });
+    }
+
+</script>
+</body>
+</html>
