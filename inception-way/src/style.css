@@ -15,7 +15,6 @@ button:focus {
 .main {
     display: block;
     font-family: "9852";
-    width: 760px;
     margin: auto;
     background: #01021b;
     padding: 20px;
@@ -118,4 +117,8 @@ button:focus {
 }
 .chooseClearSignalUl {
     display: none;
+}
+
+.main-container {
+    padding: 0;
 }
