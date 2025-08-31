@@ -78,6 +78,15 @@ class UIManager {
         upgradeButton.className = 'upgrade-button wh40k-button primary';
         upgradeButton.style.padding = '8px 12px';
         upgradeButton.style.fontSize = '14px';
+        
+        // Add achievements button with Warhammer styling
+        const achievementsButton = document.createElement('button');
+        achievementsButton.textContent = '🏆';
+        achievementsButton.title = 'Achievements (A)';
+        achievementsButton.className = 'achievements-button wh40k-button';
+        achievementsButton.style.padding = '8px 12px';
+        achievementsButton.style.fontSize = '14px';
+        achievementsButton.style.marginLeft = '8px';
         upgradeButton.style.marginLeft = '5px';
         
         upgradeButton.addEventListener('click', () => {
@@ -88,8 +97,18 @@ class UIManager {
             }
         });
         
+        // Add event listener for achievements button
+        achievementsButton.addEventListener('click', () => {
+            if (window.achievementManager) {
+                window.achievementManager.showAchievementsList();
+            } else {
+                this.showNotification('Achievements not available yet - wait for game to load', 2000);
+            }
+        });
+        
         controlPanel.appendChild(notifButton);
         controlPanel.appendChild(upgradeButton);
+        controlPanel.appendChild(achievementsButton);
     }
     
     // Create speed control buttons with gothic styling

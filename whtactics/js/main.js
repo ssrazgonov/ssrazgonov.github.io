@@ -28,9 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.gridGameManager = new GridGameManager();
         window.gridGameManager.init();
         
+        // Initialize achievement manager
+        window.achievementManager = new AchievementManager();
+        window.achievementManager.init();
+        
         // If in Telegram, show back button and adapt layout
         if (isInTelegram && window.telegramIntegration) {
-            window.telegramIntegration.tg.BackButton.show();
+            if (window.telegramIntegration.tg.BackButton) {
+                try {
+                    window.telegramIntegration.tg.BackButton.show();
+                } catch (e) {
+                    console.log('BackButton API error in main.js:', e.message);
+                }
+            }
             window.telegramIntegration.adaptLayoutForTelegram();
             
             // Hide main button during gameplay

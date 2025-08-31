@@ -45,10 +45,19 @@ class TelegramIntegration {
     setupEventListeners() {
         // Handle back button if available
         if (this.tg.BackButton) {
-            this.tg.BackButton.onClick(() => {
-                // Check current game state and handle back action
-                this.handleBackButton();
-            });
+            try {
+                this.tg.BackButton.onClick(() => {
+                    // Check current game state and handle back action
+                    this.handleBackButton();
+                });
+            } catch (e) {
+                console.log('BackButton API error:', e.message);
+                // Create a custom back button if needed
+                this.createCustomBackButton();
+            }
+        } else {
+            // Create a custom back button if BackButton API is not available
+            this.createCustomBackButton();
         }
         
         // Handle main button if available
@@ -61,6 +70,39 @@ class TelegramIntegration {
         
         // Handle viewport changes
         this.tg.onEvent('viewportChanged', this.handleViewportChanged.bind(this));
+    }
+    
+    /**
+     * Create a custom back button when Telegram's BackButton API is not available
+     */
+    createCustomBackButton() {
+        // Check if custom back button already exists
+        if (document.getElementById('customBackButton')) return;
+        
+        // Create a custom back button
+        const backButton = document.createElement('button');
+        backButton.id = 'customBackButton';
+        backButton.className = 'custom-back-button';
+        backButton.innerHTML = '&larr; Back';
+        backButton.style.position = 'fixed';
+        backButton.style.top = '10px';
+        backButton.style.left = '10px';
+        backButton.style.zIndex = '9999';
+        backButton.style.padding = '8px 12px';
+        backButton.style.backgroundColor = '#2481cc';
+        backButton.style.color = 'white';
+        backButton.style.border = 'none';
+        backButton.style.borderRadius = '4px';
+        backButton.style.cursor = 'pointer';
+        backButton.style.display = 'none'; // Hidden by default
+        
+        // Add click event listener
+        backButton.addEventListener('click', () => {
+            this.handleBackButton();
+        });
+        
+        // Add to document body
+        document.body.appendChild(backButton);
     }
     
     /**
@@ -83,7 +125,19 @@ class TelegramIntegration {
                 document.getElementById('mainMenu').style.display = 'block';
                 
                 // Hide back button when at main menu
-                this.tg.BackButton.hide();
+                if (this.tg.BackButton) {
+                    try {
+                        this.tg.BackButton.hide();
+                    } catch (e) {
+                        console.log('BackButton API error:', e.message);
+                    }
+                }
+                
+                // Hide custom back button if it exists
+                const customBackButton = document.getElementById('customBackButton');
+                if (customBackButton) {
+                    customBackButton.style.display = 'none';
+                }
             }
         } else if (inGameSetup) {
             // Return to main menu from setup
@@ -91,7 +145,19 @@ class TelegramIntegration {
             document.getElementById('mainMenu').style.display = 'block';
             
             // Hide back button when at main menu
-            this.tg.BackButton.hide();
+            if (this.tg.BackButton) {
+                try {
+                    this.tg.BackButton.hide();
+                } catch (e) {
+                    console.log('BackButton API error:', e.message);
+                }
+            }
+            
+            // Hide custom back button if it exists
+            const customBackButton = document.getElementById('customBackButton');
+            if (customBackButton) {
+                customBackButton.style.display = 'none';
+            }
         } else if (inMainMenu) {
             // At main menu, close the Web App
             this.tg.close();
@@ -114,7 +180,19 @@ class TelegramIntegration {
             window.startGridGame();
             
             // Show back button when in game
-            this.tg.BackButton.show();
+            if (this.tg.BackButton) {
+                try {
+                    this.tg.BackButton.show();
+                } catch (e) {
+                    console.log('BackButton API error:', e.message);
+                }
+            }
+            
+            // Show custom back button if it exists
+            const customBackButton = document.getElementById('customBackButton');
+            if (customBackButton) {
+                customBackButton.style.display = 'block';
+            }
         }
     }
     
@@ -133,6 +211,21 @@ class TelegramIntegration {
         // Get viewport dimensions
         const viewportHeight = this.tg.viewportHeight;
         const viewportWidth = this.tg.viewportStableWidth || this.tg.viewportWidth;
+        
+        // Show custom back button if needed
+        const customBackButton = document.getElementById('customBackButton');
+        if (customBackButton) {
+            const inGame = document.getElementById('gameContainer').style.display !== 'none';
+            const inGameSetup = document.getElementById('gameSetup').style.display !== 'none';
+            const inMainMenu = document.getElementById('mainMenu').style.display !== 'none';
+            
+            // Show custom back button only in game or setup screens
+            if (inGame || inGameSetup) {
+                customBackButton.style.display = 'block';
+            } else {
+                customBackButton.style.display = 'none';
+            }
+        }
         
         // Adjust game container size
         const gameContainer = document.getElementById('gameContainer');
@@ -203,6 +296,9 @@ class TelegramIntegration {
                 resources: window.gridGameManager.resources,
                 relics: window.gridGameManager.relics,
                 discoveredRelics: window.gridGameManager.discoveredRelics,
+                // Save achievements and combat stats
+                achievements: window.gridGameManager.achievements,
+                combatStats: window.gridGameManager.combatStats,
                 timestamp: Date.now()
             };
             
@@ -211,15 +307,22 @@ class TelegramIntegration {
             
             // Use Telegram Cloud Storage API if available
             if (this.tg.CloudStorage) {
-                this.tg.CloudStorage.setItem('gameState', gameStateString, (error, success) => {
-                    if (error) {
-                        console.error('Telegram Cloud Storage error:', error);
-                        // Fallback to localStorage
-                        localStorage.setItem('telegramGameState', gameStateString);
-                    } else {
-                        console.log('Game state saved to Telegram Cloud Storage');
-                    }
-                });
+                try {
+                    this.tg.CloudStorage.setItem('gameState', gameStateString, (error, success) => {
+                        if (error) {
+                            console.error('Telegram Cloud Storage error:', error);
+                            // Fallback to localStorage
+                            localStorage.setItem('telegramGameState', gameStateString);
+                        } else {
+                            console.log('Game state saved to Telegram Cloud Storage');
+                        }
+                    });
+                } catch (e) {
+                    console.error('CloudStorage API error:', e.message);
+                    // Fallback to localStorage on error
+                    localStorage.setItem('telegramGameState', gameStateString);
+                    console.log('Game state saved to localStorage (CloudStorage API error)');
+                }
             } else {
                 // Fallback to localStorage if Cloud Storage API is not available
                 localStorage.setItem('telegramGameState', gameStateString);
@@ -266,6 +369,10 @@ class TelegramIntegration {
                 if (gameState.relics) window.gridGameManager.relics = gameState.relics;
                 if (gameState.discoveredRelics) window.gridGameManager.discoveredRelics = gameState.discoveredRelics;
                 
+                // Load achievements and combat stats if they exist
+                if (gameState.achievements) window.gridGameManager.achievements = gameState.achievements;
+                if (gameState.combatStats) window.gridGameManager.combatStats = gameState.combatStats;
+                
                 // Redraw game
                 window.gridGameManager.drawGrid();
                 
@@ -281,9 +388,10 @@ class TelegramIntegration {
         
         // Try to load from Telegram Cloud Storage first
         if (this.tg.CloudStorage) {
-            this.tg.CloudStorage.getItem('gameState', (error, value) => {
-                if (error) {
-                    console.error('Telegram Cloud Storage error:', error);
+            try {
+                this.tg.CloudStorage.getItem('gameState', (error, value) => {
+                    if (error) {
+                        console.error('Telegram Cloud Storage error:', error);
                     // Fallback to localStorage
                     const localState = localStorage.getItem('telegramGameState');
                     return applyGameState(localState);
@@ -291,6 +399,12 @@ class TelegramIntegration {
                     return applyGameState(value);
                 }
             });
+            } catch (e) {
+                console.error('CloudStorage API error:', e.message);
+                // Fallback to localStorage on error
+                const localState = localStorage.getItem('telegramGameState');
+                return applyGameState(localState);
+            }
         } else {
             // Fallback to localStorage if Cloud Storage API is not available
             const localState = localStorage.getItem('telegramGameState');
@@ -310,23 +424,39 @@ class TelegramIntegration {
             return false;
         }
         
-        // Check Telegram Cloud Storage if available
-        if (this.tg.CloudStorage) {
-            this.tg.CloudStorage.getItem('gameState', (error, value) => {
-                if (error || !value) {
-                    // Fallback to localStorage
+        try {
+            // Check Telegram Cloud Storage if available
+            if (this.tg.CloudStorage) {
+                try {
+                    this.tg.CloudStorage.getItem('gameState', (error, value) => {
+                        if (error || !value) {
+                            // Fallback to localStorage
+                            const hasLocalSave = !!localStorage.getItem('telegramGameState');
+                            if (callback) callback(hasLocalSave);
+                            return hasLocalSave;
+                        } else {
+                            if (callback) callback(true);
+                            return true;
+                        }
+                    });
+                    // Return undefined since we're using callback
+                    return undefined;
+                } catch (e) {
+                    console.log('CloudStorage API error:', e.message);
+                    // Fallback to localStorage on error
                     const hasLocalSave = !!localStorage.getItem('telegramGameState');
                     if (callback) callback(hasLocalSave);
                     return hasLocalSave;
-                } else {
-                    if (callback) callback(true);
-                    return true;
                 }
-            });
-            // Return undefined since we're using callback
-            return undefined;
-        } else {
-            // Fallback to localStorage
+            } else {
+                // Fallback to localStorage
+                const hasLocalSave = !!localStorage.getItem('telegramGameState');
+                if (callback) callback(hasLocalSave);
+                return hasLocalSave;
+            }
+        } catch (e) {
+            console.log('Error checking saved game:', e.message);
+            // Fallback to localStorage on any error
             const hasLocalSave = !!localStorage.getItem('telegramGameState');
             if (callback) callback(hasLocalSave);
             return hasLocalSave;
@@ -361,7 +491,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update Telegram UI
                 if (window.telegramIntegration.isInTelegram) {
                     // Hide back button at main menu
-                    window.telegramIntegration.tg.BackButton.hide();
+                    if (window.telegramIntegration.tg.BackButton) {
+                        try {
+                            window.telegramIntegration.tg.BackButton.hide();
+                        } catch (e) {
+                            console.log('BackButton API error in showMainMenu override:', e.message);
+                        }
+                    }
+                    
+                    // Hide custom back button if it exists
+                    const customBackButton = document.getElementById('customBackButton');
+                    if (customBackButton) {
+                        customBackButton.style.display = 'none';
+                    }
                     
                     // Show main button for starting game
                     window.telegramIntegration.showMainButton('Start Game');
@@ -394,7 +536,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update Telegram UI
                 if (window.telegramIntegration.isInTelegram) {
                     // Show back button in setup
-                    window.telegramIntegration.tg.BackButton.show();
+                    if (window.telegramIntegration.tg.BackButton) {
+                        try {
+                            window.telegramIntegration.tg.BackButton.show();
+                        } catch (e) {
+                            console.log('BackButton API error in showGameSetup override:', e.message);
+                        }
+                    }
+                    
+                    // Show custom back button if it exists
+                    const customBackButton = document.getElementById('customBackButton');
+                    if (customBackButton) {
+                        customBackButton.style.display = 'block';
+                    }
                     
                     // Update main button text
                     window.telegramIntegration.showMainButton('Begin Battle');
