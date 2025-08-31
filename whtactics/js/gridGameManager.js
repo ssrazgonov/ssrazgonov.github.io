@@ -125,20 +125,119 @@ class GridGameManager {
         console.log('Grid Game Manager initialized with enhanced systems');
     }
     
+    // Handle resize events for responsive layout
+    handleResize() {
+        if (!this.canvas || !this.ctx) return;
+        
+        // Get current canvas dimensions
+        const currentWidth = this.canvas.width;
+        const currentHeight = this.canvas.height;
+        
+        // Get container dimensions
+        const container = document.getElementById('gameContainer');
+        if (!container) return;
+        
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        // Calculate new dimensions while maintaining aspect ratio
+        const aspectRatio = currentWidth / currentHeight;
+        let newWidth = containerWidth - 20; // Padding
+        let newHeight = newWidth / aspectRatio;
+        
+        // Ensure it fits within container height
+        if (newHeight > containerHeight - 20) {
+            newHeight = containerHeight - 20;
+            newWidth = newHeight * aspectRatio;
+        }
+        
+        // Update canvas style dimensions (not actual dimensions to avoid redrawing issues)
+        this.canvas.style.width = `${newWidth}px`;
+        this.canvas.style.height = `${newHeight}px`;
+        
+        // Redraw the grid
+        this.drawGrid();
+        
+        console.log('Canvas resized for responsive layout');
+    }
+    
     // Setup event listeners for mouse and touch
     setupEventListeners() {
         // Mouse events
         this.canvas.addEventListener('click', (e) => this.handleClick(e));
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         
-        // Touch events for mobile
+        // Touch tracking variables
+        this.touchStartPos = null;
+        this.touchCurrentCell = null;
+        
+        // Touch events for mobile with enhanced handling
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             const touch = e.touches[0];
             const rect = this.canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            this.handleClick({offsetX: x, offsetY: y});
+            
+            // Calculate touch position with higher precision
+            const canvasScale = this.canvas.width / rect.width; // Handle potential scaling
+            const x = (touch.clientX - rect.left) * canvasScale;
+            const y = (touch.clientY - rect.top) * canvasScale;
+            
+            // Store the starting position
+            this.touchStartPos = {x, y};
+            
+            // Get the grid cell and highlight it
+            const gridPos = this.canvasToGrid(x, y);
+            this.touchCurrentCell = gridPos;
+            
+            // Provide visual feedback
+            this.drawGrid(gridPos);
+            
+            // Don't trigger click immediately, wait for touchend
+        }, {passive: false});
+        
+        // Track finger movement
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!this.touchStartPos) return;
+            
+            const touch = e.touches[0];
+            const rect = this.canvas.getBoundingClientRect();
+            const canvasScale = this.canvas.width / rect.width;
+            const x = (touch.clientX - rect.left) * canvasScale;
+            const y = (touch.clientY - rect.top) * canvasScale;
+            
+            // Get current grid position
+            const gridPos = this.canvasToGrid(x, y);
+            
+            // Only update if we moved to a different cell
+            if (!this.touchCurrentCell || 
+                gridPos.x !== this.touchCurrentCell.x || 
+                gridPos.y !== this.touchCurrentCell.y) {
+                
+                this.touchCurrentCell = gridPos;
+                this.drawGrid(gridPos);
+            }
+        }, {passive: false});
+        
+        // Confirm selection on touch end
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!this.touchStartPos || !this.touchCurrentCell) return;
+            
+            // Use the final cell position for the click
+            this.handleClick({offsetX: this.touchCurrentCell.x * this.cellSize + this.cellSize/2, 
+                             offsetY: this.touchCurrentCell.y * this.cellSize + this.cellSize/2});
+            
+            // Reset touch tracking
+            this.touchStartPos = null;
+            this.touchCurrentCell = null;
+        }, {passive: false});
+        
+        // Cancel touch if moved out of canvas
+        this.canvas.addEventListener('touchcancel', (e) => {
+            this.touchStartPos = null;
+            this.touchCurrentCell = null;
+            this.drawGrid();
         }, {passive: false});
     }
     
@@ -1301,10 +1400,36 @@ class GridGameManager {
         
         // Draw highlighted possible moves
         this.highlightedCells.forEach(cell => {
+            // Check if this cell is being hovered by mouse or touched
             const isHovering = hoverPos && hoverPos.x === cell.x && hoverPos.y === cell.y;
-            const color = isHovering ? this.colors.possibleMoveHover : this.colors.possibleMove;
-            this.drawCell(cell.x, cell.y, color, 0.4);
+            const isTouched = this.touchCurrentCell && 
+                             this.touchCurrentCell.x === cell.x && 
+                             this.touchCurrentCell.y === cell.y;
+            
+            // Choose appropriate color based on interaction type
+            const color = isHovering || isTouched ? this.colors.possibleMoveHover : this.colors.possibleMove;
+            
+            // Draw with touch highlight if it's being touched
+            this.drawCell(cell.x, cell.y, color, 0.4, isTouched);
         });
+        
+        // If there's a touch in progress but not on a valid move, still show feedback
+        if (this.touchCurrentCell && !this.highlightedCells.some(cell => 
+            cell.x === this.touchCurrentCell.x && cell.y === this.touchCurrentCell.y)) {
+            // Draw a subtle indicator for invalid touch position
+            this.ctx.globalAlpha = 0.2;
+            this.ctx.fillStyle = '#ff6666';
+            const pos = this.gridToCanvas(this.touchCurrentCell.x, this.touchCurrentCell.y);
+            this.ctx.beginPath();
+            this.ctx.arc(
+                pos.x + this.cellSize / 2,
+                pos.y + this.cellSize / 2,
+                this.cellSize / 4,
+                0, 2 * Math.PI
+            );
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1.0;
+        }
         
         // Draw discovered enemies
         this.drawDiscoveredEnemies();
@@ -1319,17 +1444,54 @@ class GridGameManager {
     }
     
     // Draw a single cell with color
-    drawCell(gridX, gridY, color, alpha = 1.0) {
+    drawCell(gridX, gridY, color, alpha = 1.0, isTouchHighlight = false) {
         const canvasPos = this.gridToCanvas(gridX, gridY);
         
         this.ctx.fillStyle = color;
         this.ctx.globalAlpha = alpha;
-        this.ctx.fillRect(
-            canvasPos.x + 1, 
-            canvasPos.y + 1, 
-            this.cellSize - 2, 
-            this.cellSize - 2
-        );
+        
+        // For touch interactions, use a larger highlight area with rounded corners
+        if (isTouchHighlight && this.touchCurrentCell && 
+            this.touchCurrentCell.x === gridX && this.touchCurrentCell.y === gridY) {
+            // Draw a slightly larger cell with rounded corners for better touch feedback
+            const padding = -2; // Negative padding makes cell larger
+            const radius = 8; // Corner radius
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(canvasPos.x + padding + radius, canvasPos.y + padding);
+            this.ctx.lineTo(canvasPos.x + this.cellSize - padding - radius, canvasPos.y + padding);
+            this.ctx.arcTo(canvasPos.x + this.cellSize - padding, canvasPos.y + padding, canvasPos.x + this.cellSize - padding, canvasPos.y + padding + radius, radius);
+            this.ctx.lineTo(canvasPos.x + this.cellSize - padding, canvasPos.y + this.cellSize - padding - radius);
+            this.ctx.arcTo(canvasPos.x + this.cellSize - padding, canvasPos.y + this.cellSize - padding, canvasPos.x + this.cellSize - padding - radius, canvasPos.y + this.cellSize - padding, radius);
+            this.ctx.lineTo(canvasPos.x + padding + radius, canvasPos.y + this.cellSize - padding);
+            this.ctx.arcTo(canvasPos.x + padding, canvasPos.y + this.cellSize - padding, canvasPos.x + padding, canvasPos.y + this.cellSize - padding - radius, radius);
+            this.ctx.lineTo(canvasPos.x + padding, canvasPos.y + padding + radius);
+            this.ctx.arcTo(canvasPos.x + padding, canvasPos.y + padding, canvasPos.x + padding + radius, canvasPos.y + padding, radius);
+            this.ctx.fill();
+            
+            // Add a subtle pulsing effect for touch feedback
+            const pulseSize = 4;
+            const pulseAlpha = 0.3;
+            this.ctx.globalAlpha = pulseAlpha;
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.beginPath();
+            this.ctx.arc(
+                canvasPos.x + this.cellSize / 2,
+                canvasPos.y + this.cellSize / 2,
+                this.cellSize / 3 + Math.sin(Date.now() / 200) * pulseSize,
+                0, 2 * Math.PI
+            );
+            this.ctx.fill();
+        } else {
+            // Standard cell drawing
+            this.ctx.fillRect(
+                canvasPos.x + 1, 
+                canvasPos.y + 1, 
+                this.cellSize - 2, 
+                this.cellSize - 2
+            );
+        }
+        
         this.ctx.globalAlpha = 1.0;
     }
     

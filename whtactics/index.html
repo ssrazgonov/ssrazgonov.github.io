@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Warhammer 40K Loop Hero</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="telegram-styles.css">
+    <!-- Telegram Web App API -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Check if running in Telegram and add class to body
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                document.body.classList.add('in-telegram');
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- Game Loader -->
@@ -227,6 +238,8 @@
     <script src="js/upgradeManager.js"></script>
     <script src="js/gridGameManager.js"></script>
     <script src="js/menuManager.js"></script>
+    <script src="js/telegramIntegration.js"></script>
+    <script src="js/telegramTest.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

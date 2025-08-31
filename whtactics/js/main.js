@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.menuManager = menuManager;
     window.gridGameManager = null;
     
+    // Check if running in Telegram
+    const isInTelegram = !!window.Telegram?.WebApp;
+    
     // Override the startGame function to use grid system
     window.startGridGame = function() {
         console.log('Starting grid-based game...');
@@ -25,8 +28,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.gridGameManager = new GridGameManager();
         window.gridGameManager.init();
         
+        // If in Telegram, show back button and adapt layout
+        if (isInTelegram && window.telegramIntegration) {
+            window.telegramIntegration.tg.BackButton.show();
+            window.telegramIntegration.adaptLayoutForTelegram();
+            
+            // Hide main button during gameplay
+            window.telegramIntegration.hideMainButton();
+            
+            // Set up auto-save at regular intervals
+        const autoSaveInterval = setInterval(() => {
+            if (window.gridGameManager) {
+                window.telegramIntegration.saveGameState();
+                console.log('Auto-saved game state');
+                
+                // Override endTurn method if not already done
+                if (window.gridGameManager && !window.gridGameManager._telegramEndTurnOverridden) {
+                    const originalEndTurn = window.gridGameManager.endTurn;
+                    window.gridGameManager.endTurn = function() {
+                        // Call original method
+                        originalEndTurn.apply(this, arguments);
+                        
+                        // Save game state after turn ends
+                        window.telegramIntegration.saveGameState();
+                    };
+                    window.gridGameManager._telegramEndTurnOverridden = true;
+                }
+            } else {
+                // Clear interval if game manager no longer exists
+                clearInterval(autoSaveInterval);
+            }
+        }, 30000); // 30000 ms = 30 seconds
+        }
+        
         console.log('Grid game initialized successfully!');
     };
+    
+    // Add window resize handler for Telegram
+    window.addEventListener('resize', () => {
+        if (isInTelegram && window.telegramIntegration && window.gridGameManager) {
+            window.telegramIntegration.adaptLayoutForTelegram();
+        }
+    });
 });
 
 // Show game instructions
