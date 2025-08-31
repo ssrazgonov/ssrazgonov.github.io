@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warhammer 40K Loop Hero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Game Loader -->
+    <div id="gameLoader" class="loader-screen">
+        <div class="loader-content">
+            <div class="warhammer-logo">
+                <h1>WARHAMMER 40,000</h1>
+                <h2>RELICT WAR</h2>
+            </div>
+            <div class="loading-spinner"></div>
+            <p class="loading-text">In the grim darkness of the far future...</p>
+        </div>
+    </div>
+    
+    <!-- Main Menu -->
+    <div id="mainMenu" class="menu-screen" style="display: none;">
+        <div class="menu-content">
+            <div class="menu-header">
+                <h1>WARHAMMER 40,000</h1>
+                <h2>RELICT WAR</h2>
+            </div>
+            <div class="menu-buttons">
+                <button id="startGameBtn" class="menu-button primary">Begin the Eternal War</button>
+                <button id="infoBtn" class="menu-button">Codex</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Setup Screen -->
+    <div id="gameSetup" class="menu-screen" style="display: none;">
+        <div class="setup-content">
+            <h2>Prepare for Battle</h2>
+            
+            <div class="setup-section">
+                <h3>Starting Equipment</h3>
+                <div class="equipment-choice">
+                    <div class="choice-item" data-choice="medkit">
+                        <div class="choice-icon">⚕</div>
+                        <div class="choice-info">
+                            <h4>Medi-Kit x2</h4>
+                            <p>Standard Imperial medical supplies for field operations</p>
+                        </div>
+                    </div>
+                    <div class="choice-item" data-choice="revive">
+                        <div class="choice-icon">⚡</div>
+                        <div class="choice-info">
+                            <h4>Revive Pack</h4>
+                            <p>Emergency revival system - restores 20% health upon death</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <h3>Emperor's Seal</h3>
+                <div class="seal-choice">
+                    <div class="seal-item" data-seal="abundance">
+                        <div class="seal-header">
+                            <h4>Seal of Abundance</h4>
+                        </div>
+                        <div class="seal-effects">
+                            <div class="buff">⬆ +50% Resource gathering</div>
+                            <div class="debuff">⬇ Enemies have +25% health</div>
+                        </div>
+                    </div>
+                    <div class="seal-item" data-seal="war">
+                        <div class="seal-header">
+                            <h4>Seal of War</h4>
+                        </div>
+                        <div class="seal-effects">
+                            <div class="buff">⬆ +30% Combat damage</div>
+                            <div class="debuff">⬇ 50% more enemies spawn</div>
+                        </div>
+                    </div>
+                    <div class="seal-item" data-seal="resilience">
+                        <div class="seal-header">
+                            <h4>Seal of Resilience</h4>
+                        </div>
+                        <div class="seal-effects">
+                            <div class="buff">⬆ +40% Maximum health</div>
+                            <div class="debuff">⬇ Resources give 30% less</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-actions">
+                <button id="backToMenuBtn" class="menu-button">Return</button>
+                <button id="startExpeditionBtn" class="menu-button primary">Begin Expedition</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Container (simplified for grid system) -->
+    <div class="game-container wh40k-panel" id="gameContainer" style="display: none;">
+        <div class="game-header wh40k-border">
+            <h1 class="wh40k-title" style="font-size: 1.8rem; margin: 0;">WARHAMMER 40K GRID TACTICS</h1>
+            <div class="turn-counter-display">
+                <div class="wh40k-panel turn-counter">
+                    <div class="skull-icon">💀</div>
+                    <div class="counter-text">
+                        <span class="counter-label">MOVES UNTIL DOOM</span>
+                        <span class="counter-value" id="turnCounter">30</span>
+                    </div>
+                    <div class="skull-icon">💀</div>
+                </div>
+            </div>
+            <!-- Re-enabled resources and stats -->
+            <div class="resources" style="gap: 15px; align-items: center;">
+                <div class="resource resource-display" id="biomass">
+                    <div class="resource-icon resource-biomass"></div>
+                    <span class="wh40k-text">Biomass: <span style="color: #88ff88; font-weight: bold;">0</span></span>
+                </div>
+                <div class="resource resource-display" id="scrap">
+                    <div class="resource-icon resource-scrap"></div>
+                    <span class="wh40k-text">Scrap: <span style="color: #ffaa66; font-weight: bold;">0</span></span>
+                </div>
+                <div class="resource resource-display" id="warpstone">
+                    <div class="resource-icon resource-warpstone"></div>
+                    <span class="wh40k-text">Warpstone: <span style="color: #8888ff; font-weight: bold;">0</span></span>
+                </div>
+                <div class="resource resource-display" id="combatPoints">
+                    <div class="resource-icon" style="background: linear-gradient(45deg, #ff6600, #ffaa00);">⚔️</div>
+                    <span class="wh40k-text">Combat Points: <span style="color: #ff6600; font-weight: bold;">0</span></span>
+                </div>
+            </div>
+            <div class="stats" style="gap: 15px; align-items: center;">
+                <div class="stat resource-display" id="day">
+                    <span class="wh40k-text">Day: <span style="color: #ffcc00; font-weight: bold;">1</span></span>
+                </div>
+                <div class="stat resource-display" id="loop">
+                    <span class="wh40k-text">Loop: <span style="color: #ffcc00; font-weight: bold;">0</span></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <canvas id="gameCanvas" style="border: 3px solid #bb0000; border-radius: 8px; box-shadow: 0 0 30px rgba(187, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.6);"></canvas>
+        </div>
+        
+        <!-- Persistent Battlefield UI -->
+        <div class="battlefield-ui" style="display: flex; gap: 15px; margin-top: 15px;">
+            <!-- Terrain Information Panel -->
+            <div class="terrain-info wh40k-panel" id="terrainInfo" style="width: 300px; padding: 15px;">
+                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">TERRAIN DATA</h3>
+                <div id="terrainContent">
+                    <div style="text-align: center; color: #666; font-style: italic;">
+                        Move to a cell to see terrain information
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Building Cards Panel -->
+            <div class="building-cards wh40k-panel" id="buildingCards" style="flex: 1; padding: 15px; min-height: 200px;">
+                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">AVAILABLE STRUCTURES</h3>
+                <div id="buildingCardsContent">
+                    <div style="text-align: center; color: #666; font-style: italic;">
+                        Move to a cell to see available buildings
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Re-enabled UI elements -->
+        <div class="game-ui" style="gap: 15px; margin-top: 15px;">
+            <div class="card-deck wh40k-panel" id="cardDeck" style="flex: 1; padding: 15px; min-height: 120px;">
+                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">Battlefield Cards</h3>
+                <!-- Cards will be generated here -->
+            </div>
+            <div class="character-info wh40k-panel" id="characterInfo" style="width: 250px; padding: 15px;">
+                <h3 class="character-name ethereal-glow">Space Marine</h3>
+                <div class="stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Health:</span>
+                        <span class="stat-value">
+                            <span id="charHP" style="color: #ff6666;">100</span>/<span id="charMaxHP">100</span>
+                        </span>
+                    </div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Attack:</span>
+                        <span class="stat-value" id="charAttack" style="color: #ff8888;">10</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Defense:</span>
+                        <span class="stat-value" id="charDefense" style="color: #88ccff;">5</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Speed:</span>
+                        <span class="stat-value" id="charSpeed" style="color: #88ff88;">1.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
+    <!-- Re-enabled complex systems -->
+    <script src="js/classes/entity.js"></script>
+    <script src="js/classes/item.js"></script>
+    <script src="js/classes/character.js"></script>
+    <script src="js/classes/enemy.js"></script>
+    <script src="js/classes/tile.js"></script>
+    <script src="js/classes/card.js"></script>
+    <!-- New systems -->
+    <script src="js/classes/relic.js"></script>
+    <script src="js/classes/base.js"></script>
+            <script src="js/classes/crafting.js"></script>
+        <script src="js/classes/heroUpgrade.js"></script>
+        <script src="js/classes/combat.js"></script>
+        <script src="js/classes/battlefieldCard.js"></script>
+        <script src="js/mapGenerator.js"></script>
+    <script src="js/gameManager.js"></script>
+    <script src="js/uiManager.js"></script>
+    <script src="js/inventoryUI.js"></script>
+    <script src="js/upgradeManager.js"></script>
+    <script src="js/gridGameManager.js"></script>
+    <script src="js/menuManager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
