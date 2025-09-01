@@ -1,9 +1,9 @@
 // Мобильное управление для jsdoom
 class MobileControls {
     constructor() {
-        this.isMobile = this.detectMobile();
-        this.isVisible = false;
-        this.movementActive = false;
+        this.isMobile = true;
+        this.isVisible = true;
+        this.movementActive = true;
         this.movementCenter = { x: 0, y: 0 };
         this.movementStick = { x: 0, y: 0 };
         this.keys = {};

@@ -1,24 +1,19 @@
 /* Мобильное управление для jsdoom */
 .mobile-controls {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+  position: relative;
   z-index: 1000;
-  display: none;
+  display: flex;
+  justify-content: space-between;
   pointer-events: none;
   touch-action: none; /* Отключаем стандартные touch действия браузера */
 }
 
 .mobile-controls.show {
-  display: block;
+  display: flex;
 }
 
 /* Левая панель - движение */
 .movement-panel {
-  position: absolute;
-  left: 0;
-  bottom: 0;
   width: 200px;
   height: 200px;
   pointer-events: auto;
@@ -49,11 +44,6 @@
 
 /* Правая панель - стрельба и действия */
 .action-panel {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 200px;
-  height: 200px;
   pointer-events: auto;
   touch-action: none; /* Отключаем стандартные touch действия браузера */
 }
@@ -89,104 +79,20 @@
 
 .action-button.use {
   top: 90px;
-  right: 20px;
+  right: 50px;
 }
 
 .action-button.enter {
   top: 20px;
-  right: 50px;
+  right: 150px;
 }
 
 .action-button.weapon {
-  top: 20px;
+  top: 50px;
   right: 90px;
 }
 
 .action-button.menu {
   top: 90px;
   right: 90px;
-}
-
-/* Центральная панель больше не используется */
-
-/* Адаптивность для разных размеров экрана */
-@media (max-width: 768px) {
-  .mobile-controls {
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-  }
-  
-  .movement-panel,
-  .action-panel {
-    width: 150px;
-    height: 150px;
-  }
-  
-  .movement-joystick {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .movement-stick {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .action-button {
-    width: 50px;
-    height: 50px;
-    font-size: 10px;
-  }
-  
-  .action-button.enter {
-    top: 20px;
-    right: 40px;
-  }
-  
-  /* Центральная панель больше не используется */
-}
-
-@media (max-width: 480px) {
-  .mobile-controls {
-    bottom: 5px;
-    left: 5px;
-    right: 5px;
-  }
-  
-  .movement-panel,
-  .action-panel {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .movement-joystick {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .movement-stick {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .action-button {
-    width: 45px;
-    height: 45px;
-    font-size: 9px;
-  }
-  
-  .action-button.enter {
-    top: 20px;
-    right: 35px;
-  }
-  
-  /* Центральная панель больше не используется */
-}
-
-/* Скрытие на десктопе */
-@media (min-width: 1024px) {
-  .mobile-controls {
-    display: none !important;
-  }
 }

@@ -14,12 +14,6 @@
 <body>
     <div class="container">
         <div id="dosbox"></div>
-        <button class="wrapper" onclick="dosbox.requestFullScreen();">
-            <a><span>FULLSCREEN</span></a>
-        </button>
-        <button class="wrapper mobile-toggle" onclick="toggleMobileControls();" style="display: none;">
-            <a><span>MOBILE</span></a>
-        </button>
     </div>
 
     <script type="text/javascript" src="./script.js"></script>
@@ -42,18 +36,11 @@
 
         // Функция переключения мобильного управления
         function toggleMobileControls() {
-            if (window.mobileControls) {
+            if (window.mobileControls || true) {
                 window.mobileControls.toggleControls();
             }
         }
 
-        // Показываем кнопку мобильного управления только на мобильных устройствах
-        document.addEventListener('DOMContentLoaded', function() {
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                (window.innerWidth <= 768 && 'ontouchstart' in window)) {
-                document.querySelector('.mobile-toggle').style.display = 'block';
-            }
-        });
     </script>
 </body>
 

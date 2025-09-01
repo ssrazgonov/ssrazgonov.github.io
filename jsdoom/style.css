@@ -8,6 +8,7 @@ body {
   background: #111 url(https://goo.gl/D1AeUS) center no-repeat;
   background-size: cover;
   color: #aaa;
+  margin: 0px;
 }
 
 .container {
@@ -17,9 +18,7 @@ body {
 }
 
 .dosbox-container {
-  margin: 10% auto 0 auto;
-  width: 640px;
-  height: 400px;
+  width: 100%
 }
 
 .dosbox-container > .dosbox-overlay {
@@ -80,4 +79,8 @@ p {
 
 a {
   color: #aaa;
+}
+
+.dosbox-canvas {
+  width: 100vw;
 }
