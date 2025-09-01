@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демо мобильного управления JS DOOM</title>
+    <link rel="stylesheet" type="text/css" href="./styles/mobile-controls.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #f80;
+            overflow-x: hidden;
+        }
+        
+        .demo-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 3px solid #f80;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #f80;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #f80; }
+            to { text-shadow: 0 0 30px #f80, 0 0 40px #f80; }
+        }
+        
+        .demo-header p {
+            font-size: 1.2em;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .demo-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #f80;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(255, 136, 0, 0.3);
+        }
+        
+        .demo-section h2 {
+            color: #f80;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #f80;
+            padding-bottom: 10px;
+        }
+        
+        .demo-section p {
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .demo-section ul {
+            color: #ccc;
+            line-height: 1.8;
+            margin-left: 20px;
+            font-size: 1.1em;
+        }
+        
+        .demo-section li {
+            margin-bottom: 10px;
+        }
+        
+        .demo-section strong {
+            color: #f80;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .demo-card {
+            background: rgba(255, 136, 0, 0.1);
+            border: 2px solid #f80;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 136, 0, 0.4);
+        }
+        
+        .demo-card h3 {
+            color: #f80;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+        
+        .demo-card p {
+            color: #ccc;
+            font-size: 1em;
+        }
+        
+        .demo-cta {
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .demo-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #f80, #ff6b35);
+            color: white;
+            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(255, 136, 0, 0.4);
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 136, 0, 0.6);
+        }
+        
+        .demo-button.secondary {
+            background: linear-gradient(45deg, #333, #555);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .demo-button.secondary:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .demo-footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 3px solid #f80;
+            color: #aaa;
+        }
+        
+        .demo-footer a {
+            color: #f80;
+            text-decoration: none;
+        }
+        
+        .demo-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-header h1 {
+                font-size: 2em;
+            }
+            
+            .demo-header p {
+                font-size: 1em;
+            }
+            
+            .demo-section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🎮 Мобильное управление JS DOOM</h1>
+        <p>Полноценное управление легендарной игрой DOOM на мобильных устройствах</p>
+    </div>
+
+    <div class="demo-content">
+        <div class="demo-section">
+            <h2>🚀 Что нового?</h2>
+            <p>Теперь вы можете играть в DOOM на любом мобильном устройстве с помощью интуитивного сенсорного управления!</p>
+            <p>Система автоматически определяет мобильные устройства и активирует специальные элементы управления.</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h3>🎯 Виртуальный джойстик</h3>
+                <p>Плавное управление движением персонажа с помощью виртуального джойстика в левой части экрана</p>
+            </div>
+            
+            <div class="demo-card">
+                <h3>🔫 Кнопки действий</h3>
+                <p>Быстрый доступ к стрельбе (Ctrl) и использованию предметов (Space)</p>
+            </div>
+            
+            <div class="demo-card">
+                <h3>📱 Адаптивность</h3>
+                <p>Автоматическая подстройка размера и расположения под любой размер экрана</p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎮 Как играть</h2>
+            <ul>
+                <li><strong>Движение:</strong> Перетаскивайте палец по левой панели для управления персонажем</li>
+                <li><strong>Стрельба:</strong> Нажмите кнопку FIRE для атаки</li>
+                <li><strong>Использование:</strong> Нажмите USE для взаимодействия с предметами и дверями</li>
+                <li><strong>Движение:</strong> Перетаскивайте палец по левой панели для управления персонажем (эмулирует стрелки)</li>
+                <li><strong>Стрельба:</strong> Нажмите FIRE для атаки (эмулирует Ctrl)</li>
+                <li><strong>Использование:</strong> Нажмите USE для взаимодействия с предметами и дверями (эмулирует Space)</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>📱 Поддерживаемые устройства</h2>
+            <p>Мобильное управление работает на всех современных мобильных устройствах:</p>
+            <ul>
+                <li><strong>Android:</strong> Все версии Android с поддержкой touch событий</li>
+                <li><strong>iOS:</strong> iPhone и iPad всех поколений</li>
+                <li><strong>Windows Mobile:</strong> Устройства с Windows 10/11 Mobile</li>
+                <li><strong>Другие:</strong> Любые устройства с сенсорным экраном и современным браузером</li>
+            </ul>
+        </div>
+
+        <div class="demo-cta">
+            <a href="./index.html" class="demo-button">🎮 Играть в DOOM</a>
+            <a href="./test-mobile.html" class="demo-button secondary">🧪 Тестировать управление</a>
+        </div>
+
+        <div class="demo-section">
+            <h2>⚙️ Технические особенности</h2>
+            <ul>
+                <li><strong>Производительность:</strong> Оптимизировано для 60 FPS на всех устройствах</li>
+                <li><strong>Память:</strong> Минимальное потребление памяти и ресурсов</li>
+                <li><strong>Интеграция:</strong> Прямая интеграция с js-dos API для максимальной совместимости</li>
+                <li><strong>Адаптивность:</strong> Автоматическая подстройка под ориентацию и размер экрана</li>
+                <li><strong>Отзывчивость:</strong> Мгновенная реакция на touch события</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="demo-footer">
+        <p>🎮 <strong>JS DOOM</strong> с мобильным управлением</p>
+        <p>Создано с использованием <a href="http://js-dos.com">js-dos</a> и современных веб-технологий</p>
+        <p>📖 <a href="./MOBILE_CONTROLS_README.md">Подробная документация</a> | 🧪 <a href="./test-mobile.html">Тестирование</a></p>
+    </div>
+</body>
+</html>

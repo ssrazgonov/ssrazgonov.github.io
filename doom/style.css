@@ -1,0 +1,83 @@
+html,
+body {
+  min-height: 100%;
+}
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #111 url(https://goo.gl/D1AeUS) center no-repeat;
+  background-size: cover;
+  color: #aaa;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dosbox-container {
+  margin: 10% auto 0 auto;
+  width: 640px;
+  height: 400px;
+}
+
+.dosbox-container > .dosbox-overlay {
+  background: url(./assets/img/overlay.png) center no-repeat;
+  background-size: 100%;
+}
+
+#dosbox:hover .dosbox-start {
+  opacity: 1;
+}
+
+#dosbox .dosbox-start {
+  background: url(https://static.tumblr.com/98vyz1x/eK4lj7luf/header.png) center no-repeat;
+  background-size: 150px;
+  height: 100%;
+  image-rendering: pixelated;
+  top: 4% !important;
+  color: rgba(0, 0, 0, 0);
+  filter: drop-shadow(0px 0px 8px rgba(255, 255, 255, 0.95));
+  opacity: 0;
+}
+
+.dosbox-powered {
+  opacity: 0;
+}
+
+button {
+  border: 0;
+  margin: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.mobile-toggle {
+  background: linear-gradient(45deg, #f80, #ff6b35);
+  color: white;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(255, 136, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.mobile-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 136, 0, 0.4);
+}
+
+.mobile-toggle:active {
+  transform: translateY(0);
+}
+
+p {
+  font-size: 32px;
+}
+
+a {
+  color: #aaa;
+}

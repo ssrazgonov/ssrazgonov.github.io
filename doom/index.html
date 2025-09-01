@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS DOOM 🕹</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="./styles/button.css">
+    <link rel="stylesheet" type="text/css" href="./styles/mobile-controls.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="dosbox"></div>
+        <button class="wrapper" onclick="dosbox.requestFullScreen();">
+            <a><span>FULLSCREEN</span></a>
+        </button>
+        <button class="wrapper mobile-toggle" onclick="toggleMobileControls();" style="display: none;">
+            <a><span>MOBILE</span></a>
+        </button>
+    </div>
+
+    <script type="text/javascript" src="./script.js"></script>
+    <script type="text/javascript" src="./mobile-controls.js"></script>
+    <script type="text/javascript">
+        var dosbox = new Dosbox({
+            id: "dosbox",
+            onload: function (dosbox) {
+                dosbox.run("/jsdoom/roms/ultimate-doom.zip", "./UltDoom/DOOM.EXE");
+                
+                // Передаем ссылку на dosbox в мобильное управление
+                if (window.mobileControls) {
+                    window.mobileControls.setDosbox(dosbox);
+                }
+            },
+            onrun: function (dosbox, app) {
+                console.log("App '" + app + "' is runned");
+            }
+        });
+
+        // Функция переключения мобильного управления
+        function toggleMobileControls() {
+            if (window.mobileControls) {
+                window.mobileControls.toggleControls();
+            }
+        }
+
+        // Показываем кнопку мобильного управления только на мобильных устройствах
+        document.addEventListener('DOMContentLoaded', function() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                (window.innerWidth <= 768 && 'ontouchstart' in window)) {
+                document.querySelector('.mobile-toggle').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

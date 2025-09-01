@@ -1,0 +1,192 @@
+/* Мобильное управление для jsdoom */
+.mobile-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
+  touch-action: none; /* Отключаем стандартные touch действия браузера */
+}
+
+.mobile-controls.show {
+  display: block;
+}
+
+/* Левая панель - движение */
+.movement-panel {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  height: 200px;
+  pointer-events: auto;
+  touch-action: none; /* Отключаем стандартные touch действия браузера */
+}
+
+.movement-joystick {
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #f80;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.movement-stick {
+  width: 40px;
+  height: 40px;
+  background: #f80;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.1s ease;
+}
+
+/* Правая панель - стрельба и действия */
+.action-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 200px;
+  height: 200px;
+  pointer-events: auto;
+  touch-action: none; /* Отключаем стандартные touch действия браузера */
+}
+
+.action-button {
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #f80;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f80;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: absolute;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s ease;
+}
+
+.action-button:active {
+  background: rgba(255, 136, 0, 0.3);
+  transform: scale(0.95);
+}
+
+.action-button.fire {
+  top: 20px;
+  right: 20px;
+}
+
+.action-button.use {
+  top: 90px;
+  right: 20px;
+}
+
+.action-button.enter {
+  top: 20px;
+  right: 50px;
+}
+
+.action-button.weapon {
+  top: 20px;
+  right: 90px;
+}
+
+.action-button.menu {
+  top: 90px;
+  right: 90px;
+}
+
+/* Центральная панель больше не используется */
+
+/* Адаптивность для разных размеров экрана */
+@media (max-width: 768px) {
+  .mobile-controls {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+  }
+  
+  .movement-panel,
+  .action-panel {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .movement-joystick {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .movement-stick {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .action-button {
+    width: 50px;
+    height: 50px;
+    font-size: 10px;
+  }
+  
+  .action-button.enter {
+    top: 20px;
+    right: 40px;
+  }
+  
+  /* Центральная панель больше не используется */
+}
+
+@media (max-width: 480px) {
+  .mobile-controls {
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+  }
+  
+  .movement-panel,
+  .action-panel {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .movement-joystick {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .movement-stick {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .action-button {
+    width: 45px;
+    height: 45px;
+    font-size: 9px;
+  }
+  
+  .action-button.enter {
+    top: 20px;
+    right: 35px;
+  }
+  
+  /* Центральная панель больше не используется */
+}
+
+/* Скрытие на десктопе */
+@media (min-width: 1024px) {
+  .mobile-controls {
+    display: none !important;
+  }
+}

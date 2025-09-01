@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест js-dos API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #f80;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #f80;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #f80;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 136, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid #f80;
+        }
+        
+        .test-section h3 {
+            color: #f80;
+            margin-top: 0;
+        }
+        
+        .test-button {
+            display: inline-block;
+            background: #f80;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .test-button:hover {
+            background: #ff6b35;
+        }
+        
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .log-entry.info { background: rgba(0, 123, 255, 0.2); }
+        .log-entry.success { background: rgba(40, 167, 69, 0.2); }
+        .log-entry.warning { background: rgba(255, 193, 7, 0.2); }
+        .log-entry.error { background: rgba(220, 53, 69, 0.2); }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #f80;
+        }
+        
+        .status h4 {
+            color: #f80;
+            margin-top: 0;
+        }
+        
+        .key-test {
+            display: inline-block;
+            background: #f80;
+            color: #000;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+        }
+        
+        .key-test:hover {
+            background: #ff6b35;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Тест js-dos API</h1>
+        
+        <div class="status">
+            <h4>📊 Статус js-dos</h4>
+            <div id="status-content">
+                <p>Проверка доступности API...</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Анализ API</h3>
+            <div class="test-button" onclick="analyzeDosboxAPI()">Анализировать js-dos API</div>
+            <div class="test-button" onclick="testCanvasEvents()">Тест canvas событий</div>
+            <div class="test-button" onclick="testDirectAPI()">Тест прямого API</div>
+            <div class="test-button" onclick="clearLog()">Очистить лог</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎮 Тест клавиш</h3>
+            <div class="key-test" onclick="testKey(38)">↑ Вверх (38)</div>
+            <div class="key-test" onclick="testKey(40)">↓ Вниз (40)</div>
+            <div class="key-test" onclick="testKey(37)">← Влево (37)</div>
+            <div class="key-test" onclick="testKey(39)">→ Вправо (39)</div>
+            <div class="key-test" onclick="testKey(17)">Ctrl (17)</div>
+            <div class="key-test" onclick="testKey(32)">Space (32)</div>
+        </div>
+        
+        <div class="log" id="log-content">
+            <div class="log-entry info">Система инициализирована. Нажмите кнопки для тестирования.</div>
+        </div>
+    </div>
+
+    <script>
+        let logCounter = 0;
+        let dosboxInstance = null;
+
+        // Функция логирования
+        function log(message, type = 'info') {
+            const logContent = document.getElementById('log-content');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${++logCounter}] ${message}`;
+            logContent.appendChild(entry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        // Функция очистки лога
+        function clearLog() {
+            document.getElementById('log-content').innerHTML = '';
+            logCounter = 0;
+            log('Лог очищен', 'info');
+        }
+
+        // Функция анализа js-dos API
+        function analyzeDosboxAPI() {
+            log('🔍 Анализируем js-dos API...', 'info');
+            
+            if (window.dosbox) {
+                log('✅ window.dosbox найден', 'success');
+                
+                // Анализируем структуру dosbox
+                log(`📁 Структура dosbox: ${Object.keys(window.dosbox).join(', ')}`, 'info');
+                
+                if (window.dosbox.module) {
+                    log('✅ window.dosbox.module найден', 'success');
+                    
+                    // Анализируем модуль
+                    const moduleKeys = Object.keys(window.dosbox.module);
+                    log(`📁 Методы модуля: ${moduleKeys.join(', ')}`, 'info');
+                    
+                    // Проверяем конкретные методы
+                    if (window.dosbox.module.shell) {
+                        log('✅ window.dosbox.module.shell доступен', 'success');
+                        log(`📁 Shell методы: ${Object.keys(window.dosbox.module.shell).join(', ')}`, 'info');
+                    }
+                    
+                    if (window.dosbox.module.sendKeyEvent) {
+                        log('✅ window.dosbox.module.sendKeyEvent доступен', 'success');
+                    }
+                    
+                    if (window.dosbox.module.canvas) {
+                        log('✅ window.dosbox.module.canvas доступен', 'success');
+                        log(`Canvas: ${window.dosbox.module.canvas}`, 'info');
+                    }
+                    
+                    if (window.dosbox.module.ccall) {
+                        log('✅ window.dosbox.module.ccall доступен', 'success');
+                    }
+                    
+                } else {
+                    log('❌ window.dosbox.module недоступен', 'error');
+                }
+                
+                // Проверяем Dos object
+                if (window.dosbox.Dos) {
+                    log('✅ window.dosbox.Dos найден', 'success');
+                    log(`📁 Dos методы: ${Object.keys(window.dosbox.Dos).join(', ')}`, 'info');
+                }
+                
+            } else {
+                log('❌ window.dosbox не найден', 'error');
+            }
+            
+            updateStatus();
+        }
+
+        // Функция тестирования canvas событий
+        function testCanvasEvents() {
+            log('🎯 Тестируем canvas события...', 'info');
+            
+            if (window.dosbox && window.dosbox.module && window.dosbox.module.canvas) {
+                const canvas = window.dosbox.module.canvas;
+                log(`Canvas найден: ${canvas}`, 'info');
+                
+                // Создаем тестовое событие
+                const event = new KeyboardEvent('keydown', {
+                    keyCode: 38,
+                    which: 38,
+                    bubbles: true,
+                    cancelable: true,
+                    code: 'ArrowUp'
+                });
+                
+                try {
+                    canvas.dispatchEvent(event);
+                    log('✅ Событие отправлено на canvas', 'success');
+                } catch (error) {
+                    log(`❌ Ошибка отправки на canvas: ${error.message}`, 'error');
+                }
+                
+            } else {
+                log('❌ Canvas недоступен', 'error');
+            }
+        }
+
+        // Функция тестирования прямого API
+        function testDirectAPI() {
+            log('🎯 Тестируем прямой API...', 'info');
+            
+            if (window.dosbox && window.dosbox.module) {
+                // Тест 1: shell API
+                if (window.dosbox.module.shell && window.dosbox.module.shell.sendKeyEvent) {
+                    try {
+                        window.dosbox.module.shell.sendKeyEvent(38, true);
+                        log('✅ Shell API: keydown 38', 'success');
+                        
+                        setTimeout(() => {
+                            try {
+                                window.dosbox.module.shell.sendKeyEvent(38, false);
+                                log('✅ Shell API: keyup 38', 'success');
+                            } catch (e) {
+                                log(`❌ Shell API keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (error) {
+                        log(`❌ Shell API error: ${error.message}`, 'error');
+                    }
+                }
+                
+                // Тест 2: прямой sendKeyEvent
+                if (window.dosbox.module.sendKeyEvent) {
+                    try {
+                        window.dosbox.module.sendKeyEvent(38, true);
+                        log('✅ Direct API: keydown 38', 'success');
+                        
+                        setTimeout(() => {
+                            try {
+                                window.dosbox.module.sendKeyEvent(38, false);
+                                log('✅ Direct API: keyup 38', 'success');
+                            } catch (e) {
+                                log(`❌ Direct API keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (error) {
+                        log(`❌ Direct API error: ${error.message}`, 'error');
+                    }
+                }
+                
+                // Тест 3: Dos object
+                if (window.dosbox.Dos && window.dosbox.Dos.sendKeyEvent) {
+                    try {
+                        window.dosbox.Dos.sendKeyEvent(38, true);
+                        log('✅ Dos API: keydown 38', 'success');
+                        
+                        setTimeout(() => {
+                            try {
+                                window.dosbox.Dos.sendKeyEvent(38, false);
+                                log('✅ Dos API: keyup 38', 'success');
+                            } catch (e) {
+                                log(`❌ Dos API keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (error) {
+                        log(`❌ Dos API error: ${error.message}`, 'error');
+                    }
+                }
+                
+            } else {
+                log('❌ Dosbox недоступен', 'error');
+            }
+        }
+
+        // Функция тестирования клавиш
+        function testKey(keyCode) {
+            log(`🎮 Тестируем клавишу: ${keyCode}`, 'info');
+            
+            if (window.dosbox && window.dosbox.module) {
+                // Пытаемся использовать различные методы
+                let success = false;
+                
+                // Метод 1: shell API
+                if (window.dosbox.module.shell && window.dosbox.module.shell.sendKeyEvent) {
+                    try {
+                        window.dosbox.module.shell.sendKeyEvent(keyCode, true);
+                        log(`🚀 Shell API: keydown ${keyCode}`, 'success');
+                        success = true;
+                        
+                        setTimeout(() => {
+                            try {
+                                window.dosbox.module.shell.sendKeyEvent(keyCode, false);
+                                log(`🚀 Shell API: keyup ${keyCode}`, 'success');
+                            } catch (e) {
+                                log(`❌ Shell API keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (e) {
+                        log(`❌ Shell API error: ${e.message}`, 'error');
+                    }
+                }
+                
+                // Метод 2: прямой API
+                if (!success && window.dosbox.module.sendKeyEvent) {
+                    try {
+                        window.dosbox.module.sendKeyEvent(keyCode, true);
+                        log(`🚀 Direct API: keydown ${keyCode}`, 'success');
+                        success = true;
+                        
+                        setTimeout(() => {
+                            try {
+                                window.dosbox.module.sendKeyEvent(keyCode, false);
+                                log(`🚀 Direct API: keyup ${keyCode}`, 'success');
+                            } catch (e) {
+                                log(`❌ Direct API keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (e) {
+                        log(`❌ Direct API error: ${e.message}`, 'error');
+                    }
+                }
+                
+                // Метод 3: canvas события
+                if (!success && window.dosbox.module.canvas) {
+                    try {
+                        const canvas = window.dosbox.module.canvas;
+                        const event = new KeyboardEvent('keydown', {
+                            keyCode: keyCode,
+                            which: keyCode,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        canvas.dispatchEvent(event);
+                        log(`🚀 Canvas event: keydown ${keyCode}`, 'success');
+                        success = true;
+                        
+                        setTimeout(() => {
+                            try {
+                                const upEvent = new KeyboardEvent('keyup', {
+                                    keyCode: keyCode,
+                                    which: keyCode,
+                                    bubbles: true,
+                                    cancelable: true
+                                });
+                                canvas.dispatchEvent(upEvent);
+                                log(`🚀 Canvas event: keyup ${keyCode}`, 'success');
+                            } catch (e) {
+                                log(`❌ Canvas keyup error: ${e.message}`, 'error');
+                            }
+                        }, 100);
+                        
+                    } catch (e) {
+                        log(`❌ Canvas API error: ${e.message}`, 'error');
+                    }
+                }
+                
+                if (!success) {
+                    log(`❌ Не удалось отправить клавишу ${keyCode}`, 'error');
+                }
+                
+            } else {
+                log('❌ Dosbox недоступен', 'error');
+            }
+        }
+
+        // Функция обновления статуса
+        function updateStatus() {
+            const statusContent = document.getElementById('status-content');
+            let status = '';
+            
+            if (window.dosbox) {
+                status += '<p><strong>Dosbox:</strong> ✅ Найден</p>';
+                
+                if (window.dosbox.module) {
+                    status += '<p><strong>Module:</strong> ✅ Доступен</p>';
+                    
+                    if (window.dosbox.module.shell) {
+                        status += '<p><strong>Shell API:</strong> ✅ Доступен</p>';
+                    } else {
+                        status += '<p><strong>Shell API:</strong> ❌ Недоступен</p>';
+                    }
+                    
+                    if (window.dosbox.module.sendKeyEvent) {
+                        status += '<p><strong>SendKeyEvent:</strong> ✅ Доступен</p>';
+                    } else {
+                        status += '<p><strong>SendKeyEvent:</strong> ❌ Недоступен</p>';
+                    }
+                    
+                    if (window.dosbox.module.canvas) {
+                        status += '<p><strong>Canvas:</strong> ✅ Доступен</p>';
+                    } else {
+                        status += '<p><strong>Canvas:</strong> ❌ Недоступен</p>';
+                    }
+                } else {
+                    status += '<p><strong>Module:</strong> ❌ Недоступен</p>';
+                }
+                
+                if (window.dosbox.Dos) {
+                    status += '<p><strong>Dos Object:</strong> ✅ Найден</p>';
+                } else {
+                    status += '<p><strong>Dos Object:</strong> ❌ Не найден</p>';
+                }
+            } else {
+                status += '<p><strong>Dosbox:</strong> ❌ Не найден</p>';
+            }
+            
+            statusContent.innerHTML = status;
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Страница загружена', 'info');
+            
+            // Ждем инициализации dosbox
+            setTimeout(() => {
+                if (window.dosbox) {
+                    dosboxInstance = window.dosbox;
+                    log('Dosbox найден в window', 'info');
+                }
+                
+                updateStatus();
+                analyzeDosboxAPI();
+            }, 1000);
+        });
+
+        // Обработка событий клавиатуры для отладки
+        document.addEventListener('keydown', function(e) {
+            log(`Событие keydown: ${e.key} (код: ${e.keyCode})`, 'keydown');
+        });
+
+        document.addEventListener('keyup', function(e) {
+            log(`Событие keyup: ${e.key} (код: ${e.keyCode})`, 'keyup');
+        });
+    </script>
+</body>
+</html>

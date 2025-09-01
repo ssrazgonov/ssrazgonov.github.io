@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест клавиатуры для JS DOOM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #f80;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #f80;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #f80;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 136, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid #f80;
+        }
+        
+        .test-section h3 {
+            color: #f80;
+            margin-top: 0;
+        }
+        
+        .key-test {
+            display: inline-block;
+            background: #f80;
+            color: #000;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+        }
+        
+        .key-test:hover {
+            background: #ff6b35;
+        }
+        
+        .key-test:active {
+            transform: scale(0.95);
+        }
+        
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .log-entry.keydown { background: rgba(0, 255, 0, 0.2); }
+        .log-entry.keyup { background: rgba(255, 255, 0, 0.2); }
+        .log-entry.info { background: rgba(0, 123, 255, 0.2); }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #f80;
+        }
+        
+        .status h4 {
+            color: #f80;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎹 Тест клавиатуры для JS DOOM</h1>
+        
+        <div class="status">
+            <h4>📊 Статус системы</h4>
+            <div id="status-content">
+                <p>Проверка доступности API...</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎮 Тест движения (стрелки)</h3>
+            <div class="key-test" onclick="testKey('ARROW_UP')">↑ Вверх</div>
+            <div class="key-test" onclick="testKey('ARROW_DOWN')">↓ Вниз</div>
+            <div class="key-test" onclick="testKey('ARROW_LEFT')">← Влево</div>
+            <div class="key-test" onclick="testKey('ARROW_RIGHT')">→ Вправо</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔫 Тест действий</h3>
+            <div class="key-test" onclick="testKey('CTRL')">Ctrl (Стрельба)</div>
+            <div class="key-test" onclick="testKey('SPACE')">Space (Использование)</div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🧪 Тест API</h3>
+            <div class="key-test" onclick="testDosboxAPI()">Проверить js-dos API</div>
+            <div class="key-test" onclick="clearLog()">Очистить лог</div>
+        </div>
+        
+        <div class="log" id="log-content">
+            <div class="log-entry info">Система инициализирована. Нажмите клавиши для тестирования.</div>
+        </div>
+    </div>
+
+    <script>
+        let logCounter = 0;
+        let dosboxInstance = null;
+
+        // Функция логирования
+        function log(message, type = 'info') {
+            const logContent = document.getElementById('log-content');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${++logCounter}] ${message}`;
+            logContent.appendChild(entry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        // Функция очистки лога
+        function clearLog() {
+            document.getElementById('log-content').innerHTML = '';
+            logCounter = 0;
+            log('Лог очищен', 'info');
+        }
+
+        // Функция тестирования клавиш
+        function testKey(key) {
+            log(`Тестируем клавишу: ${key}`, 'info');
+            
+            // Создаем событие клавиши
+            const keyCode = getKeyCode(key);
+            if (keyCode !== null) {
+                log(`Код клавиши: ${keyCode}`, 'info');
+                
+                // Отправляем keydown
+                sendKeyEvent(keyCode, true);
+                log(`Отправлен keydown для ${key}`, 'keydown');
+                
+                // Отправляем keyup через 100мс
+                setTimeout(() => {
+                    sendKeyEvent(keyCode, false);
+                    log(`Отправлен keyup для ${key}`, 'keyup');
+                }, 100);
+            } else {
+                log(`Неизвестная клавиша: ${key}`, 'info');
+            }
+        }
+
+        // Функция получения кода клавиши
+        function getKeyCode(key) {
+            const keyMap = {
+                'CTRL': 29,
+                'SPACE': 57,
+                'ARROW_UP': 200,
+                'ARROW_DOWN': 208,
+                'ARROW_LEFT': 203,
+                'ARROW_RIGHT': 205
+            };
+            return keyMap[key] || null;
+        }
+
+        // Функция отправки события клавиши
+        function sendKeyEvent(keyCode, isDown) {
+            try {
+                // Пытаемся использовать js-dos API
+                if (window.dosbox && window.dosbox.module) {
+                    if (window.dosbox.module.shell && window.dosbox.module.shell.sendKeyEvent) {
+                        window.dosbox.module.shell.sendKeyEvent(keyCode, isDown);
+                        log(`js-dos shell: ${isDown ? 'keydown' : 'keyup'} ${keyCode}`, 'info');
+                    } else if (window.dosbox.module.sendKeyEvent) {
+                        window.dosbox.module.sendKeyEvent(keyCode, isDown);
+                        log(`js-dos direct: ${isDown ? 'keydown' : 'keyup'} ${keyCode}`, 'info');
+                    } else {
+                        // Fallback - DOM событие
+                        const event = new KeyboardEvent(isDown ? 'keydown' : 'keyup', {
+                            keyCode: keyCode,
+                            which: keyCode,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        document.dispatchEvent(event);
+                        log(`DOM fallback: ${isDown ? 'keydown' : 'keyup'} ${keyCode}`, 'info');
+                    }
+                } else {
+                    // Fallback - DOM событие
+                    const event = new KeyboardEvent(isDown ? 'keydown' : 'keyup', {
+                        keyCode: keyCode,
+                        which: keyCode,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    document.dispatchEvent(event);
+                    log(`DOM fallback: ${isDown ? 'keydown' : 'keyup'} ${keyCode}`, 'info');
+                }
+            } catch (error) {
+                log(`Ошибка отправки клавиши: ${error.message}`, 'info');
+            }
+        }
+
+        // Функция проверки js-dos API
+        function testDosboxAPI() {
+            log('Проверяем доступность js-dos API...', 'info');
+            
+            if (window.dosbox) {
+                log('✅ window.dosbox найден', 'info');
+                
+                if (window.dosbox.module) {
+                    log('✅ window.dosbox.module найден', 'info');
+                    
+                    if (window.dosbox.module.shell) {
+                        log('✅ window.dosbox.module.shell доступен', 'info');
+                    } else {
+                        log('❌ window.dosbox.module.shell недоступен', 'info');
+                    }
+                    
+                    if (window.dosbox.module.sendKeyEvent) {
+                        log('✅ window.dosbox.module.sendKeyEvent доступен', 'info');
+                    } else {
+                        log('❌ window.dosbox.module.sendKeyEvent недоступен', 'info');
+                    }
+                } else {
+                    log('❌ window.dosbox.module недоступен', 'info');
+                }
+            } else {
+                log('❌ window.dosbox не найден', 'info');
+            }
+            
+            updateStatus();
+        }
+
+        // Функция обновления статуса
+        function updateStatus() {
+            const statusContent = document.getElementById('status-content');
+            let status = '';
+            
+            if (window.dosbox) {
+                status += '<p><strong>Dosbox:</strong> ✅ Найден</p>';
+                
+                if (window.dosbox.module) {
+                    status += '<p><strong>Module:</strong> ✅ Доступен</p>';
+                    
+                    if (window.dosbox.module.shell) {
+                        status += '<p><strong>Shell API:</strong> ✅ Доступен</p>';
+                    } else {
+                        status += '<p><strong>Shell API:</strong> ❌ Недоступен</p>';
+                    }
+                    
+                    if (window.dosbox.module.sendKeyEvent) {
+                        status += '<p><strong>SendKeyEvent:</strong> ✅ Доступен</p>';
+                    } else {
+                        status += '<p><strong>SendKeyEvent:</strong> ❌ Недоступен</p>';
+                    }
+                } else {
+                    status += '<p><strong>Module:</strong> ❌ Недоступен</p>';
+                }
+            } else {
+                status += '<p><strong>Dosbox:</strong> ❌ Не найден</p>';
+            }
+            
+            statusContent.innerHTML = status;
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Страница загружена', 'info');
+            
+            // Ждем инициализации dosbox
+            setTimeout(() => {
+                if (window.dosbox) {
+                    dosboxInstance = window.dosbox;
+                    log('Dosbox найден в window', 'info');
+                }
+                
+                updateStatus();
+                testDosboxAPI();
+            }, 1000);
+        });
+
+        // Обработка событий клавиатуры для отладки
+        document.addEventListener('keydown', function(e) {
+            log(`Событие keydown: ${e.key} (код: ${e.keyCode})`, 'keydown');
+        });
+
+        document.addEventListener('keyup', function(e) {
+            log(`Событие keyup: ${e.key} (код: ${e.keyCode})`, 'keyup');
+        });
+    </script>
+</body>
+</html>
