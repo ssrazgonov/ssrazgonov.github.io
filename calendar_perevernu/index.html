@@ -275,6 +275,21 @@
                         }
                     } else if (this.selectedStartDate && date.getTime() === this.selectedStartDate.getTime()) {
                         dayElement.classList.add('range-start');
+                    } else if (this.selectedStartDate && date > this.selectedStartDate) {
+                        // Подсветка потенциального диапазона при наведении
+                        dayElement.addEventListener('mouseenter', () => {
+                            if (!this.selectedEndDate) {
+                                dayElement.classList.add('in-range');
+                                this.highlightRange(date);
+                            }
+                        });
+                        
+                        dayElement.addEventListener('mouseleave', () => {
+                            if (!this.selectedEndDate) {
+                                dayElement.classList.remove('in-range');
+                                this.clearHighlight();
+                            }
+                        });
                     }
                     
                     dayElement.addEventListener('click', () => {
@@ -295,13 +310,41 @@
                 }
             }
             
+            highlightRange(hoverDate) {
+                const days = document.querySelectorAll('.day');
+                days.forEach(dayElement => {
+                    const dateStr = dayElement.textContent;
+                    if (dateStr && !isNaN(dateStr) && !dayElement.classList.contains('other-month')) {
+                        const date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), parseInt(dateStr));
+                        date.setHours(0, 0, 0, 0);
+                        
+                        if (date > this.selectedStartDate && date <= hoverDate) {
+                            dayElement.classList.add('in-range');
+                        } else if (date > hoverDate && date > this.selectedStartDate) {
+                            dayElement.classList.remove('in-range');
+                        }
+                    }
+                });
+            }
+            
+            clearHighlight() {
+                const days = document.querySelectorAll('.day');
+                days.forEach(dayElement => {
+                    if (dayElement.classList.contains('in-range') && 
+                        !dayElement.classList.contains('range-start') && 
+                        !dayElement.classList.contains('range-end')) {
+                        dayElement.classList.remove('in-range');
+                    }
+                });
+            }
+            
             selectDate(date) {
-                if (!this.selectedStartDate || this.selectedEndDate) {
-                    // Начинаем новый диапазон
+                if (!this.selectedStartDate) {
+                    // Выбираем начальную дату
                     this.selectedStartDate = date;
                     this.selectedEndDate = null;
-                } else {
-                    // Завершаем диапазон
+                } else if (!this.selectedEndDate) {
+                    // Выбираем конечную дату
                     if (date < this.selectedStartDate) {
                         this.selectedEndDate = this.selectedStartDate;
                         this.selectedStartDate = date;
@@ -311,7 +354,10 @@
                     
                     // Обновляем поле ввода
                     this.updateInput();
-                    this.hideCalendar();
+                } else {
+                    // Начинаем новый диапазон
+                    this.selectedStartDate = date;
+                    this.selectedEndDate = null;
                 }
                 
                 this.renderCalendar();
