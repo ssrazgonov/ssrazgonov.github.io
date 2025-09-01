@@ -135,6 +135,31 @@
             font-weight: bold;
             color: #4285f4;
         }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .calendar-controls button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .calendar-controls .clear-button {
+            background-color: #f44336;
+            color: white;
+            margin-right: 5px;
+        }
+
+        .calendar-controls .apply-button {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +183,10 @@
                     <div>Вс</div>
                 </div>
                 <div class="days" id="days"></div>
+                <div class="calendar-controls">
+                    <button class="clear-button" id="clearButton">Очистить</button>
+                    <button class="apply-button" id="applyButton">Применить</button>
+                </div>
             </div>
         </div>
     </div>
@@ -172,6 +201,7 @@
                 this.selectedEndDate = null;
                 this.today = new Date();
                 this.today.setHours(0, 0, 0, 0);
+                this.isSelectingEndDate = false;
                 
                 this.init();
             }
@@ -197,6 +227,16 @@
                     this.currentDate.setMonth(this.currentDate.getMonth() + 1);
                     this.renderCalendar();
                 });
+
+                document.getElementById('clearButton').addEventListener('click', (e) => {
+                    e.stopPropagation(); // Предотвращаем всплытие события, чтобы не закрыть календарь
+                    this.clearSelection();
+                });
+
+                document.getElementById('applyButton').addEventListener('click', (e) => {
+                    e.stopPropagation(); // Предотвращаем всплытие события
+                    this.hideCalendar();
+                });
                 
                 this.renderCalendar();
             }
@@ -216,6 +256,14 @@
             
             hideCalendar() {
                 this.calendarElement.style.display = 'none';
+            }
+
+            clearSelection() {
+                this.selectedStartDate = null;
+                this.selectedEndDate = null;
+                this.isSelectingEndDate = false;
+                this.updateInput();
+                this.renderCalendar();
             }
             
             renderCalendar() {
@@ -292,7 +340,8 @@
                         });
                     }
                     
-                    dayElement.addEventListener('click', () => {
+                    dayElement.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Предотвращаем всплытие события
                         this.selectDate(date);
                     });
                     
@@ -343,7 +392,8 @@
                     // Выбираем начальную дату
                     this.selectedStartDate = date;
                     this.selectedEndDate = null;
-                } else if (!this.selectedEndDate) {
+                    this.isSelectingEndDate = true; // Устанавливаем флаг, что выбираем конечную дату
+                } else if (this.isSelectingEndDate) {
                     // Выбираем конечную дату
                     if (date < this.selectedStartDate) {
                         this.selectedEndDate = this.selectedStartDate;
@@ -352,12 +402,14 @@
                         this.selectedEndDate = date;
                     }
                     
+                    this.isSelectingEndDate = false; // Сбрасываем флаг
                     // Обновляем поле ввода
                     this.updateInput();
                 } else {
                     // Начинаем новый диапазон
                     this.selectedStartDate = date;
                     this.selectedEndDate = null;
+                    this.isSelectingEndDate = true;
                 }
                 
                 this.renderCalendar();
@@ -373,6 +425,8 @@
                     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
                     const startDateStr = this.selectedStartDate.toLocaleDateString('ru-RU', options);
                     this.inputElement.value = `${startDateStr} - ...`;
+                } else {
+                    this.inputElement.value = '';
                 }
             }
         }
