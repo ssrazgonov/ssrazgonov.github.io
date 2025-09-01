@@ -2,9 +2,49 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		.container {
+			width: 100%;
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 15px;
+		}
+		
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			margin: 0 -15px;
+		}
+		
+		.col {
+			flex: 1;
+			padding: 0 15px;
+		}
+		
+		@media (max-width: 768px) {
+			.col {
+				flex: 0 0 100%;
+				margin-bottom: 20px;
+			}
+		}
+	</style>
 </head>
 <body>
-	<h1>TEST</h1>
+	<div class="container">
+		<h1>TEST</h1>
+		<div class="row">
+			<div class="col">
+				<p>Колонка 1</p>
+			</div>
+			<div class="col">
+				<p>Колонка 2</p>
+			</div>
+			<div class="col">
+				<p>Колонка 3</p>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
