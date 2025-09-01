@@ -28,21 +28,34 @@ class BattlefieldCard {
     // Get available buildings for current position
     getAvailableBuildings(x, y) {
         const terrainType = this.getTerrainType(x, y);
-        const terrainInfo = TERRAIN_BUILDING_TYPES[terrainType];
         
-        if (!terrainInfo) {
-            return [];
-        }
-        
-        // Filter buildings based on terrain and player resources
-        return terrainInfo.availableBuildings
-            .map(buildingKey => BATTLEFIELD_CARDS[buildingKey])
-            .filter(building => building && this.canAffordBuilding(building))
-            .map(building => ({
-                ...building,
-                canBuild: this.canAffordBuilding(building),
-                costText: this.getCostText(building.cost)
+        // Get all buildings and filter by terrain restrictions
+        const allBuildings = Object.entries(BATTLEFIELD_CARDS)
+            .map(([buildingKey, building]) => ({
+                key: buildingKey,
+                ...building
             }));
+        
+        const terrainFiltered = allBuildings.filter(building => {
+            // Check if building is allowed on this terrain
+            if (building.allowedTerrain && !building.allowedTerrain.includes(terrainType)) {
+                return false;
+            }
+            return true;
+        });
+        
+        const affordableBuildings = terrainFiltered.filter(building => this.canAffordBuilding(building));
+        
+        const result = affordableBuildings.map(building => ({
+            ...building,
+            canBuild: this.canAffordBuilding(building),
+            costText: this.getCostText(building.cost),
+            terrainRestriction: building.allowedTerrain ? 
+                `Only on: ${building.allowedTerrain.map(t => TERRAIN_BUILDING_TYPES[t]?.name || t).join(', ')}` : 
+                'Any terrain'
+        }));
+        
+        return result;
     }
     
     // Check if player can afford a building
@@ -91,6 +104,13 @@ class BattlefieldCard {
             return false;
         }
         
+        // Check terrain restrictions
+        const terrainType = this.getTerrainType(x, y);
+        if (building.allowedTerrain && !building.allowedTerrain.includes(terrainType)) {
+            console.error(`Cannot build ${building.name} on ${terrainType} terrain`);
+            return false;
+        }
+        
         if (!this.canAffordBuilding(building)) {
             console.error('Cannot afford building:', building.name);
             return false;
@@ -133,34 +153,9 @@ class BattlefieldCard {
     
     // Apply building effects
     applyBuildingEffects(building, x, y) {
-        if (!window.gridGameManager || !window.gridGameManager.character) {
-            return;
-        }
-        
-        const character = window.gridGameManager.character;
-        
-        // Apply immediate effects
-        if (building.effects.health) {
-            character.maxHealth += building.effects.health;
-            character.health = Math.min(character.health + building.effects.health, character.maxHealth);
-        }
-        
-        if (building.effects.attack) {
-            character.attack += building.effects.attack;
-        }
-        
-        if (building.effects.defense) {
-            character.defense += building.effects.defense;
-        }
-        
-        if (building.effects.shield) {
-            character.shield = (character.shield || 0) + building.effects.shield;
-        }
-        
-        // Update character display
-        if (window.gridGameManager.updateCharacterDisplay) {
-            window.gridGameManager.updateCharacterDisplay();
-        }
+        // For the new simplified building system, we don't apply immediate effects
+        // All effects are applied when the structure is used
+        console.log(`Built ${building.name} at position (${x}, ${y})`);
     }
     
     // Get structure at position
@@ -201,7 +196,71 @@ class BattlefieldCard {
                     window.gridGameManager.updateCharacterDisplay();
                 }
                 
-                return { success: true, message: 'Shield fully restored!' };
+                return { success: true, message: 'Shield restored to maximum!' };
+            }
+        }
+        
+        // Handle Medical Hospital
+        if (structure.name === 'Medical Hospital') {
+            const character = window.gridGameManager.character;
+            if (character) {
+                character.health = character.maxHealth;
+                structure.usesRemaining = 0;
+                structure.cooldownRemaining = structure.effects.cooldown;
+                
+                // Update character display
+                if (window.gridGameManager.updateCharacterDisplay) {
+                    window.gridGameManager.updateCharacterDisplay();
+                }
+                
+                return { success: true, message: 'Health restored to maximum!' };
+            }
+        }
+        
+        // Handle Outpost
+        if (structure.name === 'Outpost') {
+            if (window.gridGameManager) {
+                // Restore 10 turn points
+                window.gridGameManager.remainingTurns = Math.min(
+                    window.gridGameManager.maxTurns,
+                    window.gridGameManager.remainingTurns + 10
+                );
+                
+                structure.usesRemaining = 0;
+                structure.cooldownRemaining = structure.effects.cooldown;
+                
+                // Update turn display
+                if (window.gridGameManager.updateTurnDisplay) {
+                    window.gridGameManager.updateTurnDisplay();
+                }
+                
+                return { success: true, message: 'Turn points restored! (+10 turns)' };
+            }
+        }
+        
+        // Handle Plasma Reactor
+        if (structure.name === 'Plasma Reactor') {
+            const character = window.gridGameManager.character;
+            if (character) {
+                // Provide combat bonuses for 3 turns
+                character.plasmaBoost = true;
+                character.plasmaBoostTurns = 3;
+                
+                // Temporary stat boosts
+                character.tempAttack = character.attack;
+                character.tempDefense = character.defense;
+                character.attack = Math.floor(character.attack * 1.5); // +50% attack
+                character.defense = Math.floor(character.defense * 1.3); // +30% defense
+                
+                structure.usesRemaining = 0;
+                structure.cooldownRemaining = structure.effects.cooldown;
+                
+                // Update character display
+                if (window.gridGameManager.updateCharacterDisplay) {
+                    window.gridGameManager.updateCharacterDisplay();
+                }
+                
+                return { success: true, message: 'Plasma energy activated! Combat bonuses for 3 turns!' };
             }
         }
         
@@ -239,34 +298,9 @@ class BattlefieldCard {
     
     // Remove building effects
     removeBuildingEffects(building) {
-        if (!window.gridGameManager || !window.gridGameManager.character) {
-            return;
-        }
-        
-        const character = window.gridGameManager.character;
-        
-        // Remove effects
-        if (building.effects.health) {
-            character.maxHealth -= building.effects.health;
-            character.health = Math.min(character.health, character.maxHealth);
-        }
-        
-        if (building.effects.attack) {
-            character.attack -= building.effects.attack;
-        }
-        
-        if (building.effects.defense) {
-            character.defense -= building.effects.defense;
-        }
-        
-        if (building.effects.shield) {
-            character.shield = Math.max(0, (character.shield || 0) - building.effects.shield);
-        }
-        
-        // Update character display
-        if (window.gridGameManager.updateCharacterDisplay) {
-            window.gridGameManager.updateCharacterDisplay();
-        }
+        // For the new simplified building system, we don't need to remove effects
+        // since effects are only applied when structures are used
+        console.log(`Removed ${building.name} from position`);
     }
     
     // Get all built structures

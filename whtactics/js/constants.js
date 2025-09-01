@@ -548,54 +548,8 @@ const RELIC_TYPES = {
     }
 };
 
-// Base Building Types
-const BASE_STRUCTURES = {
-    ARMORY: {
-        name: 'Armory',
-        cost: { [RESOURCE_TYPES.SCRAP]: 50 },
-        effect: 'weaponCrafting',
-        description: 'Craft and upgrade weapons',
-        icon: '🏭',
-        level: 1,
-        maxLevel: 3
-    },
-    MEDICAL_BAY: {
-        name: 'Medical Bay',
-        cost: { [RESOURCE_TYPES.BIOMASS]: 40 },
-        effect: 'healing',
-        description: 'Heal and revive fallen heroes',
-        icon: '🏥',
-        level: 1,
-        maxLevel: 3
-    },
-    WARP_GENERATOR: {
-        name: 'Warp Generator',
-        cost: { [RESOURCE_TYPES.WARPSTONE]: 60 },
-        effect: 'energyBoost',
-        description: 'Generate warp energy for upgrades',
-        icon: '⚡',
-        level: 1,
-        maxLevel: 3
-    },
-    FORTRESS_WALL: {
-        name: 'Fortress Wall',
-        cost: { [RESOURCE_TYPES.SCRAP]: 30 },
-        effect: 'defense',
-        description: 'Protect your base from attacks',
-        icon: '🏰',
-        level: 1,
-        maxLevel: 5
-    },
-    RESEARCH_LAB: {
-        name: 'Research Lab',
-        cost: { [RESOURCE_TYPES.WARPSTONE]: 40, [RESOURCE_TYPES.SCRAP]: 20 },
-        effect: 'technology',
-        description: 'Research new technologies and upgrades',
-        icon: '🔬',
-        level: 1,
-        maxLevel: 3
-    }
-};
+// Base Building Types (Simplified - only battlefield structures are used)
+const BASE_STRUCTURES = {};
 
 // Crafting Recipes
 const CRAFTING_RECIPES = {
@@ -783,134 +737,64 @@ const COMBAT_EFFECTS = {
 
 // Battlefield Cards - Possible buildings on each cell
 const BATTLEFIELD_CARDS = {
-    // Defensive structures
-    BUNKER: {
-        name: 'Bunker',
-        description: 'Heavy defensive structure that provides cover and protection',
-        cost: { [RESOURCE_TYPES.SCRAP]: 50, [RESOURCE_TYPES.BIOMASS]: 20 },
-        icon: '🏰',
-        type: 'defensive',
-        effects: { defense: 15, health: 50 },
-        buildTime: 2,
-        rarity: 'common'
-    },
-    TURRET: {
-        name: 'Auto-Turret',
-        description: 'Automated weapon system that attacks enemies automatically',
-        cost: { [RESOURCE_TYPES.SCRAP]: 30, [RESOURCE_TYPES.WARPSTONE]: 10 },
-        icon: '🔫',
-        type: 'offensive',
-        effects: { attack: 20, range: 2 },
-        buildTime: 1,
-        rarity: 'common'
-    },
+    // Shield Generator - Restores hero shield energy
     SHIELD_GENERATOR: {
         name: 'Shield Generator',
-        description: 'Restores hero shield energy. 1 use, then 5-turn cooldown.',
+        description: 'Restores hero shield energy to maximum. 1 use, then 5-turn cooldown.',
         cost: { [RESOURCE_TYPES.WARPSTONE]: 25, [RESOURCE_TYPES.SCRAP]: 15 },
-        icon: '⚡',
+        icon: '🛡️',
         type: 'utility',
         effects: { shieldRestore: 'full', uses: 1, cooldown: 5 },
         buildTime: 3,
         rarity: 'uncommon',
         usesRemaining: 1,
-        cooldownRemaining: 0
+        cooldownRemaining: 0,
+        allowedTerrain: ['PLAINS', 'HILLS', 'MOUNTAIN', 'WARPSTONE_DEPOSIT']
     },
     
-    // Resource structures
-    MINING_FACILITY: {
-        name: 'Mining Facility',
-        description: 'Extracts valuable resources from the ground',
-        cost: { [RESOURCE_TYPES.SCRAP]: 40, [RESOURCE_TYPES.BIOMASS]: 10 },
-        icon: '⛏️',
-        type: 'resource',
-        effects: { scrapProduction: 5, biomassProduction: 2 },
-        buildTime: 2,
-        rarity: 'common'
-    },
-    BIOMASS_HARVESTER: {
-        name: 'Biomass Harvester',
-        description: 'Collects organic matter for biological research',
+    // Medical Hospital - Restores hero health
+    MEDICAL_HOSPITAL: {
+        name: 'Medical Hospital',
+        description: 'Restores hero health to maximum. 1 use, then 5-turn cooldown.',
         cost: { [RESOURCE_TYPES.BIOMASS]: 30, [RESOURCE_TYPES.SCRAP]: 20 },
-        icon: '🌱',
-        type: 'resource',
-        effects: { biomassProduction: 8, healthRegen: 2 },
-        buildTime: 2,
-        rarity: 'common'
-    },
-    WARPSTONE_EXTRACTOR: {
-        name: 'Warpstone Extractor',
-        description: 'Harnesses the chaotic energy of warpstone',
-        cost: { [RESOURCE_TYPES.WARPSTONE]: 20, [RESOURCE_TYPES.SCRAP]: 35 },
-        icon: '💎',
-        type: 'resource',
-        effects: { warpstoneProduction: 3, specialAbility: 'warpBoost' },
-        buildTime: 3,
-        rarity: 'rare'
-    },
-    
-    // Support structures
-    MEDICAL_BAY: {
-        name: 'Medical Bay',
-        description: 'Heals and restores health to nearby units',
-        cost: { [RESOURCE_TYPES.BIOMASS]: 25, [RESOURCE_TYPES.SCRAP]: 25 },
         icon: '🏥',
         type: 'support',
-        effects: { healing: 10, healthRegen: 5 },
-        buildTime: 2,
-        rarity: 'uncommon'
-    },
-    ARMORY: {
-        name: 'Armory',
-        description: 'Provides weapons and equipment upgrades',
-        cost: { [RESOURCE_TYPES.SCRAP]: 45, [RESOURCE_TYPES.WARPSTONE]: 15 },
-        icon: '⚔️',
-        type: 'support',
-        effects: { attack: 15, weaponUpgrade: true },
-        buildTime: 2,
-        rarity: 'uncommon'
-    },
-    COMMAND_CENTER: {
-        name: 'Command Center',
-        description: 'Strategic headquarters that boosts all nearby structures',
-        cost: { [RESOURCE_TYPES.SCRAP]: 60, [RESOURCE_TYPES.WARPSTONE]: 30 },
-        icon: '🎖️',
-        type: 'command',
-        effects: { globalBoost: 1.5, commandPoints: 3 },
-        buildTime: 4,
-        rarity: 'epic'
+        effects: { healthRestore: 'full', uses: 1, cooldown: 5 },
+        buildTime: 3,
+        rarity: 'uncommon',
+        usesRemaining: 1,
+        cooldownRemaining: 0,
+        allowedTerrain: ['PLAINS', 'FOREST', 'RUINS']
     },
     
-    // Special structures
-    TELEPORTER: {
-        name: 'Teleporter',
-        description: 'Allows instant movement between connected points',
-        cost: { [RESOURCE_TYPES.WARPSTONE]: 40, [RESOURCE_TYPES.SCRAP]: 20 },
-        icon: '🌀',
-        type: 'special',
-        effects: { teleport: true, movement: 3 },
-        buildTime: 3,
-        rarity: 'rare'
+    // Outpost - Restores 10 turn points
+    OUTPOST: {
+        name: 'Outpost',
+        description: 'Restores 10 turn points. 1 use, then 5-turn cooldown.',
+        cost: { [RESOURCE_TYPES.SCRAP]: 35, [RESOURCE_TYPES.BIOMASS]: 15 },
+        icon: '🏛️',
+        type: 'command',
+        effects: { turnPointsRestore: 10, uses: 1, cooldown: 5 },
+        buildTime: 2,
+        rarity: 'uncommon',
+        usesRemaining: 1,
+        cooldownRemaining: 0,
+        allowedTerrain: ['PLAINS', 'HILLS', 'MOUNTAIN', 'RUINS']
     },
-    OBSERVATION_TOWER: {
-        name: 'Observation Tower',
-        description: 'Reveals hidden enemies and provides tactical information',
-        cost: { [RESOURCE_TYPES.SCRAP]: 25, [RESOURCE_TYPES.BIOMASS]: 15 },
-        icon: '🗼',
-        type: 'intelligence',
-        effects: { vision: 3, enemyDetection: true },
-        buildTime: 1,
-        rarity: 'common'
-    },
-    POWER_GENERATOR: {
-        name: 'Power Generator',
-        description: 'Provides energy to all nearby structures',
-        cost: { [RESOURCE_TYPES.WARPSTONE]: 35, [RESOURCE_TYPES.SCRAP]: 30 },
+    
+    // Plasma Reactor - Generates energy for Space Marine equipment
+    PLASMA_REACTOR: {
+        name: 'Plasma Reactor',
+        description: 'Advanced plasma energy generator that powers Space Marine equipment and provides combat bonuses. 1 use, then 5-turn cooldown.',
+        cost: { [RESOURCE_TYPES.WARPSTONE]: 40, [RESOURCE_TYPES.SCRAP]: 30 },
         icon: '⚡',
         type: 'utility',
-        effects: { powerBoost: 2.0, efficiency: 1.5 },
-        buildTime: 3,
-        rarity: 'rare'
+        effects: { plasmaBoost: 'full', uses: 1, cooldown: 5 },
+        buildTime: 4,
+        rarity: 'rare',
+        usesRemaining: 1,
+        cooldownRemaining: 0,
+        allowedTerrain: ['WARPSTONE_DEPOSIT', 'RUINS']
     }
 };
 
@@ -919,43 +803,43 @@ const TERRAIN_BUILDING_TYPES = {
     PLAINS: {
         name: 'Plains',
         description: 'Open terrain suitable for most structures',
-        availableBuildings: ['BUNKER', 'TURRET', 'MINING_FACILITY', 'BIOMASS_HARVESTER', 'MEDICAL_BAY', 'ARMORY', 'OBSERVATION_TOWER'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST', 'PLASMA_REACTOR'],
         icon: '🌾'
     },
     HILLS: {
         name: 'Hills',
         description: 'Elevated terrain with defensive advantages',
-        availableBuildings: ['BUNKER', 'TURRET', 'SHIELD_GENERATOR', 'OBSERVATION_TOWER', 'COMMAND_CENTER'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST', 'PLASMA_REACTOR'],
         icon: '⛰️'
     },
     FOREST: {
         name: 'Forest',
         description: 'Dense vegetation with abundant biomass',
-        availableBuildings: ['BIOMASS_HARVESTER', 'MEDICAL_BAY', 'OBSERVATION_TOWER', 'TURRET'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST'],
         icon: '🌲'
     },
     RUINS: {
         name: 'Ruins',
         description: 'Ancient structures with valuable scrap',
-        availableBuildings: ['MINING_FACILITY', 'ARMORY', 'POWER_GENERATOR', 'TURRET'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST', 'PLASMA_REACTOR'],
         icon: '🏛️'
     },
     WARPSTONE_DEPOSIT: {
         name: 'Warpstone Deposit',
         description: 'Chaotic energy emanates from this area',
-        availableBuildings: ['WARPSTONE_EXTRACTOR', 'SHIELD_GENERATOR', 'TELEPORTER', 'POWER_GENERATOR'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST', 'PLASMA_REACTOR'],
         icon: '💎'
     },
     MOUNTAIN: {
         name: 'Mountain',
         description: 'Rocky peaks that provide excellent defensive positions',
-        availableBuildings: ['BUNKER', 'OBSERVATION_TOWER', 'SHIELD_GENERATOR', 'COMMAND_CENTER'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST', 'PLASMA_REACTOR'],
         icon: '🏔️'
     },
     WASTELAND: {
         name: 'Wasteland',
         description: 'Barren, corrupted land where few structures can survive',
-        availableBuildings: ['TURRET', 'BUNKER'],
+        availableBuildings: ['SHIELD_GENERATOR', 'MEDICAL_HOSPITAL', 'OUTPOST'],
         icon: '☠️'
     }
 };

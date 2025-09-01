@@ -5,17 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Warhammer 40K Loop Hero</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="telegram-styles.css">
-    <!-- Telegram Web App API -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        // Check if running in Telegram and add class to body
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                document.body.classList.add('in-telegram');
-            }
-        });
-    </script>
 </head>
 <body>
     <!-- Game Loader -->
@@ -51,36 +40,58 @@
             
             <div class="setup-section">
                 <h3>Starting Equipment</h3>
-                <div class="equipment-choice">
-                    <div class="choice-item" data-choice="medkit">
-                        <div class="choice-icon">⚕</div>
-                        <div class="choice-info">
-                            <h4>Medi-Kit x2</h4>
-                            <p>Standard Imperial medical supplies for field operations</p>
-                        </div>
+                <div class="equipment-grid">
+                    <div class="equipment-slot" data-equipment="medkit">
+                        <div class="equipment-icon">⚕</div>
+                        <div class="equipment-name">Medi-Kit</div>
+                        <div class="equipment-quantity">x2</div>
                     </div>
-                    <div class="choice-item" data-choice="revive">
-                        <div class="choice-icon">⚡</div>
-                        <div class="choice-info">
-                            <h4>Revive Pack</h4>
-                            <p>Emergency revival system - restores 20% health upon death</p>
-                        </div>
+                    <div class="equipment-slot" data-equipment="revive">
+                        <div class="equipment-icon">⚡</div>
+                        <div class="equipment-name">Revive Pack</div>
+                        <div class="equipment-quantity">x1</div>
+                    </div>
+                    <div class="equipment-slot" data-equipment="grenade">
+                        <div class="equipment-icon">💣</div>
+                        <div class="equipment-name">Frag Grenade</div>
+                        <div class="equipment-quantity">x3</div>
+                    </div>
+                    <div class="equipment-slot" data-equipment="shield">
+                        <div class="equipment-icon">🛡️</div>
+                        <div class="equipment-name">Energy Shield</div>
+                        <div class="equipment-quantity">x1</div>
+                    </div>
+                    <div class="equipment-slot" data-equipment="stim">
+                        <div class="equipment-icon">💉</div>
+                        <div class="equipment-name">Combat Stim</div>
+                        <div class="equipment-quantity">x2</div>
+                    </div>
+                    <div class="equipment-slot" data-equipment="scanner">
+                        <div class="equipment-icon">📡</div>
+                        <div class="equipment-name">Tactical Scanner</div>
+                        <div class="equipment-quantity">x1</div>
                     </div>
                 </div>
             </div>
             
             <div class="setup-section">
                 <h3>Emperor's Seal</h3>
-                <div class="seal-choice">
-                    <div class="seal-item" data-seal="shield">
-                        <div class="seal-header">
-                            <h4>Seal of Protection</h4>
-                        </div>
-                        <div class="seal-effects">
-                            <div class="buff">⬆ +25% Maximum health</div>
-                            <div class="buff">⬆ +50% Shield capacity</div>
-                            <div class="debuff">⬇ -15% Resource gathering</div>
-                        </div>
+                <div class="seal-grid">
+                    <div class="seal-slot" data-seal="shield">
+                        <div class="seal-icon">🛡️</div>
+                        <div class="seal-name">Protection</div>
+                    </div>
+                    <div class="seal-slot" data-seal="strength">
+                        <div class="seal-icon">⚔️</div>
+                        <div class="seal-name">Strength</div>
+                    </div>
+                    <div class="seal-slot" data-seal="speed">
+                        <div class="seal-icon">⚡</div>
+                        <div class="seal-name">Swiftness</div>
+                    </div>
+                    <div class="seal-slot" data-seal="wisdom">
+                        <div class="seal-icon">🧠</div>
+                        <div class="seal-name">Wisdom</div>
                     </div>
                 </div>
             </div>
@@ -88,6 +99,29 @@
             <div class="setup-actions">
                 <button id="backToMenuBtn" class="menu-button">Return</button>
                 <button id="startExpeditionBtn" class="menu-button primary">Begin Expedition</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Equipment/Seal Info Modal -->
+    <div id="equipmentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Equipment Info</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon-container">
+                    <div id="modalIcon" class="modal-icon"></div>
+                </div>
+                <div class="modal-info">
+                    <h4 id="modalName">Equipment Name</h4>
+                    <p id="modalDescription">Equipment description goes here...</p>
+                    <div id="modalEffects" class="modal-effects"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="equipButton" class="equip-button">Equip</button>
             </div>
         </div>
     </div>
@@ -187,8 +221,6 @@
     <script src="js/upgradeManager.js"></script>
     <script src="js/gridGameManager.js"></script>
     <script src="js/menuManager.js"></script>
-    <script src="js/telegramIntegration.js"></script>
-    <script src="js/telegramTest.js"></script>
     <script src="js/achievementManager.js"></script>
     <script src="js/main.js"></script>
 </body>

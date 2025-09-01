@@ -29,6 +29,10 @@ class GridGameManager {
         this.inCombat = false;
         this.currentEnemy = null;
         
+        // Retreat system
+        this.retreatCooldown = 0; // Turns remaining in retreat cooldown
+        this.retreatCooldownDuration = 3; // Number of turns to prevent enemy spawning after retreat
+        
         // New systems integration
         this.base = new Base();
         this.crafting = new Crafting(this.base);
@@ -43,9 +47,9 @@ class GridGameManager {
         
         // Resource collection
         this.resources = {
-            [RESOURCE_TYPES.BIOMASS]: 0,
-            [RESOURCE_TYPES.SCRAP]: 0,
-            [RESOURCE_TYPES.WARPSTONE]: 0
+            [RESOURCE_TYPES.BIOMASS]: 10, // Start with some initial resources
+            [RESOURCE_TYPES.SCRAP]: 15,
+            [RESOURCE_TYPES.WARPSTONE]: 5
         };
         
         // Combat points system
@@ -361,6 +365,9 @@ class GridGameManager {
         // Discover the cell the player stepped on
         this.discoverCell(x, y);
         
+        // Collect resources from terrain
+        this.collectTerrainResources(x, y);
+        
         // Decrease remaining turns
         this.remainingTurns--;
         this.updateTurnCounter();
@@ -388,12 +395,55 @@ class GridGameManager {
         // Process battlefield card effects
         this.battlefieldCard.processTurnEffects();
         
+        // Process plasma boost duration
+        this.processPlasmaBoost();
+        
+        // Process retreat cooldown
+        this.processRetreatCooldown();
+        
         // Update persistent battlefield UI
         this.updateBattlefieldUI();
         
         // For now, immediately start new turn
         // In future, this is where enemy/event processing would happen
         this.isPlayerTurn = true;
+    }
+    
+    // Process retreat cooldown
+    processRetreatCooldown() {
+        if (this.retreatCooldown > 0) {
+            this.retreatCooldown--;
+            console.log(`Retreat cooldown: ${this.retreatCooldown} turns remaining`);
+            
+            if (this.retreatCooldown === 0) {
+                this.showNotification('Retreat cooldown expired. Enemy spawning resumed.', 'info');
+            }
+        }
+    }
+    
+    // Process plasma boost duration
+    processPlasmaBoost() {
+        if (this.character && this.character.plasmaBoost && this.character.plasmaBoostTurns > 0) {
+            this.character.plasmaBoostTurns--;
+            
+            if (this.character.plasmaBoostTurns <= 0) {
+                // Remove plasma boost effects
+                this.character.plasmaBoost = false;
+                this.character.attack = this.character.tempAttack || this.character.attack;
+                this.character.defense = this.character.tempDefense || this.character.defense;
+                delete this.character.tempAttack;
+                delete this.character.tempDefense;
+                
+                // Update character display
+                if (this.updateCharacterDisplay) {
+                    this.updateCharacterDisplay();
+                }
+                
+                console.log('Plasma boost expired');
+            } else {
+                console.log(`Plasma boost active for ${this.character.plasmaBoostTurns} more turns`);
+            }
+        }
     }
     
     // Generate hidden enemies on the map
@@ -920,6 +970,13 @@ class GridGameManager {
         if (retreatedEnemy) {
             retreatedEnemy.inCombat = false;
         }
+        
+        // Activate retreat cooldown to prevent immediate enemy spawning
+        this.retreatCooldown = this.retreatCooldownDuration;
+        console.log(`Retreat cooldown activated: ${this.retreatCooldown} turns remaining`);
+        
+        // Show notification
+        this.showNotification('Retreat successful! Enemy spawning disabled for 3 turns.', 'success');
     }
     
     // End combat
@@ -1802,6 +1859,67 @@ class GridGameManager {
         }, 4000);
     }
 
+    // Collect resources from terrain
+    collectTerrainResources(x, y) {
+        const terrainType = this.battlefieldCard.getTerrainType(x, y);
+        let resources = {};
+        
+        // Define resource rewards for different terrain types
+        switch (terrainType) {
+            case 'PLAINS':
+                resources = {
+                    [RESOURCE_TYPES.BIOMASS]: 1,
+                    [RESOURCE_TYPES.SCRAP]: 1
+                };
+                break;
+            case 'HILLS':
+                resources = {
+                    [RESOURCE_TYPES.SCRAP]: 2
+                };
+                break;
+            case 'FOREST':
+                resources = {
+                    [RESOURCE_TYPES.BIOMASS]: 3
+                };
+                break;
+            case 'RUINS':
+                resources = {
+                    [RESOURCE_TYPES.SCRAP]: 3,
+                    [RESOURCE_TYPES.WARPSTONE]: 1
+                };
+                break;
+            case 'WARPSTONE_DEPOSIT':
+                resources = {
+                    [RESOURCE_TYPES.WARPSTONE]: 2
+                };
+                break;
+            case 'MOUNTAIN':
+                resources = {
+                    [RESOURCE_TYPES.SCRAP]: 2,
+                    [RESOURCE_TYPES.WARPSTONE]: 1
+                };
+                break;
+            case 'WASTELAND':
+                resources = {
+                    [RESOURCE_TYPES.SCRAP]: 1
+                };
+                break;
+        }
+        
+        // Add resources and show notification
+        let resourceText = '';
+        for (const [resourceType, amount] of Object.entries(resources)) {
+            this.resources[resourceType] += amount;
+            const resourceName = resourceType.charAt(0).toUpperCase() + resourceType.slice(1);
+            resourceText += `${resourceName}: +${amount} `;
+        }
+        
+        if (resourceText) {
+            this.showNotification(`Collected: ${resourceText}`, 'success');
+            this.updateResourceDisplay();
+        }
+    }
+    
     // Collect resources from enemy
     collectResources(enemy) {
         if (!enemy.loot) return;
@@ -2259,9 +2377,11 @@ class GridGameManager {
         if (tile && !tile.isDiscovered) {
             tile.discover();
             
-            // Check for enemy encounter
-            if (tile.hasEnemy && tile.enemyType) {
+            // Check for enemy encounter (but respect retreat cooldown)
+            if (tile.hasEnemy && tile.enemyType && this.retreatCooldown <= 0) {
                 this.spawnEnemyAtPosition(x, y, tile.enemyType);
+            } else if (tile.hasEnemy && tile.enemyType && this.retreatCooldown > 0) {
+                console.log(`Enemy spawning blocked due to retreat cooldown (${this.retreatCooldown} turns remaining)`);
             }
             
             // Redraw grid to show discovered cell
@@ -2528,8 +2648,11 @@ class GridGameManager {
         }
         
         // Get available buildings for this terrain
-        const tile = this.grid[y][x];
-        const terrainInfo = tile.getTerrainInfo();
+        const availableBuildings = this.battlefieldCard.getAvailableBuildings(x, y);
+        
+        // Get terrain information for display
+        const terrainType = this.battlefieldCard.getTerrainType(x, y);
+        const terrainInfo = TERRAIN_BUILDING_TYPES[terrainType];
         
         // Create building menu modal
         const modal = document.createElement('div');
@@ -2564,13 +2687,10 @@ class GridGameManager {
         
         // Build available buildings list
         let buildingOptionsHtml = '';
-        if (terrainInfo.availableBuildings && terrainInfo.availableBuildings.length > 0) {
-            buildingOptionsHtml = terrainInfo.availableBuildings.map(buildingKey => {
-                const building = BATTLEFIELD_CARDS[buildingKey];
-                if (!building) return '';
-                
+        if (availableBuildings && availableBuildings.length > 0) {
+            buildingOptionsHtml = availableBuildings.map(building => {
                 // Check if player can afford this building
-                const canAfford = this.battlefieldCard.canAffordBuilding(building);
+                const canAfford = building.canBuild;
                 const buttonStyle = canAfford ? 
                     'background: linear-gradient(45deg, #006600, #00aa00); border-color: #004400; cursor: pointer;' :
                     'background: linear-gradient(45deg, #666, #888); border-color: #444; cursor: not-allowed; opacity: 0.6;';
@@ -2589,13 +2709,14 @@ class GridGameManager {
                             <div style="flex: 1;">
                                 <h3 style="color: #ffcc00; margin-bottom: 5px;">${building.name}</h3>
                                 <p style="color: #e0e0e0; font-size: 0.9rem; margin-bottom: 8px;">${building.description}</p>
-                                <div style="color: #ff9900; font-size: 0.8rem;">
-                                    Cost: ${Object.entries(building.cost).map(([resource, amount]) => 
-                                        `${amount} ${resource.charAt(0).toUpperCase() + resource.slice(1)}`
-                                    ).join(', ')}
+                                <div style="color: #ff9900; font-size: 0.8rem; margin-bottom: 5px;">
+                                    Cost: ${building.costText}
+                                </div>
+                                <div style="color: #88ccff; font-size: 0.8rem; font-style: italic;">
+                                    ${building.terrainRestriction}
                                 </div>
                             </div>
-                            <button onclick="window.gridGameManager.buildStructureFromMenu('${buildingKey}', ${x}, ${y})" 
+                            <button onclick="window.gridGameManager.buildStructureFromMenu('${building.key}', ${x}, ${y})" 
                                 style="
                                     ${buttonStyle}
                                     color: white;
@@ -2629,7 +2750,7 @@ class GridGameManager {
                     text-shadow: 0 0 15px rgba(204, 102, 0, 0.8);
                 ">BUILD STRUCTURE</h2>
                 <p style="color: #e0e0e0; font-size: 1rem;">
-                    Position: (${x}, ${y}) - ${terrainInfo.name}
+                    Position: (${x}, ${y}) - ${terrainInfo ? terrainInfo.name : terrainType}
                 </p>
             </div>
             
@@ -2680,7 +2801,15 @@ class GridGameManager {
             this.updateBattlefieldUI();
             this.showNotification(`Successfully built ${BATTLEFIELD_CARDS[buildingKey].name}!`, 'success');
         } else {
-            this.showNotification('Failed to build structure! Check resources.', 'error');
+            // Check if it's a terrain restriction error
+            const building = BATTLEFIELD_CARDS[buildingKey];
+            const terrainType = this.battlefieldCard.getTerrainType(x, y);
+            if (building && building.allowedTerrain && !building.allowedTerrain.includes(terrainType)) {
+                const allowedTerrains = building.allowedTerrain.map(t => TERRAIN_BUILDING_TYPES[t]?.name || t).join(', ');
+                this.showNotification(`Cannot build ${building.name} on ${TERRAIN_BUILDING_TYPES[terrainType]?.name || terrainType}. Allowed: ${allowedTerrains}`, 'error');
+            } else {
+                this.showNotification('Failed to build structure! Check resources.', 'error');
+            }
         }
     }
     
@@ -2689,8 +2818,8 @@ class GridGameManager {
         const structure = this.battlefieldCard.getStructureAt(x, y);
         if (!structure) return '';
         
-        // Check if structure is usable (Shield Generator)
-        if (structure.name === 'Shield Generator') {
+        // Check if structure is usable (Shield Generator, Medical Hospital, Outpost, Plasma Reactor)
+        if (structure.name === 'Shield Generator' || structure.name === 'Medical Hospital' || structure.name === 'Outpost' || structure.name === 'Plasma Reactor') {
             const canUse = structure.usesRemaining > 0 && structure.cooldownRemaining === 0;
             const buttonStyle = canUse ? 
                 'background: linear-gradient(45deg, #0066cc, #00aaff); border-color: #004499; cursor: pointer;' :
@@ -2703,6 +2832,24 @@ class GridGameManager {
                 statusText = `Cooldown: ${structure.cooldownRemaining} turns`;
             } else {
                 statusText = 'Ready to use';
+            }
+            
+            // Get appropriate icon and text for each structure type
+            let icon = '⚡';
+            let actionText = 'USE STRUCTURE';
+            
+            if (structure.name === 'Shield Generator') {
+                icon = '🛡️';
+                actionText = 'USE SHIELD GENERATOR';
+            } else if (structure.name === 'Medical Hospital') {
+                icon = '🏥';
+                actionText = 'USE MEDICAL HOSPITAL';
+            } else if (structure.name === 'Outpost') {
+                icon = '🏛️';
+                actionText = 'USE OUTPOST';
+            } else if (structure.name === 'Plasma Reactor') {
+                icon = '⚡';
+                actionText = 'ACTIVATE PLASMA REACTOR';
             }
             
             return `
@@ -2720,7 +2867,7 @@ class GridGameManager {
                         display: block;
                         width: 100%;
                     " ${!canUse ? 'disabled' : ''}>
-                    ⚡ USE SHIELD GENERATOR
+                    ${icon} ${actionText}
                     <div style="font-size: 0.8rem; margin-top: 4px; opacity: 0.8;">${statusText}</div>
                 </button>
             `;
