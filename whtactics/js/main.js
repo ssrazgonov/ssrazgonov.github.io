@@ -26,11 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Initialize grid game manager
         window.gridGameManager = new GridGameManager();
-        window.gridGameManager.init();
+        window.gridGameManager.initializeGame();
+        
+        // Initialize inventory UI (adds Inventory button and modal)
+        if (window.InventoryUI) {
+            window.inventoryUI = new InventoryUI(window.gridGameManager);
+        }
         
         // Initialize achievement manager
-        window.achievementManager = new AchievementManager();
-        window.achievementManager.init();
+        window.achievementManager = new AchievementManager(window.gridGameManager);
         
         // If in Telegram, show back button and adapt layout
         if (isInTelegram && window.telegramIntegration) {

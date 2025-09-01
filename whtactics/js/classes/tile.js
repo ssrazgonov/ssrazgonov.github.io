@@ -6,13 +6,18 @@ class Tile extends Entity {
         
         this.gridX = gridX;
         this.gridY = gridY;
-        this.type = type || TERRAIN_TYPES.EMPTY;
+        this.type = type || this.generateRandomTerrain();
         this.isPath = false;
         this.isPlaceable = false;
         this.isOccupied = false;
         this.cardType = null;
         this.effectsApplied = false;
         this.daysPassed = 0;
+        
+        // Discovery system
+        this.isDiscovered = false;
+        this.hasEnemy = Math.random() < 0.3; // 30% chance for enemy
+        this.enemyType = this.hasEnemy ? this.generateRandomEnemy() : null;
         
         // Visual properties
         this.highlight = false;
@@ -87,10 +92,73 @@ class Tile extends Entity {
         }
     }
     
+    // Generate random terrain type
+    generateRandomTerrain() {
+        const terrainTypes = [
+            TERRAIN_TYPES.PLAINS,
+            TERRAIN_TYPES.HILLS,
+            TERRAIN_TYPES.FOREST,
+            TERRAIN_TYPES.RUINS,
+            TERRAIN_TYPES.WASTELAND,
+            TERRAIN_TYPES.MOUNTAIN,
+            TERRAIN_TYPES.WARPSTONE_DEPOSIT
+        ];
+        
+        const weights = [30, 20, 15, 10, 10, 10, 5]; // Weighted probabilities
+        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+        let random = Math.random() * totalWeight;
+        
+        for (let i = 0; i < terrainTypes.length; i++) {
+            random -= weights[i];
+            if (random <= 0) {
+                return terrainTypes[i];
+            }
+        }
+        
+        return TERRAIN_TYPES.PLAINS; // Fallback
+    }
+    
+    // Generate random enemy type
+    generateRandomEnemy() {
+        const enemyTypes = Object.keys(ENEMY_TYPES);
+        return enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+    }
+    
+    // Discover this tile
+    discover() {
+        this.isDiscovered = true;
+        console.log(`Discovered ${this.type} at (${this.gridX}, ${this.gridY})${this.hasEnemy ? ' with enemy: ' + this.enemyType : ''}`);
+    }
+    
+    // Get terrain info for display
+    getTerrainInfo() {
+        // Convert terrain type to proper constant key
+        let terrainKey = this.type.toUpperCase();
+        if (terrainKey === 'WARPSTONEDEPOSIT') {
+            terrainKey = 'WARPSTONE_DEPOSIT';
+        }
+        
+        const terrainData = TERRAIN_BUILDING_TYPES[terrainKey];
+        
+        return {
+            name: terrainData?.name || this.type,
+            description: terrainData?.description || 'Unknown terrain',
+            icon: terrainData?.icon || '❓',
+            type: this.type,
+            availableBuildings: terrainData?.availableBuildings || [],
+            hasEnemy: this.hasEnemy,
+            enemyType: this.enemyType
+        };
+    }
+    
     // Draw the tile
     draw(ctx) {
         // Draw base tile
-        ctx.fillStyle = this.getBackgroundColor();
+        if (this.isDiscovered) {
+            ctx.fillStyle = this.getBackgroundColor();
+        } else {
+            ctx.fillStyle = 'rgba(20, 20, 20, 0.8)'; // Dark undiscovered color
+        }
         ctx.fillRect(this.x, this.y, this.width, this.height);
         
         // Draw border with stronger visibility
@@ -118,6 +186,22 @@ class Tile extends Entity {
                 this.width - inset * 2,
                 this.height - inset * 2
             );
+        }
+        
+        // Draw terrain icon if discovered
+        if (this.isDiscovered && !this.isOccupied) {
+            const terrainInfo = this.getTerrainInfo();
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'white';
+            ctx.fillText(terrainInfo.icon, this.x + this.width/2, this.y + this.height/2 + 6);
+            
+            // Draw enemy indicator if present
+            if (this.hasEnemy && this.enemyType) {
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#ff6600';
+                ctx.fillText('👹', this.x + this.width - 8, this.y + 12);
+            }
         }
         
         // Draw highlight
@@ -169,9 +253,19 @@ class Tile extends Entity {
     
     // Get background color based on tile type
     getBackgroundColor() {
+        if (!this.isDiscovered) {
+            return 'rgba(20, 20, 20, 0.8)';
+        }
+        
         switch (this.type) {
             case TERRAIN_TYPES.EMPTY:
                 return this.isPlaceable ? 'rgba(100, 100, 100, 0.2)' : 'rgba(40, 40, 40, 0.3)';
+            case TERRAIN_TYPES.PLAINS:
+                return 'rgba(90, 140, 60, 0.6)';
+            case TERRAIN_TYPES.HILLS:
+                return 'rgba(120, 100, 80, 0.6)';
+            case TERRAIN_TYPES.FOREST:
+                return 'rgba(50, 120, 50, 0.6)';
             case TERRAIN_TYPES.BATTLEFIELD:
                 return 'rgba(150, 30, 30, 0.7)';
             case TERRAIN_TYPES.FORGE:
@@ -190,6 +284,8 @@ class Tile extends Entity {
                 return 'rgba(120, 120, 120, 0.6)';
             case TERRAIN_TYPES.WASTELAND:
                 return 'rgba(160, 140, 70, 0.6)';
+            case TERRAIN_TYPES.WARPSTONE_DEPOSIT:
+                return 'rgba(100, 50, 180, 0.6)';
             default:
                 return 'rgba(40, 40, 40, 0.3)';
         }

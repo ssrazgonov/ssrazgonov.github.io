@@ -11,8 +11,10 @@ class Combat {
         
         // Player combat state
         this.playerState = {
-            health: player.health,
-            maxHealth: player.maxHealth,
+            health: player.hp,
+            maxHealth: player.maxHp,
+            shield: player.shield || 0,
+            maxShield: player.maxShield || 0,
             attack: player.attack,
             defense: player.defense,
             effects: [],
@@ -223,11 +225,38 @@ class Combat {
         // Check player defensive effects
         damage = this.applyDefensiveEffects(damage);
         
-        // Apply damage to player
+        // Apply damage to player (shield first, then health)
         console.log('Combat: Player health before damage:', this.playerState.health);
-        this.playerState.health -= damage;
+        console.log('Combat: Player shield before damage:', this.playerState.shield);
+        
+        let remainingDamage = damage;
+        let shieldDamage = 0;
+        let healthDamage = 0;
+        
+        // Shield absorbs damage first
+        if (this.playerState.shield > 0) {
+            shieldDamage = Math.min(remainingDamage, this.playerState.shield);
+            this.playerState.shield -= shieldDamage;
+            remainingDamage -= shieldDamage;
+        }
+        
+        // Remaining damage goes to health
+        if (remainingDamage > 0) {
+            healthDamage = remainingDamage;
+            this.playerState.health -= healthDamage;
+        }
+        
         console.log('Combat: Player health after damage:', this.playerState.health);
-        this.addToLog(`${this.enemy.name}'s ${action.name} deals ${Math.round(damage)} damage!`);
+        console.log('Combat: Player shield after damage:', this.playerState.shield);
+        
+        // Create damage message
+        let damageMessage = `${this.enemy.name}'s ${action.name} deals ${Math.round(damage)} damage!`;
+        if (shieldDamage > 0 && healthDamage > 0) {
+            damageMessage += ` (${Math.round(shieldDamage)} to shield, ${Math.round(healthDamage)} to health)`;
+        } else if (shieldDamage > 0) {
+            damageMessage += ` (absorbed by shield)`;
+        }
+        this.addToLog(damageMessage);
         
         // Apply special effects
         if (action.effect) {
@@ -444,6 +473,8 @@ class Combat {
         return {
             playerHealth: this.playerState.health,
             playerMaxHealth: this.playerState.maxHealth,
+            playerShield: this.playerState.shield,
+            playerMaxShield: this.playerState.maxShield,
             enemyHealth: this.enemyState.health,
             enemyMaxHealth: this.enemyState.maxHealth,
             turnNumber: this.turnNumber,

@@ -114,7 +114,9 @@ class BattlefieldCard {
             ...building,
             position: { x, y },
             buildTurn: window.gridGameManager ? window.gridGameManager.maxTurns - window.gridGameManager.remainingTurns : 0,
-            isActive: true
+            isActive: true,
+            usesRemaining: building.effects?.uses || null,
+            cooldownRemaining: 0
         });
         
         // Apply building effects
@@ -165,6 +167,55 @@ class BattlefieldCard {
     getStructureAt(x, y) {
         const positionKey = `${x},${y}`;
         return this.builtStructures.get(positionKey);
+    }
+    
+    // Use structure (for Shield Generator and other utility buildings)
+    useStructure(x, y) {
+        const positionKey = `${x},${y}`;
+        const structure = this.builtStructures.get(positionKey);
+        
+        if (!structure || !structure.isActive) {
+            return { success: false, message: 'No active structure at this position' };
+        }
+        
+        // Check if structure has uses
+        if (structure.usesRemaining !== null && structure.usesRemaining <= 0) {
+            return { success: false, message: 'Structure has no uses remaining' };
+        }
+        
+        // Check cooldown
+        if (structure.cooldownRemaining > 0) {
+            return { success: false, message: `Structure on cooldown for ${structure.cooldownRemaining} turns` };
+        }
+        
+        // Handle Shield Generator
+        if (structure.name === 'Shield Generator') {
+            const character = window.gridGameManager.character;
+            if (character) {
+                character.shield = character.maxShield;
+                structure.usesRemaining = 0;
+                structure.cooldownRemaining = structure.effects.cooldown;
+                
+                // Update character display
+                if (window.gridGameManager.updateCharacterDisplay) {
+                    window.gridGameManager.updateCharacterDisplay();
+                }
+                
+                return { success: true, message: 'Shield fully restored!' };
+            }
+        }
+        
+        return { success: false, message: 'Unknown structure type' };
+    }
+    
+    // Process turn effects for all structures
+    processTurnEffects() {
+        // Reduce cooldowns for all structures
+        for (const [positionKey, structure] of this.builtStructures) {
+            if (structure.cooldownRemaining > 0) {
+                structure.cooldownRemaining--;
+            }
+        }
     }
     
     // Remove structure at position

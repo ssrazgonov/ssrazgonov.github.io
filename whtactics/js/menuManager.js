@@ -7,19 +7,12 @@ class MenuManager {
         // Game configuration based on choices
         this.gameConfig = {
             startingEquipment: 'medkit', // 'medkit' or 'revive'
-            emperorsSeal: 'abundance', // 'abundance', 'war', or 'resilience'
+            emperorsSeal: 'shield', // only 'shield' seal available
             sealModifiers: {
-                abundance: {
-                    buff: { type: 'resourceMultiplier', value: 1.5 },
-                    debuff: { type: 'enemyHealthMultiplier', value: 1.25 }
-                },
-                war: {
-                    buff: { type: 'damageMultiplier', value: 1.3 },
-                    debuff: { type: 'enemySpawnMultiplier', value: 1.5 }
-                },
-                resilience: {
-                    buff: { type: 'healthMultiplier', value: 1.4 },
-                    debuff: { type: 'resourceMultiplier', value: 0.7 }
+                shield: {
+                    healthMultiplier: 1.25,  // +25% health
+                    shieldMultiplier: 1.50,  // +50% shield
+                    resourceMultiplier: 0.85 // -15% resources
                 }
             }
         };
@@ -117,7 +110,7 @@ class MenuManager {
         
         // Set default selections
         this.selectEquipment('medkit');
-        this.selectSeal('abundance');
+        this.selectSeal('shield');
     }
     
     showInfo() {

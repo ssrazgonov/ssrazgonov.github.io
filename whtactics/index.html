@@ -72,31 +72,14 @@
             <div class="setup-section">
                 <h3>Emperor's Seal</h3>
                 <div class="seal-choice">
-                    <div class="seal-item" data-seal="abundance">
+                    <div class="seal-item" data-seal="shield">
                         <div class="seal-header">
-                            <h4>Seal of Abundance</h4>
+                            <h4>Seal of Protection</h4>
                         </div>
                         <div class="seal-effects">
-                            <div class="buff">⬆ +50% Resource gathering</div>
-                            <div class="debuff">⬇ Enemies have +25% health</div>
-                        </div>
-                    </div>
-                    <div class="seal-item" data-seal="war">
-                        <div class="seal-header">
-                            <h4>Seal of War</h4>
-                        </div>
-                        <div class="seal-effects">
-                            <div class="buff">⬆ +30% Combat damage</div>
-                            <div class="debuff">⬇ 50% more enemies spawn</div>
-                        </div>
-                    </div>
-                    <div class="seal-item" data-seal="resilience">
-                        <div class="seal-header">
-                            <h4>Seal of Resilience</h4>
-                        </div>
-                        <div class="seal-effects">
-                            <div class="buff">⬆ +40% Maximum health</div>
-                            <div class="debuff">⬇ Resources give 30% less</div>
+                            <div class="buff">⬆ +25% Maximum health</div>
+                            <div class="buff">⬆ +50% Shield capacity</div>
+                            <div class="debuff">⬇ -15% Resource gathering</div>
                         </div>
                     </div>
                 </div>
@@ -113,17 +96,40 @@
     <div class="game-container wh40k-panel" id="gameContainer" style="display: none;">
         <div class="game-header wh40k-border">
             <h1 class="wh40k-title" style="font-size: 1.8rem; margin: 0;">WARHAMMER 40K GRID TACTICS</h1>
-            <div class="turn-counter-display">
-                <div class="wh40k-panel turn-counter">
-                    <div class="skull-icon">💀</div>
-                    <div class="counter-text">
-                        <span class="counter-label">MOVES UNTIL DOOM</span>
-                        <span class="counter-value" id="turnCounter">30</span>
-                    </div>
-                    <div class="skull-icon">💀</div>
+            <!-- Resource Display -->
+            <div class="resource-display">
+                <div class="resource-item">
+                    <span class="resource-icon">🧬</span>
+                    <span class="resource-value" id="biomassCount">0</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">⚙️</span>
+                    <span class="resource-value" id="scrapCount">0</span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">💎</span>
+                    <span class="resource-value" id="warpstoneCount">0</span>
                 </div>
             </div>
-            <!-- Re-enabled resources and stats -->
+            
+            <!-- Character Stats (moved from bottom) -->
+            <div class="character-stats-compact" style="display: flex; gap: 10px; align-items: center; margin-left: 15px;">
+                <div class="hp-display" style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #ff6666; font-size: 0.9rem;">❤️</span>
+                    <span id="charHP" style="color: #ff6666; font-weight: bold;">100</span>/<span id="charMaxHP" style="color: #ccc;">100</span>
+                </div>
+                <div class="shield-display" style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #00ccff; font-size: 0.9rem;">🛡️</span>
+                    <span id="charShield" style="color: #00ccff; font-weight: bold;">50</span>/<span id="charMaxShield" style="color: #ccc;">50</span>
+                </div>
+                <div class="stat-compact" style="display: flex; gap: 8px; font-size: 0.85rem;">
+                    <span style="color: #ff8888;">⚔️<span id="charAttack">10</span></span>
+                    <span style="color: #88ccff;">🛡️<span id="charDefense">5</span></span>
+                    <span style="color: #88ff88;">⚡<span id="charSpeed">1.0</span></span>
+                </div>
+            </div>
+            
+            
             <div class="resources" style="gap: 15px; align-items: center;">
                 <div class="resource resource-display" id="biomass">
                     <div class="resource-icon resource-biomass"></div>
@@ -152,65 +158,8 @@
             </div>
         </div>
         
-        <div class="game-area">
-            <canvas id="gameCanvas" style="border: 3px solid #bb0000; border-radius: 8px; box-shadow: 0 0 30px rgba(187, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.6);"></canvas>
-        </div>
-        
-        <!-- Persistent Battlefield UI -->
-        <div class="battlefield-ui" style="display: flex; gap: 15px; margin-top: 15px;">
-            <!-- Terrain Information Panel -->
-            <div class="terrain-info wh40k-panel" id="terrainInfo" style="width: 300px; padding: 15px;">
-                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">TERRAIN DATA</h3>
-                <div id="terrainContent">
-                    <div style="text-align: center; color: #666; font-style: italic;">
-                        Move to a cell to see terrain information
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Building Cards Panel -->
-            <div class="building-cards wh40k-panel" id="buildingCards" style="flex: 1; padding: 15px; min-height: 200px;">
-                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">AVAILABLE STRUCTURES</h3>
-                <div id="buildingCardsContent">
-                    <div style="text-align: center; color: #666; font-style: italic;">
-                        Move to a cell to see available buildings
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Re-enabled UI elements -->
-        <div class="game-ui" style="gap: 15px; margin-top: 15px;">
-            <div class="card-deck wh40k-panel" id="cardDeck" style="flex: 1; padding: 15px; min-height: 120px;">
-                <h3 class="wh40k-subtitle" style="margin-bottom: 10px;">Battlefield Cards</h3>
-                <!-- Cards will be generated here -->
-            </div>
-            <div class="character-info wh40k-panel" id="characterInfo" style="width: 250px; padding: 15px;">
-                <h3 class="character-name ethereal-glow">Space Marine</h3>
-                <div class="stats">
-                    <div class="stat-row">
-                        <span class="stat-label">Health:</span>
-                        <span class="stat-value">
-                            <span id="charHP" style="color: #ff6666;">100</span>/<span id="charMaxHP">100</span>
-                        </span>
-                    </div>
-                    <div class="hp-bar">
-                        <div class="hp-fill" style="width: 100%;"></div>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Attack:</span>
-                        <span class="stat-value" id="charAttack" style="color: #ff8888;">10</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Defense:</span>
-                        <span class="stat-value" id="charDefense" style="color: #88ccff;">5</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Speed:</span>
-                        <span class="stat-value" id="charSpeed" style="color: #88ff88;">1.0</span>
-                    </div>
-                </div>
-            </div>
+        <div class="game-area" style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 10px;">
+            <canvas id="gameCanvas" style="border: 3px solid #bb0000; border-radius: 8px; box-shadow: 0 0 30px rgba(187, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.6); max-width: 100%; max-height: 100%;"></canvas>
         </div>
     </div>
 

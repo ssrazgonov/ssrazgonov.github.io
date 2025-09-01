@@ -10,7 +10,7 @@ class GameManager {
         // Game configuration from menu
         this.gameConfig = gameConfig || {
             startingEquipment: 'medkit',
-            emperorsSeal: 'abundance'
+            emperorsSeal: 'shield'
         };
         
         // Apply seal modifiers
@@ -70,6 +70,11 @@ class GameManager {
         // Apply seal effects to character
         this.applySealEffectsToCharacter();
         
+        // Update UI after applying seal effects
+        if (window.gridGameManager && window.gridGameManager.updateCharacterDisplay) {
+            window.gridGameManager.updateCharacterDisplay();
+        }
+        
         // Set character's movement path
         this.character.setPath(this.path);
         
@@ -93,21 +98,14 @@ class GameManager {
     // Initialize seal modifiers based on chosen seal
     initializeSealModifiers() {
         const sealData = {
-            abundance: {
-                resourceMultiplier: 1.5,
-                enemyHealthMultiplier: 1.25
-            },
-            war: {
-                damageMultiplier: 1.3,
-                enemySpawnMultiplier: 1.5
-            },
-            resilience: {
-                healthMultiplier: 1.4,
-                resourceMultiplier: 0.7
+            shield: {
+                healthMultiplier: 1.25,  // +25% health
+                shieldMultiplier: 1.50,  // +50% shield
+                resourceMultiplier: 0.85 // -15% resources
             }
         };
         
-        return sealData[this.gameConfig.emperorsSeal] || sealData.abundance;
+        return sealData[this.gameConfig.emperorsSeal] || sealData.shield;
     }
     
     // Apply seal effects to character
@@ -115,20 +113,20 @@ class GameManager {
         const seal = this.gameConfig.emperorsSeal;
         
         switch(seal) {
-            case 'war':
-                // Increase damage
-                this.character.attack = Math.floor(this.character.attack * this.sealModifiers.damageMultiplier);
-                break;
-            case 'resilience':
-                // Increase health
+            case 'shield':
+                // Apply +25% health bonus
                 const healthBonus = Math.floor(this.character.maxHp * (this.sealModifiers.healthMultiplier - 1));
                 this.character.maxHp += healthBonus;
                 this.character.hp += healthBonus;
+                
+                // Apply +50% shield bonus (base shield is 50, so 50 * 1.5 = 75)
+                const baseShield = 50;
+                this.character.shield = Math.floor(baseShield * this.sealModifiers.shieldMultiplier);
+                this.character.maxShield = Math.floor(baseShield * this.sealModifiers.shieldMultiplier);
                 break;
-            // abundance doesn't directly affect character stats
         }
         
-        console.log(`Applied ${seal} seal effects to character`);
+        console.log(`Applied ${seal} seal effects to character: +${Math.floor((this.sealModifiers.healthMultiplier - 1) * 100)}% health, +${Math.floor((this.sealModifiers.shieldMultiplier - 1) * 100)}% shield, ${Math.floor((this.sealModifiers.resourceMultiplier - 1) * 100)}% resources`);
     }
     
     // Main game loop
@@ -604,24 +602,6 @@ class GameManager {
         document.getElementById('charAttack').textContent = this.character.attack;
         document.getElementById('charDefense').textContent = this.character.defense;
         document.getElementById('charSpeed').textContent = this.character.speed.toFixed(1);
-        
-        // Resources
-        Object.entries(this.character.resources).forEach(([type, amount]) => {
-            const element = document.getElementById(type);
-            if (element) {
-                element.querySelector('span').textContent = amount;
-            }
-        });
-        
-        // Day and loop counters
-        document.getElementById('day').querySelector('span').textContent = this.day;
-        document.getElementById('loop').querySelector('span').textContent = this.loopCount;
-    }
-    
-    // Give character starter equipment
-    giveStarterEquipment() {
-        // Create starter weapon
-        const starterWeapon = new Equipment(ITEM_TEMPLATES.BOLT_PISTOL);
         const weaponSlot = starterWeapon.getEquipSlot();
         
         // Directly equip weapon

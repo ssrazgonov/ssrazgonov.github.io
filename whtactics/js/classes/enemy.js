@@ -12,15 +12,7 @@ class Enemy extends Entity {
         this.faction = enemyData.faction;
         this.enemyType = enemyType;
         
-        // Apply seal modifiers to enemy stats
-        if (gameManager && gameManager.gameConfig && gameManager.sealModifiers) {
-            const seal = gameManager.gameConfig.emperorsSeal;
-            const modifiers = gameManager.sealModifiers;
-            
-            if (seal === 'abundance' && modifiers.enemyHealthMultiplier) {
-                this.maxHp = Math.floor(this.maxHp * modifiers.enemyHealthMultiplier);
-            }
-        }
+        // Shield seal has no enemy modifiers
         
         this.hp = this.maxHp;
         

@@ -87,39 +87,58 @@ class GridGameManager {
     }
     
     // Initialize the grid game
-    init() {
+    initializeGame() {
+        console.log('Initializing grid game...');
+        
+        // Get canvas and context first
         this.canvas = document.getElementById('gameCanvas');
-        if (!this.canvas) {
-            console.error('Game canvas not found');
+        this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+        
+        if (!this.canvas || !this.ctx) {
+            console.error('Canvas not found or context not available');
             return;
         }
         
-        this.ctx = this.canvas.getContext('2d');
+        // Set initial canvas size and make it responsive
+        this.handleResize();
         
-        // Set canvas size
-        this.canvas.width = GAME_WIDTH;
-        this.canvas.height = GAME_HEIGHT;
+        this.isPlayerTurn = true;
+        this.inCombat = false;
+        this.isGameOver = false;
+        this.remainingTurns = 30;
+        this.highlightedCells = [];
         
-        // Setup event listeners
+        // Initialize player position at center
+        this.playerPosition = { x: 5, y: 5 };
+        
+        // Initialize enemies array
+        this.enemies = [];
+        
+        // Initialize battlefield card
+        this.battlefieldCard = new BattlefieldCard();
+        
+        // Initialize character first
+        this.initializeCharacter();
+        
+        // Initialize grid with tiles
+        this.initializeGrid();
+        
+        // Set up canvas event listeners
         this.setupEventListeners();
         
-        // Initialize character and systems
-        this.initializeCharacter();
-        this.updateResourceDisplay();
+        // Set up window resize listener
+        window.addEventListener('resize', () => this.handleResize());
         
-        // Draw initial state
+        // Initial draw
         this.drawGrid();
         this.highlightPossibleMoves();
+        
+        // Update UI
         this.updateTurnCounter();
-        
-        // Generate hidden enemies
-        this.generateHiddenEnemies();
-        
-        // Add UI buttons
-        this.addUIButtons();
-        
-        // Initialize battlefield UI
         this.updateBattlefieldUI();
+        
+        // Add inventory button to header
+        this.addInventoryButton();
         
         this.isInitialized = true;
         console.log('Grid Game Manager initialized with enhanced systems');
@@ -129,36 +148,34 @@ class GridGameManager {
     handleResize() {
         if (!this.canvas || !this.ctx) return;
         
-        // Get current canvas dimensions
-        const currentWidth = this.canvas.width;
-        const currentHeight = this.canvas.height;
-        
         // Get container dimensions
-        const container = document.getElementById('gameContainer');
+        const container = document.querySelector('.game-area');
         if (!container) return;
         
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+        const containerRect = container.getBoundingClientRect();
+        const maxWidth = containerRect.width - 20; // Leave some padding
+        const maxHeight = containerRect.height - 20; // Use container height
         
-        // Calculate new dimensions while maintaining aspect ratio
-        const aspectRatio = currentWidth / currentHeight;
-        let newWidth = containerWidth - 20; // Padding
-        let newHeight = newWidth / aspectRatio;
+        // Calculate optimal cell size to fit container
+        const maxCellSizeByWidth = Math.floor(maxWidth / this.gridSize);
+        const maxCellSizeByHeight = Math.floor(maxHeight / this.gridSize);
+        const optimalCellSize = Math.min(maxCellSizeByWidth, maxCellSizeByHeight, 50); // Cap at 50px for mobile
         
-        // Ensure it fits within container height
-        if (newHeight > containerHeight - 20) {
-            newHeight = containerHeight - 20;
-            newWidth = newHeight * aspectRatio;
-        }
+        this.cellSize = Math.max(optimalCellSize, 25); // Minimum 25px for mobile
         
-        // Update canvas style dimensions (not actual dimensions to avoid redrawing issues)
+        // Update canvas dimensions
+        const newWidth = this.gridSize * this.cellSize;
+        const newHeight = this.gridSize * this.cellSize;
+        
+        this.canvas.width = newWidth;
+        this.canvas.height = newHeight;
         this.canvas.style.width = `${newWidth}px`;
         this.canvas.style.height = `${newHeight}px`;
         
         // Redraw the grid
         this.drawGrid();
         
-        console.log('Canvas resized for responsive layout');
+        console.log(`Canvas resized: ${newWidth}x${newHeight}, cell size: ${this.cellSize}px`);
     }
     
     // Setup event listeners for mouse and touch
@@ -294,9 +311,19 @@ class GridGameManager {
     
     // Handle mouse click
     handleClick(event) {
-        if (!this.isPlayerTurn || this.isGameOver || this.inCombat) return;
-        
         const gridPos = this.canvasToGrid(event.offsetX, event.offsetY);
+        
+        // Check if clicking on a discovered cell to show info
+        if (this.grid && this.grid[gridPos.y] && this.grid[gridPos.y][gridPos.x]) {
+            const clickedTile = this.grid[gridPos.y][gridPos.x];
+            if (clickedTile.isDiscovered) {
+                this.showCellInfoModal(clickedTile);
+                return;
+            }
+        }
+        
+        // Normal movement logic
+        if (!this.isPlayerTurn || this.isGameOver || this.inCombat) return;
         
         // Check if clicked position is a valid move
         const isValidMove = this.highlightedCells.some(cell => 
@@ -331,6 +358,9 @@ class GridGameManager {
         this.playerPosition.x = x;
         this.playerPosition.y = y;
         
+        // Discover the cell the player stepped on
+        this.discoverCell(x, y);
+        
         // Decrease remaining turns
         this.remainingTurns--;
         this.updateTurnCounter();
@@ -343,9 +373,6 @@ class GridGameManager {
         
         // Update highlights for new position
         this.highlightPossibleMoves();
-        
-        // Update battlefield UI for new position
-        this.updateBattlefieldUI();
         
         // End turn (for future turn-based mechanics)
         this.endPlayerTurn();
@@ -547,9 +574,16 @@ class GridGameManager {
                     <div class="player-health" style="flex: 1; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; border: 2px solid #0070dd;">
                         <div style="color: #0070dd; font-weight: bold; margin-bottom: 5px;">YOUR HEALTH</div>
                         <div class="health-bar" style="background: #333; height: 20px; border-radius: 10px; overflow: hidden;">
-                            <div class="health-fill" style="background: linear-gradient(90deg, #0070dd, #00aaff); height: 100%; width: 100%; transition: width 0.3s;"></div>
+                            <div class="health-fill" style="background: linear-gradient(90deg, #0070dd, #00aaff); height: 100%; width: ${(this.character.hp / this.character.maxHp) * 100}%; transition: width 0.3s;"></div>
                         </div>
-                        <div class="health-text" style="color: #fff; font-size: 0.9rem; margin-top: 5px;">100/100</div>
+                        <div class="health-text" style="color: #fff; font-size: 0.9rem; margin-top: 5px;">${this.character.hp}/${this.character.maxHp}</div>
+                        
+                        <!-- Shield Bar -->
+                        <div style="color: #00ccff; font-weight: bold; margin-bottom: 5px; margin-top: 10px;">SHIELD</div>
+                        <div class="shield-bar" style="background: #333; height: 15px; border-radius: 8px; overflow: hidden;">
+                            <div class="shield-fill" style="background: linear-gradient(90deg, #00ccff, #66ddff); height: 100%; width: ${(this.character.shield / this.character.maxShield) * 100}%; transition: width 0.3s;"></div>
+                        </div>
+                        <div class="shield-text" style="color: #fff; font-size: 0.8rem; margin-top: 3px;">${this.character.shield}/${this.character.maxShield}</div>
                     </div>
                     <div class="enemy-health" style="flex: 1; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; border: 2px solid #bb0000;">
                         <div style="color: #bb0000; font-weight: bold; margin-bottom: 5px;">${enemy.name.toUpperCase()}</div>
@@ -558,6 +592,30 @@ class GridGameManager {
                         </div>
                         <div class="health-text" style="color: #fff; font-size: 0.9rem; margin-top: 5px;">100/100</div>
                     </div>
+                </div>
+
+                 <!-- Combat Control Buttons -->
+                <div style="text-align: center; display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                    <button onclick="window.gridGameManager.toggleAutobattle()" id="autobattle-button" class="autobattle-button" style="
+                        background: linear-gradient(45deg, #006600, #00aa00);
+                        color: white;
+                        border: 2px solid #004400;
+                        border-radius: 5px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        transition: all 0.3s ease;
+                    ">AUTO BATTLE</button>
+                    <button onclick="window.gridGameManager.retreatFromCombat()" class="retreat-button" style="
+                        background: linear-gradient(45deg, #666, #999);
+                        color: white;
+                        border: 2px solid #444;
+                        border-radius: 5px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        transition: all 0.3s ease;
+                    ">RETREAT</button>
                 </div>
                 
                 <!-- Combat Actions -->
@@ -597,28 +655,14 @@ class GridGameManager {
                     <div class="turn-status" style="color: #00ff00; font-size: 0.9rem;">Your turn</div>
                 </div>
                 
-                <!-- Combat Control Buttons -->
-                <div style="text-align: center; display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
-                    <button onclick="window.gridGameManager.toggleAutobattle()" id="autobattle-button" class="autobattle-button" style="
-                        background: linear-gradient(45deg, #006600, #00aa00);
-                        color: white;
-                        border: 2px solid #004400;
-                        border-radius: 5px;
-                        padding: 10px 20px;
-                        cursor: pointer;
-                        font-weight: bold;
-                        transition: all 0.3s ease;
-                    ">AUTO BATTLE</button>
-                    <button onclick="window.gridGameManager.retreatFromCombat()" class="retreat-button" style="
-                        background: linear-gradient(45deg, #666, #999);
-                        color: white;
-                        border: 2px solid #444;
-                        border-radius: 5px;
-                        padding: 10px 20px;
-                        cursor: pointer;
-                        font-weight: bold;
-                        transition: all 0.3s ease;
-                    ">RETREAT</button>
+               
+                
+                <!-- Combat Actions -->
+                <div class="combat-actions" style="margin-bottom: 20px;">
+                    <h4 style="color: #ffcc00; margin-bottom: 10px; text-align: center;">CHOOSE YOUR ACTION</h4>
+                    <div class="action-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                        <!-- Action buttons will be populated by JavaScript -->
+                    </div>
                 </div>
             </div>
         `;
@@ -649,6 +693,8 @@ class GridGameManager {
         // Update health bars
         const playerHealthFill = document.querySelector('.player-health .health-fill');
         const playerHealthText = document.querySelector('.player-health .health-text');
+        const playerShieldFill = document.querySelector('.player-health .shield-fill');
+        const playerShieldText = document.querySelector('.player-health .shield-text');
         const enemyHealthFill = document.querySelector('.enemy-health .health-fill');
         const enemyHealthText = document.querySelector('.enemy-health .health-text');
         
@@ -660,6 +706,18 @@ class GridGameManager {
             if (Math.abs(currentPlayerPercent - playerHealthPercent) > 1) {
                 playerHealthFill.style.width = `${playerHealthPercent}%`;
                 playerHealthText.textContent = `${Math.round(status.playerHealth)}/${status.playerMaxHealth}`;
+            }
+        }
+        
+        // Update shield bars
+        if (playerShieldFill && playerShieldText) {
+            const playerShieldPercent = (status.playerShield / status.playerMaxShield) * 100;
+            const currentShieldPercent = parseFloat(playerShieldFill.style.width) || 100;
+            
+            // Only update if shield actually changed significantly
+            if (Math.abs(currentShieldPercent - playerShieldPercent) > 1) {
+                playerShieldFill.style.width = `${playerShieldPercent}%`;
+                playerShieldText.textContent = `${Math.round(status.playerShield)}/${status.playerMaxShield}`;
             }
         }
         
@@ -1373,6 +1431,29 @@ class GridGameManager {
         this.ctx.fillStyle = this.colors.background;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // Draw tiles with discovery state
+        for (let y = 0; y < this.gridSize; y++) {
+            for (let x = 0; x < this.gridSize; x++) {
+                const cellX = x * this.cellSize;
+                const cellY = y * this.cellSize;
+                
+                // Get tile if grid is initialized
+                if (this.grid && this.grid[y] && this.grid[y][x]) {
+                    const tile = this.grid[y][x];
+                    // Set tile position and size for drawing
+                    tile.x = cellX;
+                    tile.y = cellY;
+                    tile.width = this.cellSize;
+                    tile.height = this.cellSize;
+                    tile.draw(this.ctx);
+                } else {
+                    // Fallback to default cell color for uninitialized grid
+                    this.ctx.fillStyle = this.colors.cell;
+                    this.ctx.fillRect(cellX, cellY, this.cellSize, this.cellSize);
+                }
+            }
+        }
+        
         // Draw grid lines
         this.ctx.strokeStyle = this.colors.grid;
         this.ctx.lineWidth = 1;
@@ -1394,9 +1475,6 @@ class GridGameManager {
             this.ctx.lineTo(this.canvas.width, yPos);
             this.ctx.stroke();
         }
-        
-        // Draw start cell (center)
-        this.drawCell(START_POSITION.x, START_POSITION.y, this.colors.startCell, 0.3);
         
         // Draw highlighted possible moves
         this.highlightedCells.forEach(cell => {
@@ -1760,14 +1838,49 @@ class GridGameManager {
     // Initialize character with upgrades and relics
     initializeCharacter() {
         if (!this.character) {
-            this.character = {
-                health: 100,
-                maxHealth: 100,
-                attack: 10,
-                defense: 5,
-                speed: 1.0,
-                level: 1
+            // If the main GameManager exists and has a character with seal effects applied,
+            // reuse that character instance to keep stats/UI in sync.
+            if (window.gameManager && window.gameManager.character) {
+                this.character = window.gameManager.character;
+            } else {
+                // Fallback: create a local character object using hp/maxHp fields
+                this.character = {
+                    hp: 100,
+                    maxHp: 100,
+                    shield: 50,
+                    maxShield: 50,
+                    attack: 10,
+                    defense: 5,
+                    speed: 1.0,
+                    level: 1
+                };
+            }
+        }
+        
+        // Apply Emperor's Seal effects (grid mode) if not already applied and no main GameManager
+        if (!window.gameManager && !this._sealApplied) {
+            const config = (window.menuManager && window.menuManager.getGameConfig && window.menuManager.getGameConfig()) || { emperorsSeal: 'shield' };
+            const seal = config.emperorsSeal || 'shield';
+            // Only one seal exists now: shield
+            const sealModifiers = (config.sealModifiers && config.sealModifiers[seal]) || {
+                healthMultiplier: 1.25,
+                shieldMultiplier: 1.50,
+                resourceMultiplier: 0.85
             };
+            
+            if (seal === 'shield') {
+                // Health bonus
+                const healthBonus = Math.floor(this.character.maxHp * (sealModifiers.healthMultiplier - 1));
+                this.character.maxHp += healthBonus;
+                this.character.hp += healthBonus;
+                
+                // Shield bonus based on base 50
+                const baseShield = 50;
+                this.character.maxShield = Math.floor(baseShield * sealModifiers.shieldMultiplier);
+                this.character.shield = this.character.maxShield;
+            }
+            
+            this._sealApplied = true;
         }
         
         // Apply hero upgrades
@@ -1789,12 +1902,16 @@ class GridGameManager {
         
         const hpEl = document.getElementById('charHP');
         const maxHpEl = document.getElementById('charMaxHP');
+        const shieldEl = document.getElementById('charShield');
+        const maxShieldEl = document.getElementById('charMaxShield');
         const attackEl = document.getElementById('charAttack');
         const defenseEl = document.getElementById('charDefense');
         const speedEl = document.getElementById('charSpeed');
         
-        if (hpEl) hpEl.textContent = this.character.health;
-        if (maxHpEl) maxHpEl.textContent = this.character.maxHealth;
+        if (hpEl) hpEl.textContent = this.character.hp;
+        if (maxHpEl) maxHpEl.textContent = this.character.maxHp;
+        if (shieldEl) shieldEl.textContent = this.character.shield;
+        if (maxShieldEl) maxShieldEl.textContent = this.character.maxShield;
         if (attackEl) attackEl.textContent = this.character.attack;
         if (defenseEl) defenseEl.textContent = this.character.defense;
         if (speedEl) speedEl.textContent = this.character.speed.toFixed(1);
@@ -1802,8 +1919,15 @@ class GridGameManager {
         // Update HP bar
         const hpBar = document.querySelector('.hp-fill');
         if (hpBar) {
-            const hpPercent = (this.character.health / this.character.maxHealth) * 100;
+            const hpPercent = (this.character.hp / this.character.maxHp) * 100;
             hpBar.style.width = `${hpPercent}%`;
+        }
+        
+        // Update shield bar
+        const shieldBar = document.querySelector('.shield-fill');
+        if (shieldBar) {
+            const shieldPercent = (this.character.shield / this.character.maxShield) * 100;
+            shieldBar.style.width = `${shieldPercent}%`;
         }
     }
 
@@ -1854,72 +1978,52 @@ class GridGameManager {
         document.body.appendChild(modal);
     }
 
-    // Add UI buttons for new systems
-    addUIButtons() {
-        const gameContainer = document.getElementById('gameContainer');
-        if (!gameContainer) return;
+    // Add inventory button to header
+    addInventoryButton() {
+        const gameHeader = document.querySelector('.game-header');
+        if (!gameHeader) return;
 
-        // Create button container
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'enhanced-ui-buttons';
-        buttonContainer.style.cssText = `
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
+        // Create inventory button
+        const inventoryBtn = document.createElement('button');
+        inventoryBtn.className = 'inventory-button';
+        inventoryBtn.innerHTML = '📦 Inventory';
+        inventoryBtn.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border: 2px solid #8b0000;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: "Arial Black", Arial, sans-serif;
+            font-size: 14px;
+            text-shadow: 0 0 5px #ff0000;
+            transition: all 0.3s ease;
         `;
-
-        // Base button
-        const baseBtn = document.createElement('button');
-        baseBtn.textContent = '🏰 Base';
-        baseBtn.className = 'enhanced-ui-btn';
-        baseBtn.onclick = () => this.openBaseUI();
-        buttonContainer.appendChild(baseBtn);
-
-        // Crafting button
-        const craftBtn = document.createElement('button');
-        craftBtn.textContent = '🔧 Craft';
-        craftBtn.className = 'enhanced-ui-btn';
-        craftBtn.onclick = () => this.openCraftingUI();
-        buttonContainer.appendChild(craftBtn);
-
-        // Hero upgrades button
-        const heroBtn = document.createElement('button');
-        heroBtn.textContent = '⚔️ Hero';
-        heroBtn.className = 'enhanced-ui-btn';
-        heroBtn.onclick = () => this.openHeroUI();
-        buttonContainer.appendChild(heroBtn);
-
-        // Relics button
-        const relicBtn = document.createElement('button');
-        relicBtn.textContent = '🔮 Relics';
-        relicBtn.className = 'enhanced-ui-btn';
-        relicBtn.onclick = () => this.openRelicUI();
-        buttonContainer.appendChild(relicBtn);
-
-        // Add to game container
-        gameContainer.appendChild(buttonContainer);
-
-        // Add CSS for buttons
-        const style = document.createElement('style');
-        style.textContent = `
-            .enhanced-ui-btn {
-                background: linear-gradient(45deg, #bb0000, #ff6600);
-                color: white;
-                border: 2px solid #ffcc00;
-                border-radius: 5px;
-                padding: 8px 16px;
-                cursor: pointer;
-                font-weight: bold;
-                transition: all 0.3s ease;
+        
+        // Add hover effect
+        inventoryBtn.addEventListener('mouseover', () => {
+            inventoryBtn.style.background = '#2a2a2a';
+            inventoryBtn.style.transform = 'translateY(-2px)';
+            inventoryBtn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+        });
+        
+        inventoryBtn.addEventListener('mouseout', () => {
+            inventoryBtn.style.background = '#1a1a1a';
+            inventoryBtn.style.transform = 'translateY(0)';
+            inventoryBtn.style.boxShadow = 'none';
+        });
+        
+        // Toggle inventory on click
+        inventoryBtn.addEventListener('click', () => {
+            if (this.inventoryUI) {
+                this.inventoryUI.toggle();
             }
-            .enhanced-ui-btn:hover {
-                background: linear-gradient(45deg, #ff6600, #bb0000);
-                transform: scale(1.05);
-                box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-            }
-        `;
-        document.head.appendChild(style);
+        });
+        
+        gameHeader.appendChild(inventoryBtn);
     }
 
     // Open crafting UI
@@ -2099,99 +2203,10 @@ class GridGameManager {
         const terrainInfo = TERRAIN_BUILDING_TYPES[terrainType];
         const existingStructure = this.battlefieldCard.getStructureAt(x, y);
         
-        // Update terrain information
-        const terrainContent = document.getElementById('terrainContent');
-        if (terrainContent && terrainInfo) {
-            terrainContent.innerHTML = `
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <div style="font-size: 2.5rem; margin-bottom: 10px;">${terrainInfo.icon}</div>
-                    <h4 style="color: #ff6600; font-size: 1.2rem; margin-bottom: 5px;">${terrainInfo.name}</h4>
-                    <p style="color: #e0e0e0; font-size: 0.9rem; margin-bottom: 10px;">${terrainInfo.description}</p>
-                    <p style="color: #bb0000; font-size: 0.8rem;">Position: (${x}, ${y})</p>
-                </div>
-                
-                ${existingStructure ? `
-                    <div style="background: rgba(0, 255, 0, 0.1); border: 2px solid #00ff00; border-radius: 8px; padding: 12px; margin-top: 10px;">
-                        <h5 style="color: #00ff00; margin-bottom: 8px; font-size: 0.9rem;">EXISTING STRUCTURE</h5>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 1.5rem;">${existingStructure.icon}</span>
-                            <div>
-                                <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${existingStructure.name}</div>
-                                <div style="color: #ccc; font-size: 0.7rem;">${existingStructure.description}</div>
-                            </div>
-                        </div>
-                        <button onclick="window.gridGameManager.removeStructureAtPosition()" style="
-                            background: linear-gradient(45deg, #ff0000, #cc0000);
-                            color: white;
-                            border: none;
-                            border-radius: 4px;
-                            padding: 6px 12px;
-                            cursor: pointer;
-                            margin-top: 8px;
-                            font-size: 0.8rem;
-                        ">Remove Structure</button>
-                    </div>
-                ` : ''}
-            `;
-        }
+        // Terrain info panel removed - now using click-to-view modal system
+        // No longer updating terrain content since it's been removed
         
-        // Update building cards
-        const buildingCardsContent = document.getElementById('buildingCardsContent');
-        if (buildingCardsContent) {
-            if (availableBuildings.length > 0) {
-                buildingCardsContent.innerHTML = `
-                    <div class="building-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-                        ${availableBuildings.map(building => `
-                            <div class="building-card" style="
-                                background: linear-gradient(45deg, rgba(50, 50, 50, 0.9), rgba(70, 70, 70, 0.9));
-                                border: 2px solid ${building.canBuild ? '#00ff00' : '#666'};
-                                border-radius: 6px;
-                                padding: 10px;
-                                cursor: ${building.canBuild ? 'pointer' : 'not-allowed'};
-                                transition: all 0.3s ease;
-                                opacity: ${building.canBuild ? '1' : '0.6'};
-                                font-size: 0.8rem;
-                            " onclick="${building.canBuild ? `window.gridGameManager.buildStructure('${Object.keys(BATTLEFIELD_CARDS).find(key => BATTLEFIELD_CARDS[key].name === building.name)}')` : ''}">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <span style="font-size: 1.5rem;">${building.icon}</span>
-                                    <div>
-                                        <div style="color: #fff; font-weight: bold; font-size: 0.9rem;">${building.name}</div>
-                                        <div style="color: #ffcc00; font-size: 0.7rem; text-transform: uppercase;">${building.rarity}</div>
-                                    </div>
-                                </div>
-                                <div style="color: #ccc; font-size: 0.8rem; margin-bottom: 8px;">${building.description}</div>
-                                <div style="color: #ff6600; font-size: 0.7rem; margin-bottom: 5px;">Cost: ${building.costText}</div>
-                                <div style="color: #00aaff; font-size: 0.7rem;">Build Time: ${building.buildTime} turns</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                
-                // Add hover effects for building cards
-                setTimeout(() => {
-                    const buildingCards = buildingCardsContent.querySelectorAll('.building-card');
-                    buildingCards.forEach(card => {
-                        if (card.style.cursor === 'pointer') {
-                            card.addEventListener('mouseenter', () => {
-                                card.style.transform = 'scale(1.02)';
-                                card.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
-                            });
-                            
-                            card.addEventListener('mouseleave', () => {
-                                card.style.transform = 'scale(1)';
-                                card.style.boxShadow = 'none';
-                            });
-                        }
-                    });
-                }, 100);
-            } else {
-                buildingCardsContent.innerHTML = `
-                    <div style="text-align: center; color: #666; font-style: italic; padding: 20px;">
-                        No buildings available for this terrain type or insufficient resources.
-                    </div>
-                `;
-            }
-        }
+        // Building cards panel removed - now shown in cell info modal
     }
     
     // Build structure at current position
@@ -2231,6 +2246,65 @@ class GridGameManager {
         }
     }
     
+    // Discover a cell when player steps on it
+    discoverCell(x, y) {
+        if (!this.isValidPosition(x, y)) return;
+        
+        // Get the tile from the grid (need to implement grid storage)
+        if (!this.grid) {
+            this.initializeGrid();
+        }
+        
+        const tile = this.grid[y][x];
+        if (tile && !tile.isDiscovered) {
+            tile.discover();
+            
+            // Check for enemy encounter
+            if (tile.hasEnemy && tile.enemyType) {
+                this.spawnEnemyAtPosition(x, y, tile.enemyType);
+            }
+            
+            // Redraw grid to show discovered cell
+            this.drawGrid();
+        }
+    }
+    
+    // Initialize grid with tiles
+    initializeGrid() {
+        this.grid = [];
+        for (let y = 0; y < this.gridSize; y++) {
+            const row = [];
+            for (let x = 0; x < this.gridSize; x++) {
+                row.push(new Tile(x, y));
+            }
+            this.grid.push(row);
+        }
+        
+        // Discover starting position
+        const startTile = this.grid[this.playerPosition.y][this.playerPosition.x];
+        if (startTile) {
+            startTile.discover();
+        }
+    }
+    
+    // Spawn enemy at specific position
+    spawnEnemyAtPosition(x, y, enemyType) {
+        const enemy = {
+            id: `discovered_enemy_${x}_${y}`,
+            x: x,
+            y: y,
+            name: ENEMY_TYPES[enemyType].name,
+            faction: ENEMY_TYPES[enemyType].faction,
+            threat: ENEMY_TYPES[enemyType].attack,
+            discovered: true,
+            defeated: false,
+            fromTile: true
+        };
+        
+        this.enemies.push(enemy);
+        console.log(`Spawned ${enemy.name} at discovered position (${x}, ${y})`);
+    }
+    
     // Show notification
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
@@ -2261,5 +2335,413 @@ class GridGameManager {
                 }
             }, 500);
         }, 3000);
+    }
+    
+    // Move player from modal and close it
+    movePlayerFromModal(x, y) {
+        // Close the modal first
+        const modal = document.getElementById('cellInfoModal');
+        if (modal) {
+            modal.remove();
+        }
+        
+        // Move player to the selected position
+        this.movePlayer(x, y);
+    }
+    
+    // Show cell information modal
+    showCellInfoModal(tile) {
+        // Remove existing modal if present
+        const existingModal = document.getElementById('cellInfoModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        const terrainInfo = tile.getTerrainInfo();
+        
+        // Check if this cell is within movement range
+        const isInMovementRange = this.highlightedCells.some(cell => 
+            cell.x === tile.gridX && cell.y === tile.gridY
+        );
+        
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.id = 'cellInfoModal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        `;
+        
+        // Create modal content
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: linear-gradient(135deg, rgba(15, 5, 5, 0.98), rgba(30, 10, 10, 0.99));
+            border: 3px solid #bb0000;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 50px rgba(187, 0, 0, 0.8);
+            color: white;
+        `;
+        
+        // Build available buildings list
+        let buildingsHtml = '';
+        if (terrainInfo.availableBuildings && terrainInfo.availableBuildings.length > 0) {
+            buildingsHtml = `
+                <div style="margin-top: 15px;">
+                    <h4 style="color: #ffcc00; margin-bottom: 10px;">Available Structures:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px;">
+                        ${terrainInfo.availableBuildings.map(building => {
+                            const buildingData = BATTLEFIELD_CARDS[building];
+                            return buildingData ? `
+                                <div style="
+                                    background: rgba(0, 0, 0, 0.4);
+                                    border: 1px solid #666;
+                                    border-radius: 6px;
+                                    padding: 8px;
+                                    text-align: center;
+                                    font-size: 0.8rem;
+                                ">
+                                    <div style="font-size: 1.2rem; margin-bottom: 4px;">${buildingData.icon}</div>
+                                    <div style="color: #ffcc00; font-weight: bold;">${buildingData.name}</div>
+                                </div>
+                            ` : '';
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Create move button if in range
+        let moveButtonHtml = '';
+        if (isInMovementRange && !this.inCombat && this.isPlayerTurn) {
+            moveButtonHtml = `
+                <button onclick="window.gridGameManager.movePlayerFromModal(${tile.gridX}, ${tile.gridY})" style="
+                    background: linear-gradient(45deg, #00aa00, #00ff00);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-right: 10px;
+                ">Move Here</button>
+            `;
+        }
+        
+        content.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">${terrainInfo.icon}</div>
+                <h2 style="
+                    color: #ffcc00;
+                    font-size: 1.8rem;
+                    margin-bottom: 10px;
+                    text-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
+                ">${terrainInfo.name}</h2>
+                <p style="
+                    color: #e0e0e0;
+                    font-size: 1rem;
+                    margin-bottom: 15px;
+                    line-height: 1.4;
+                ">${terrainInfo.description}</p>
+            </div>
+            
+            <div style="
+                background: rgba(0, 0, 0, 0.5);
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+            ">
+                <h3 style="color: #bb0000; margin-bottom: 10px;">Terrain Details</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                    <div>Position: <span style="color: #ffcc00;">(${tile.gridX}, ${tile.gridY})</span></div>
+                    <div>Type: <span style="color: #00aaff;">${terrainInfo.type}</span></div>
+                    <div>Enemy Present: <span style="color: ${terrainInfo.hasEnemy ? '#ff6600' : '#00aa00'};">${terrainInfo.hasEnemy ? 'Yes' : 'No'}</span></div>
+                    ${terrainInfo.hasEnemy ? `<div>Enemy Type: <span style="color: #ff6600;">${ENEMY_TYPES[terrainInfo.enemyType]?.name || 'Unknown'}</span></div>` : ''}
+                </div>
+            </div>
+            
+            ${buildingsHtml}
+            
+            <!-- Structure Actions -->
+            <div style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
+                ${this.getStructureActionButtons(tile.gridX, tile.gridY)}
+                <button onclick="window.gridGameManager.showBuildingMenu(${tile.gridX}, ${tile.gridY})" style="
+                    background: linear-gradient(45deg, #cc6600, #ff9900);
+                    color: white;
+                    border: 2px solid #aa5500;
+                    border-radius: 8px;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-bottom: 10px;
+                ">🏗️ BUILD STRUCTURE</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                ${moveButtonHtml}
+                <button onclick="document.getElementById('cellInfoModal').remove()" style="
+                    background: linear-gradient(45deg, #bb0000, #ff6600);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">Close</button>
+            </div>
+        `;
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    // Show building menu for construction
+    showBuildingMenu(x, y) {
+        // Close existing modal first
+        const existingModal = document.getElementById('cellInfoModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Get available buildings for this terrain
+        const tile = this.grid[y][x];
+        const terrainInfo = tile.getTerrainInfo();
+        
+        // Create building menu modal
+        const modal = document.createElement('div');
+        modal.id = 'buildingMenuModal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            animation: fadeIn 0.3s ease-out;
+        `;
+        
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: linear-gradient(135deg, rgba(15, 5, 5, 0.98), rgba(30, 10, 10, 0.99));
+            border: 3px solid #cc6600;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(204, 102, 0, 0.8);
+            color: white;
+        `;
+        
+        // Build available buildings list
+        let buildingOptionsHtml = '';
+        if (terrainInfo.availableBuildings && terrainInfo.availableBuildings.length > 0) {
+            buildingOptionsHtml = terrainInfo.availableBuildings.map(buildingKey => {
+                const building = BATTLEFIELD_CARDS[buildingKey];
+                if (!building) return '';
+                
+                // Check if player can afford this building
+                const canAfford = this.battlefieldCard.canAffordBuilding(building);
+                const buttonStyle = canAfford ? 
+                    'background: linear-gradient(45deg, #006600, #00aa00); border-color: #004400; cursor: pointer;' :
+                    'background: linear-gradient(45deg, #666, #888); border-color: #444; cursor: not-allowed; opacity: 0.6;';
+                
+                return `
+                    <div style="
+                        background: rgba(0, 0, 0, 0.4);
+                        border: 2px solid #666;
+                        border-radius: 8px;
+                        padding: 15px;
+                        margin-bottom: 10px;
+                        transition: all 0.3s ease;
+                    ">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="font-size: 2.5rem;">${building.icon}</div>
+                            <div style="flex: 1;">
+                                <h3 style="color: #ffcc00; margin-bottom: 5px;">${building.name}</h3>
+                                <p style="color: #e0e0e0; font-size: 0.9rem; margin-bottom: 8px;">${building.description}</p>
+                                <div style="color: #ff9900; font-size: 0.8rem;">
+                                    Cost: ${Object.entries(building.cost).map(([resource, amount]) => 
+                                        `${amount} ${resource.charAt(0).toUpperCase() + resource.slice(1)}`
+                                    ).join(', ')}
+                                </div>
+                            </div>
+                            <button onclick="window.gridGameManager.buildStructureFromMenu('${buildingKey}', ${x}, ${y})" 
+                                style="
+                                    ${buttonStyle}
+                                    color: white;
+                                    border: 2px solid;
+                                    border-radius: 6px;
+                                    padding: 10px 15px;
+                                    font-weight: bold;
+                                    transition: all 0.3s ease;
+                                " ${!canAfford ? 'disabled' : ''}>
+                                ${canAfford ? 'BUILD' : 'NEED RESOURCES'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            buildingOptionsHtml = `
+                <div style="text-align: center; color: #888; font-style: italic; padding: 20px;">
+                    No structures can be built on this terrain type.
+                </div>
+            `;
+        }
+        
+        content.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🏗️</div>
+                <h2 style="
+                    color: #cc6600;
+                    font-size: 1.8rem;
+                    margin-bottom: 10px;
+                    text-shadow: 0 0 15px rgba(204, 102, 0, 0.8);
+                ">BUILD STRUCTURE</h2>
+                <p style="color: #e0e0e0; font-size: 1rem;">
+                    Position: (${x}, ${y}) - ${terrainInfo.name}
+                </p>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                ${buildingOptionsHtml}
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="document.getElementById('buildingMenuModal').remove()" style="
+                    background: linear-gradient(45deg, #bb0000, #ff6600);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 12px 25px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">Cancel</button>
+            </div>
+        `;
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    // Build structure from building menu
+    buildStructureFromMenu(buildingKey, x, y) {
+        // Close building menu
+        const modal = document.getElementById('buildingMenuModal');
+        if (modal) {
+            modal.remove();
+        }
+        
+        // Attempt to build the structure
+        const success = this.battlefieldCard.buildStructure(buildingKey, x, y);
+        
+        if (success) {
+            // Update the grid display
+            this.drawGrid();
+            this.updateBattlefieldUI();
+            this.showNotification(`Successfully built ${BATTLEFIELD_CARDS[buildingKey].name}!`, 'success');
+        } else {
+            this.showNotification('Failed to build structure! Check resources.', 'error');
+        }
+    }
+    
+    // Get structure action buttons for tile modal
+    getStructureActionButtons(x, y) {
+        const structure = this.battlefieldCard.getStructureAt(x, y);
+        if (!structure) return '';
+        
+        // Check if structure is usable (Shield Generator)
+        if (structure.name === 'Shield Generator') {
+            const canUse = structure.usesRemaining > 0 && structure.cooldownRemaining === 0;
+            const buttonStyle = canUse ? 
+                'background: linear-gradient(45deg, #0066cc, #00aaff); border-color: #004499; cursor: pointer;' :
+                'background: linear-gradient(45deg, #666, #888); border-color: #444; cursor: not-allowed; opacity: 0.6;';
+            
+            let statusText = '';
+            if (structure.usesRemaining <= 0) {
+                statusText = 'No uses remaining';
+            } else if (structure.cooldownRemaining > 0) {
+                statusText = `Cooldown: ${structure.cooldownRemaining} turns`;
+            } else {
+                statusText = 'Ready to use';
+            }
+            
+            return `
+                <button onclick="window.gridGameManager.useStructure(${x}, ${y})" 
+                    style="
+                        ${buttonStyle}
+                        color: white;
+                        border: 2px solid;
+                        border-radius: 8px;
+                        padding: 12px 25px;
+                        font-size: 1rem;
+                        font-weight: bold;
+                        transition: all 0.3s ease;
+                        margin-bottom: 10px;
+                        display: block;
+                        width: 100%;
+                    " ${!canUse ? 'disabled' : ''}>
+                    ⚡ USE SHIELD GENERATOR
+                    <div style="font-size: 0.8rem; margin-top: 4px; opacity: 0.8;">${statusText}</div>
+                </button>
+            `;
+        }
+        
+        return '';
+    }
+    
+    // Use structure at position
+    useStructure(x, y) {
+        const result = this.battlefieldCard.useStructure(x, y);
+        
+        if (result.success) {
+            this.showNotification(result.message, 'success');
+            // Close modal after successful use
+            const modal = document.getElementById('cellInfoModal');
+            if (modal) {
+                modal.remove();
+            }
+        } else {
+            this.showNotification(result.message, 'error');
+        }
     }
 }

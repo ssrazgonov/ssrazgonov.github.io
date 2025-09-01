@@ -1266,18 +1266,25 @@ canvas#gameCanvas {
 
 .game-area {
     flex: 1 !important;
-    width: 100vw !important;
+    width: 100% !important;
     height: auto !important;
-    min-height: 400px !important;
-    max-height: calc(100vh - 160px) !important;
+    min-height: 300px !important;
+    max-height: calc(100vh - 120px) !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     position: relative !important;
     background: radial-gradient(ellipse at center, #1a0a0a 0%, #0f0f0f 50%, #000000 100%) !important;
-    padding: 20px !important;
+    padding: 10px !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
+}
+
+#gameCanvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 .game-ui {
@@ -1384,7 +1391,37 @@ canvas#gameCanvas {
     .game-container {
         height: 100vh !important;
         overflow: hidden !important;
+        padding: 5px !important;
     }
+    
+    .game-header {
+        padding: 8px !important;
+        gap: 8px !important;
+    }
+    
+    .character-stats-compact {
+        flex-wrap: wrap !important;
+        gap: 5px !important;
+        margin-left: 5px !important;
+    }
+    
+    .stat-compact {
+        gap: 4px !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .resource-display {
+        gap: 6px !important;
+    }
+    
+    .resource-item {
+        font-size: 0.75rem !important;
+    }
+    
+    .turn-counter {
+        font-size: 0.8rem !important;
+    }
+}
     
     /* Game Setup Mobile Optimizations */
     .setup-content {

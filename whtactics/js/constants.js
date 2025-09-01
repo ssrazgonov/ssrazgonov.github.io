@@ -806,13 +806,15 @@ const BATTLEFIELD_CARDS = {
     },
     SHIELD_GENERATOR: {
         name: 'Shield Generator',
-        description: 'Creates a protective energy barrier around the area',
+        description: 'Restores hero shield energy. 1 use, then 5-turn cooldown.',
         cost: { [RESOURCE_TYPES.WARPSTONE]: 25, [RESOURCE_TYPES.SCRAP]: 15 },
-        icon: '🛡️',
-        type: 'defensive',
-        effects: { shield: 30, defense: 10 },
+        icon: '⚡',
+        type: 'utility',
+        effects: { shieldRestore: 'full', uses: 1, cooldown: 5 },
         buildTime: 3,
-        rarity: 'uncommon'
+        rarity: 'uncommon',
+        usesRemaining: 1,
+        cooldownRemaining: 0
     },
     
     // Resource structures
@@ -943,5 +945,17 @@ const TERRAIN_BUILDING_TYPES = {
         description: 'Chaotic energy emanates from this area',
         availableBuildings: ['WARPSTONE_EXTRACTOR', 'SHIELD_GENERATOR', 'TELEPORTER', 'POWER_GENERATOR'],
         icon: '💎'
+    },
+    MOUNTAIN: {
+        name: 'Mountain',
+        description: 'Rocky peaks that provide excellent defensive positions',
+        availableBuildings: ['BUNKER', 'OBSERVATION_TOWER', 'SHIELD_GENERATOR', 'COMMAND_CENTER'],
+        icon: '🏔️'
+    },
+    WASTELAND: {
+        name: 'Wasteland',
+        description: 'Barren, corrupted land where few structures can survive',
+        availableBuildings: ['TURRET', 'BUNKER'],
+        icon: '☠️'
     }
 };

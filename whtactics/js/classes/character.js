@@ -271,26 +271,24 @@ class Character extends Entity {
         }
     }
     
-    // Add resource
+    // Add resource to character
     addResource(resourceType, amount, gameManager = null) {
         if (this.resources.hasOwnProperty(resourceType)) {
             let finalAmount = amount;
             
             // Apply seal modifiers if gameManager is available
-            if (gameManager && gameManager.gameConfig) {
+            if (gameManager && gameManager.gameConfig && gameManager.sealModifiers) {
                 const seal = gameManager.gameConfig.emperorsSeal;
                 const modifiers = gameManager.sealModifiers;
                 
-                if (seal === 'abundance' && modifiers.resourceMultiplier) {
-                    finalAmount = Math.floor(amount * modifiers.resourceMultiplier);
-                } else if (seal === 'resilience' && modifiers.resourceMultiplier) {
+                if (seal === 'shield' && modifiers.resourceMultiplier) {
                     finalAmount = Math.floor(amount * modifiers.resourceMultiplier);
                 }
             }
             
             this.resources[resourceType] += finalAmount;
             
-            // Update UI
+            // Update UI if element exists
             const resourceElement = document.getElementById(resourceType);
             if (resourceElement) {
                 resourceElement.querySelector('span').textContent = this.resources[resourceType];
