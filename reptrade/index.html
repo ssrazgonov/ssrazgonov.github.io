@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RepTrade — перевозки грузов и оптовые поставки из Китая в Россию</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header" id="header">
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <a href="mailto:info@reptrade.ru" class="top-bar-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          info@reptrade.ru
+        </a>
+        <a href="tel:88005508566" class="top-bar-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          8 (800) 550-85-66
+        </a>
+      </div>
+      <div class="top-bar-right">
+        <a href="#" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="#" aria-label="Telegram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a>
+        <a href="#" aria-label="ВКонтакте" class="top-bar-vk">VK</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-main">
+    <div class="container header-inner">
+      <a href="/" class="header-logo">
+        <img src="src/public/logo.svg" alt="RepTrade — комплексный сервис ВЭД">
+      </a>
+
+      <nav class="header-nav">
+        <a href="#services">Услуги</a>
+        <a href="#categories">Категории</a>
+        <a href="#transport">Доставка</a>
+        <a href="#cases">Решения</a>
+        <a href="#stages">Этапы</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-sm" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">Оставить заявку</button>
+        <button class="menu-btn" id="menuBtn" aria-label="Меню">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MOBILE NAV OVERLAY ===== -->
+<nav class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-panel">
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Закрыть меню">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="mobile-nav-header">
+      <img src="src/public/logo.svg" alt="RepTrade" class="mobile-nav-logo">
+    </div>
+
+    <div class="mobile-nav-links">
+      <a href="#services" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>Услуги</span>
+      </a>
+      <a href="#categories" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <span>Категории</span>
+      </a>
+      <a href="#transport" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"/><polygon points="6 21 12 17 18 21 12 13 6 21"/></svg>
+        <span>Доставка</span>
+      </a>
+      <a href="#cases" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <span>Решения</span>
+      </a>
+      <a href="#stages" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Этапы</span>
+      </a>
+      <a href="#reviews" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l1.81 3.668a.53.53 0 0 0 .399.29l4.047.588a.53.53 0 0 1 .294.904l-2.93 2.856a.53.53 0 0 0-.152.47l.692 4.033a.53.53 0 0 1-.77.559l-3.619-1.903a.53.53 0 0 0-.493 0l-3.619 1.903a.53.53 0 0 1-.77-.56l.692-4.032a.53.53 0 0 0-.152-.47L3.974 7.745a.53.53 0 0 1 .294-.904l4.047-.588a.53.53 0 0 0 .399-.29z"/></svg>
+        <span>Отзывы</span>
+      </a>
+      <a href="#contacts" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Контакты</span>
+      </a>
+    </div>
+
+    <div class="mobile-nav-footer">
+      <div class="mobile-nav-social">
+        <a href="#" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="#" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a>
+        <a href="#" aria-label="VK">VK</a>
+      </div>
+      <div class="mobile-nav-contacts">
+        <a href="tel:88005508566" class="mobile-nav-contact">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>8 (800) 550-85-66</span>
+        </a>
+        <a href="mailto:info@reptrade.ru" class="mobile-nav-contact">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>info@reptrade.ru</span>
+        </a>
+      </div>
+      <button class="mobile-nav-cta" onclick="closeMobileNav(); document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">Оставить заявку</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <video class="hero-video" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mixkit-flying-over-a-cargo-ship-leaving-a-port-35869-hd-ready-Xlvb6EM7VyOnQjW7N8228wyuD7cm64.mp4" autoplay muted loop playsinline></video>
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <span class="hero-badge">Доставка из Китая под ключ с 2012 года</span>
+      <h1>Перевозки грузов и оптовые поставки из Китая в Россию</h1>
+      <p>Находим поставщиков, организуем доставку и таможенное оформление в режиме одного окна. Авиа, ж/д, море и авто — под ваш бюджет и сроки.</p>
+
+      <div class="hero-bullets">
+        <div class="hero-bullet"><span class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span> Поиск поставщика</div>
+        <div class="hero-bullet"><span class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> Аудит фабрик</div>
+        <div class="hero-bullet"><span class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></span> Таможня под ключ</div>
+        <div class="hero-bullet"><span class="bullet-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Параллельный импорт</div>
+      </div>
+
+      <div class="hero-btns">
+        <a href="#contacts" class="btn btn-primary btn-lg">Узнать стоимость и сроки</a>
+        <a href="#services" class="btn btn-outline btn-lg">Наши услуги</a>
+      </div>
+    </div>
+
+    <div class="hero-form" id="heroForm">
+      <div class="form-card" id="formCard">
+        <h2>Оставить заявку</h2>
+        <p>Заполните форму, мы свяжемся с вами в течение 30 минут.</p>
+        <form class="lead-form" id="heroLeadForm" onsubmit="event.preventDefault(); document.getElementById('formCard').innerHTML = '<div class=\'form-success\'><div class=\'success-icon\'><svg width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><path d=\'M22 11.08V12a10 10 0 1 1-5.93-9.14\'/><polyline points=\'22 4 12 14.01 9 11.01\'/></svg></div><h2>Спасибо за заявку!</h2><p>Мы свяжемся с вами в течение 30 минут.</p></div>'">
+          <input type="text" placeholder="Ваше имя*" required>
+          <input type="tel" placeholder="Телефон*" required>
+          <input type="email" placeholder="E-mail">
+          <textarea rows="3" placeholder="Что нужно привезти? Опишите товар или задачу"></textarea>
+          <label class="form-checkbox">
+            <input type="checkbox" checked>
+            <span>Удобнее связаться в WhatsApp / Telegram</span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+          <p class="form-note">Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности и обработки персональных данных.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">2012</div><div class="stat-label">Год начала работы</div></div>
+      <div class="stat-card"><div class="stat-value">3 млрд ₽</div><div class="stat-label">Доставлено грузов</div></div>
+      <div class="stat-card"><div class="stat-value">50+</div><div class="stat-label">Постоянных клиентов</div></div>
+      <div class="stat-card"><div class="stat-value">18+</div><div class="stat-label">Крупных партнёров</div></div>
+    </div>
+
+    <div class="tasks-section">
+      <div class="section-header">
+        <h2 class="section-title">Решаем задачи вашего бизнеса</h2>
+        <p class="section-desc">Берём на себя весь цикл поставки — от поиска фабрики до доставки до двери.</p>
+      </div>
+      <div class="tasks-grid">
+        <div class="task-card">
+          <span class="task-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg></span>
+          <h3>Ищем и проверяем поставщиков</h3>
+          <p>Аудит фабрик, переговоры и контроль качества перед отгрузкой.</p>
+        </div>
+        <div class="task-card">
+          <span class="task-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+          <h3>Организуем доставку и ВЭД</h3>
+          <p>Таможня, документация и логистика любым видом транспорта.</p>
+        </div>
+        <div class="task-card">
+          <span class="task-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <h3>Подбираем схему оплаты</h3>
+          <p>Частичная предоплата, контракт и параллельный импорт.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="section section-alt" id="categories">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Направления</span>
+      <h2 class="section-title">Что мы возим из Китая</h2>
+      <p class="section-desc">Выберите категорию, чтобы узнать подробнее о поставках по вашему направлению.</p>
+    </div>
+    <div class="categories-grid">
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-industrial.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Промышленное оборудование</h3>
+          <p class="cat-short">Станки, линии, прессы и автоматика для производств любой отрасли.</p>
+          <p class="cat-hover">Поставляем промышленное оборудование напрямую с заводов Китая. Подбираем технику под ваши требования, проверяем производителя и сопровождаем до монтажа.</p>
+          <div class="cat-meta"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 18–35 дней</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> от 500 кг</span><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> от 2.5$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-electronics.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Электроника и компоненты</h3>
+          <p class="cat-short">Печатные платы, модули, датчики и готовые электронные изделия.</p>
+          <p class="cat-hover">Закупаем электронику у проверенных производителей Шэньчжэня и Гуанчжоу. Контролируем качество партии перед отправкой и оформляем документы для ввоза.</p>
+          <div class="cat-meta"><span>5–14 дней</span><span>от 1 кг</span><span>от 5$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-machine-tools.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Станки и ЧПУ</h3>
+          <p class="cat-short">Металлообработка, токарные и фрезерные станки с ЧПУ.</p>
+          <p class="cat-hover">Поставляем металлообрабатывающие станки и ЧПУ-оборудование. Организуем перевозку негабарита по железной дороге с креплением, страхованием и сертификацией.</p>
+          <div class="cat-meta"><span>20–30 дней</span><span>от 1 т</span><span>от 2$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-telecom.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Телеком-оборудование</h3>
+          <p class="cat-short">Серверы, коммутаторы, инфраструктура и сетевое оборудование.</p>
+          <p class="cat-hover">Подбираем телекоммуникационное и серверное оборудование для дата-центров и операторов. Помогаем с сертификацией и таможенным оформлением.</p>
+          <div class="cat-meta"><span>7–14 дней</span><span>от 5 кг</span><span>от 4.5$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-apparel.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Одежда и ТНП</h3>
+          <p class="cat-short">Текстиль, одежда, обувь и товары народного потребления.</p>
+          <p class="cat-hover">Организуем оптовые поставки одежды, текстиля и товаров народного потребления. Консолидируем грузы от нескольких поставщиков и доставляем единой партией.</p>
+          <div class="cat-meta"><span>30–45 дней</span><span>от 50 кг</span><span>от 1.8$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-marketplace.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Товары для маркетплейсов</h3>
+          <p class="cat-short">Подбор и поставка ходовых товаров под продажи на маркетплейсах.</p>
+          <p class="cat-hover">Помогаем селлерам находить и привозить товары для Wildberries, Ozon и Яндекс Маркет. Собираем сборные грузы с упаковкой под требования площадок.</p>
+          <div class="cat-meta"><span>25–40 дней</span><span>от 1 кг</span><span>от 2$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-construction.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Строительное оборудование</h3>
+          <p class="cat-short">Инструмент, спецтехника и материалы для строительства.</p>
+          <p class="cat-hover">Поставляем строительное оборудование и инструмент напрямую с заводов Китая. Подбираем технику под объект, организуем доставку негабарита и таможенное оформление.</p>
+          <div class="cat-meta"><span>20–35 дней</span><span>от 100 кг</span><span>от 2.2$/кг</span></div>
+        </div>
+      </a>
+      <a href="#" class="cat-card" style="background-image:url(src/public/images/cat-auto.png)">
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <h3>Автозапчасти</h3>
+          <p class="cat-short">Оригинальные и аналоговые запчасти, узлы и агрегаты.</p>
+          <p class="cat-hover">Закупаем автозапчасти и комплектующие у проверенных поставщиков. Собираем заказы от разных фабрик в одну партию и доставляем мультимодально.</p>
+          <div class="cat-meta"><span>15–25 дней</span><span>от 10 кг</span><span>от 3$/кг</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CASES ===== -->
+<section class="section" id="cases">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Проверено временем</span>
+      <h2 class="section-title">Популярные решения для наших клиентов</h2>
+      <p class="section-desc">Реальные маршруты, сроки и экономия.</p>
+    </div>
+
+    <div class="cases-filters" id="casesFilters">
+      <button class="filter-btn active" data-filter="all">Все кейсы</button>
+      <button class="filter-btn" data-filter="Авиа">Авиа</button>
+      <button class="filter-btn" data-filter="Море">Море</button>
+      <button class="filter-btn" data-filter="Ж/Д">Ж/Д</button>
+      <button class="filter-btn" data-filter="Авто">Авто</button>
+      <button class="filter-btn" data-filter="Мультимодал">Мультимодал</button>
+    </div>
+
+    <div class="cases-grid" id="casesGrid">
+      <article class="case-card" data-transport="Авиа" data-index="0">
+        <div class="case-img">
+          <img src="src/public/images/case-electronics.png" alt="">
+          <div class="case-overlay">
+            <h3>Смартфоны</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ТехноЛайн</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шэньчжэнь, Китай → Москва, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>4 дн.</strong></div><div><span>Экономия</span><strong class="accent">−22%</strong></div><div><span>Вес</span><strong>2,4 т</strong></div><div><span>Груз</span><strong>8 600 шт.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Море" data-index="1">
+        <div class="case-img">
+          <img src="src/public/images/case-textile.png" alt="">
+          <div class="case-overlay">
+            <h3>Текстиль</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: Уют Текстиль</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Гуанчжоу, Китай → Санкт-Петербург, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>38 дн.</strong></div><div><span>Экономия</span><strong class="accent">−41%</strong></div><div><span>Вес</span><strong>18 т</strong></div><div><span>Груз</span><strong>32 000 шт.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Ж/Д" data-index="2">
+        <div class="case-img">
+          <img src="src/public/images/case-cnc.png" alt="">
+          <div class="case-overlay">
+            <h3>Станки ЧПУ</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ПромРесурс</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай, Китай → Екатеринбург, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>21 дн.</strong></div><div><span>Экономия</span><strong class="accent">−28%</strong></div><div><span>Вес</span><strong>26 т</strong></div><div><span>Груз</span><strong>6 ед.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Мультимодал" data-index="3">
+        <div class="case-img">
+          <img src="src/public/images/case-auto.png" alt="">
+          <div class="case-overlay">
+            <h3>Автозапчасти</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: АвтоДрайв</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Иу, Китай → Казань, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>16 дн.</strong></div><div><span>Экономия</span><strong class="accent">−35%</strong></div><div><span>Вес</span><strong>5,8 т</strong></div><div><span>Груз</span><strong>120 артикулов</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Авто" data-index="4">
+        <div class="case-img">
+          <img src="src/public/images/case-furniture.png" alt="">
+          <div class="case-overlay">
+            <h3>Мебель</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ДомСтиль</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Фошань, Китай → Новосибирск, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>19 дн.</strong></div><div><span>Экономия</span><strong class="accent">−24%</strong></div><div><span>Вес</span><strong>9,2 т</strong></div><div><span>Груз</span><strong>210 мест</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Море" data-index="5">
+        <div class="case-img">
+          <img src="src/public/images/case-appliances.png" alt="">
+          <div class="case-overlay">
+            <h3>Бытовая техника</h3>
+          </div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ГудМаркет</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Нинбо, Китай → Краснодар, Россия</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>42 дн.</strong></div><div><span>Экономия</span><strong class="accent">−47%</strong></div><div><span>Вес</span><strong>21 т</strong></div><div><span>Груз</span><strong>15 400 шт.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Что мы делаем</span>
+      <h2 class="section-title">Наши услуги</h2>
+      <p class="section-desc">Полный комплекс ВЭД: от поиска фабрики до доставки и таможенного оформления.</p>
+    </div>
+    <div class="services-grid">
+      <button class="service-card" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">
+        <span class="serv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <h3>Поиск надёжного поставщика</h3>
+        <p>Находим производителя или дистрибьютора и получаем выгодные условия сотрудничества.</p>
+        <span class="serv-link">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+      <button class="service-card" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">
+        <span class="serv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        <h3>Аудит поставщика</h3>
+        <p>Проверяем фабрику на соответствие требованиям и стандартам качества.</p>
+        <span class="serv-link">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+      <button class="service-card" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">
+        <span class="serv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <h3>Таможенное оформление</h3>
+        <p>Полный комплекс услуг по таможне: подготовка документов и сертификация.</p>
+        <span class="serv-link">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+      <button class="service-card" onclick="document.getElementById('contacts').scrollIntoView({behavior:'smooth'})">
+        <span class="serv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>
+        <h3>Параллельный импорт</h3>
+        <p>Ввозим товары в обход ограничений с быстрой и законной доставкой.</p>
+        <span class="serv-link">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW WE WORK ===== -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Просто и прозрачно</span>
+      <h2 class="section-title">Как мы работаем</h2>
+      <p class="section-desc">Четыре шага от заявки до доставки груза до вашей двери.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num-bg">1</span>
+        <span class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/></svg></span>
+        <h3>Оставляете заявку</h3>
+        <p>Описываете товар или задачу — мы перезваниваем в течение 30 минут.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num-bg">2</span>
+        <span class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <h3>Подбираем поставщика</h3>
+        <p>Находим производителя и маршрут, считаем стоимость и сроки.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num-bg">3</span>
+        <span class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"/><polygon points="6 21 12 17 18 21 12 13 6 21"/></svg></span>
+        <h3>Доставляем груз</h3>
+        <p>Организуем перевозку любым видом транспорта со страхованием.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num-bg">4</span>
+        <span class="step-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+        <h3>Таможня и доставка</h3>
+        <p>Оформляем груз и доставляем до двери под ключ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STAGES ===== -->
+<section class="section section-dark" id="stages">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Порядок работ</span>
+      <h2 class="section-title">Этапы работы — от заявки до запуска</h2>
+      <p class="section-desc">Нажимайте на шаги, чтобы увидеть, что происходит на каждом этапе поставки.</p>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="timeline-bar">
+        <button class="tl-step active" data-index="0"><span class="tl-num">01</span><span class="tl-label">Шаг 01</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="1"><span class="tl-num">02</span><span class="tl-label">Шаг 02</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="2"><span class="tl-num">03</span><span class="tl-label">Шаг 03</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="3"><span class="tl-num">04</span><span class="tl-label">Шаг 04</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="4"><span class="tl-num">05</span><span class="tl-label">Шаг 05</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="5"><span class="tl-num">06</span><span class="tl-label">Шаг 06</span></button>
+        <span class="tl-connector"></span>
+        <button class="tl-step" data-index="6"><span class="tl-num">07</span><span class="tl-label">Шаг 07</span></button>
+      </div>
+
+      <div class="tl-content" id="tlContent">
+        <div class="tl-image"><img src="src/public/images/process-1.png" alt="" id="tlImg"></div>
+        <div class="tl-info">
+          <span class="tl-number" id="tlNumber">01</span>
+          <h3 id="tlTitle">Подбор подходящего оборудования</h3>
+          <p id="tlDesc">Начинаем с технического задания: вы описываете задачу производства, а мы подбираем оборудование или товар и согласовываем спецификацию. Если у вас уже есть конкретный товар — находим производителя и проводим переговоры.</p>
+          <ul id="tlDetails">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Сбор и уточнение технического задания</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Подбор оборудования или товара под задачу</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Согласование спецификации и характеристик</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Предварительный расчёт стоимости и сроков</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stages-list">
+      <a href="#" class="stage-link"><span class="sl-num">01</span><span>Подбор подходящего оборудования</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">02</span><span>Поиск товара и моделирование поставки</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">03</span><span>Оформление документов</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">04</span><span>Доставка до границы</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">05</span><span>Прохождение таможни и сертификации</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">06</span><span>Доставка до вашего предприятия</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="#" class="stage-link"><span class="sl-num">07</span><span>Организация монтажа и пусконаладки</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWS ===== -->
+<section class="section" id="news">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Блог</span>
+      <h2 class="section-title">Новости и аналитика</h2>
+      <p class="section-desc">Что происходит на рынке оборудования и логистики Китай — Россия.</p>
+    </div>
+    <div class="news-grid">
+      <article class="news-card">
+        <div class="news-img"><img src="src/public/images/news-robots.png" alt=""></div>
+        <div class="news-body"><div class="news-meta"><span class="badge">Новости</span><span>27 апреля 2026</span></div><h3>Китай запустил первый в мире завод по производству суставов для роботов</h3></div>
+      </article>
+      <article class="news-card">
+        <div class="news-img"><img src="src/public/images/news-export.png" alt=""></div>
+        <div class="news-body"><div class="news-meta"><span class="badge">Аналитика</span><span>17 марта 2026</span></div><h3>Экспорт китайской промышленной техники: устойчивый рост и новые рынки</h3></div>
+      </article>
+      <article class="news-card">
+        <div class="news-img"><img src="src/public/images/news-construction.png" alt=""></div>
+        <div class="news-body"><div class="news-meta"><span class="badge">Рынок</span><span>16 марта 2026</span></div><h3>Перспективы строительной техники до 2026 года: глобализация рынка</h3></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Вопросы и ответы</span>
+      <h2 class="section-title">Часто задаваемые вопросы</h2>
+      <p class="section-desc">Ответы на популярные вопросы о поставках и перевозках из Китая.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Как заказать услугу в RepTrade?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Просто оставьте заявку на сайте или позвоните нам. Мы перезвоним в течение 30 минут, уточним задачу, рассчитаем стоимость и сроки, после чего предложим оптимальное решение.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Можно ли объединить товарные партии от разных поставщиков?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Да, мы предлагаем сборные грузы (консолидацию): собираем товар от нескольких поставщиков на одном складе в Китае и доставляем единой партией, что снижает стоимость логистики.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Какие сроки доставки у разных категорий транспорта?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Ориентировочно: авиа — 3–7 дней, авто — 12–20 дней, ж/д — 18–25 дней, море — 30–45 дней. Точные сроки зависят от маршрута, объёма и сезона.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Как отслеживать груз?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Мы предоставляем актуальную информацию о статусе на каждом этапе: загрузка на заводе, прохождение таможни, движение по маршруту — вы всегда в курсе, где находится партия.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Как происходит оплата?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Возможны разные схемы: частичная предоплата, оплата по контракту, а также параллельный импорт. Подбираем удобный вариант под вашу сделку и бюджет.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Какие товары выгоднее всего везти?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Наиболее популярны промышленное оборудование, электроника, текстиль, мебель и товары для маркетплейсов. Под параллельный импорт берём партии от 100 тыс. ₽.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACTS ===== -->
+<section class="section section-dark" id="contacts">
+  <div class="container">
+    <div class="contacts-layout">
+      <div>
+        <span class="section-eyebrow">Контакты</span>
+        <h2 class="section-title" style="text-align:left;color:#fff">Рассчитаем стоимость и сроки поставки за 30 минут</h2>
+        <p class="contacts-sub">Оставьте заявку — менеджер свяжется с вами, уточнит задачу и подготовит предварительный расчёт по вашему грузу.</p>
+        <div class="contacts-list">
+          <a href="tel:88005508566"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span><span class="c-label">Телефон</span><span class="c-value">8 (800) 550-85-66</span></span></a>
+          <a href="mailto:info@reptrade.ru"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><span class="c-label">E-mail</span><span class="c-value">info@reptrade.ru</span></span></a>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span><span class="c-label">Офис в России</span><span class="c-value">123100, г. Москва, ул. Сергея Макеева, д. 1, пом. 2/2</span></span></div>
+          <div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 22h8"/></svg><span><span class="c-label">Офис в Китае</span><span class="c-value">г. Иу, провинция Чжэцзян</span></span></div>
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <h3>Оставить заявку</h3>
+        <p>Заполните форму, мы свяжемся с вами в течение 30 минут.</p>
+        <form class="lead-form dark" onsubmit="event.preventDefault(); this.innerHTML = '<div class=\'form-success\'><div class=\'success-icon\'><svg width=\'36\' height=\'36\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><path d=\'M22 11.08V12a10 10 0 1 1-5.93-9.14\'/><polyline points=\'22 4 12 14.01 9 11.01\'/></svg></div><h3>Спасибо за заявку!</h3><p>Мы свяжемся с вами в течение 30 минут.</p></div>'">
+          <input type="text" placeholder="Ваше имя*" required>
+          <input type="tel" placeholder="Телефон*" required>
+          <input type="email" placeholder="E-mail">
+          <textarea rows="3" placeholder="Что нужно привезти? Опишите товар или задачу"></textarea>
+          <label class="form-checkbox"><input type="checkbox" checked><span>Удобнее связаться в WhatsApp / Telegram</span></label>
+          <button type="submit" class="btn btn-primary btn-block">Отправить заявку</button>
+          <p class="form-note">Нажимая на кнопку, вы соглашаетесь с политикой конфиденциальности и обработки персональных данных.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container footer-top">
+    <div>
+      <img src="src/public/logo.svg" alt="RepTrade" class="footer-logo">
+      <p class="footer-about">Комплексный сервис ВЭД с 2012 года. Перевозки грузов и оптовые поставки из Китая в Россию под ключ.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="WhatsApp"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="#" aria-label="Telegram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></a>
+        <a href="#" aria-label="VK" style="font-size:12px;font-weight:700">VK</a>
+      </div>
+    </div>
+    <div>
+      <h4>Услуги</h4>
+      <ul>
+        <li><a href="#">Поиск надёжного поставщика</a></li>
+        <li><a href="#">Аудит поставщика</a></li>
+        <li><a href="#">Таможенное оформление</a></li>
+        <li><a href="#">Параллельный импорт</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Категории</h4>
+      <ul>
+        <li><a href="#">Промышленное оборудование</a></li>
+        <li><a href="#">Электроника и компоненты</a></li>
+        <li><a href="#">Станки и ЧПУ</a></li>
+        <li><a href="#">Телеком-оборудование</a></li>
+        <li><a href="#">Одежда и ТНП</a></li>
+        <li><a href="#">Товары для маркетплейсов</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Контакты</h4>
+      <ul class="footer-contacts">
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <a href="tel:88005508566">8 (800) 550-85-66</a></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> <a href="mailto:info@reptrade.ru">info@reptrade.ru</a></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> 123100, г. Москва, ул. Сергея Макеева, д. 1, пом. 2/2</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 22h8"/></svg> г. Иу, провинция Чжэцзян</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <span>&copy; 2026 RepTrade. Все права защищены.</span>
+      <a href="#">Политика конфиденциальности</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="caseModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeCaseModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-scroll">
+      <div id="modalBody"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// FAQ Accordion
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const open = item.classList.contains('active');
+    document.querySelectorAll('.faq-item.active').forEach(el => el.classList.remove('active'));
+    if (!open) item.classList.add('active');
+  });
+});
+
+// Mobile Menu
+const mobileNav = document.getElementById('mobileNav');
+function closeMobileNav() { mobileNav.classList.remove('open'); }
+function toggleMobileNav() { mobileNav.classList.toggle('open'); }
+document.getElementById('menuBtn').addEventListener('click', toggleMobileNav);
+document.getElementById('mobileNavClose').addEventListener('click', closeMobileNav);
+document.querySelectorAll('.mobile-nav-link').forEach(a => a.addEventListener('click', closeMobileNav));
+mobileNav.addEventListener('click', (e) => { if (e.target === mobileNav) closeMobileNav(); });
+
+// Sticky Header
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  if (window.scrollY > 80) header.classList.add('sticky');
+  else header.classList.remove('sticky');
+});
+
+// Cases Filter
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.case-card').forEach(card => {
+      if (filter === 'all' || card.dataset.transport === filter) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Timeline
+const stageData = [
+  { num: '01', title: 'Подбор подходящего оборудования', desc: 'Начинаем с технического задания: вы описываете задачу производства, а мы подбираем оборудование или товар и согласовываем спецификацию. Если у вас уже есть конкретный товар — находим производителя и проводим переговоры.', details: ['Сбор и уточнение технического задания', 'Подбор оборудования или товара под задачу', 'Согласование спецификации и характеристик', 'Предварительный расчёт стоимости и сроков'], img: 0 },
+  { num: '02', title: 'Поиск товара и моделирование поставки', desc: 'Проводим переговоры с продавцом и выполняем предварительные расчёты. Если вы ищете определённый товар — находим его, либо моделируем поставку под бюджет и сроки.', details: ['Переговоры с продавцом и запрос образцов', 'Сравнение коммерческих предложений', 'Моделирование маршрута и сроков', 'Расчёт логистики и таможенных платежей'], img: 1 },
+  { num: '03', title: 'Оформление документов', desc: 'Заключаем договор поставки, готовим контракт, инвойсы, упаковочные листы и весь пакет документов. Берём на себя валютный контроль и юридическое сопровождение сделки.', details: ['Заключение договора поставки', 'Подготовка контракта и инвойсов', 'Валютный контроль и постановка на учёт', 'Юридическое сопровождение сделки'], img: 2 },
+  { num: '04', title: 'Доставка до границы', desc: 'Организуем доставку морем, авиа, по железной дороге или авто. Контролируем загрузку на заводе, упаковку и движение груза на всём пути до границы.', details: ['Контроль загрузки и упаковки на заводе', 'Выбор оптимального вида транспорта', 'Страхование груза', 'Отслеживание движения партии'], img: 0 },
+  { num: '05', title: 'Прохождение таможни и сертификации', desc: 'Представляем полный комплекс услуг по таможенному оформлению груза, включая подготовку документов и получение сертификатов в соответствии с законодательством ЕАЭС.', details: ['Таможенное оформление и декларирование', 'Подбор кодов ТН ВЭД', 'Получение сертификатов и деклараций соответствия', 'Уплата таможенных платежей'], img: 1 },
+  { num: '06', title: 'Доставка до вашего предприятия', desc: 'После таможенной очистки доставляем груз до вашего склада или производства. Подбираем транспорт под габариты и контролируем приёмку.', details: ['Перевозка от границы до двери', 'Перевозка негабарита и спецтехники', 'Контроль сохранности груза', 'Сопровождение приёмки'], img: 2 },
+  { num: '07', title: 'Организация монтажа и пусконаладки', desc: 'При необходимости организуем монтаж, шеф-наладку и пусконаладочные работы. Привлекаем специалистов производителя для запуска и обучения персонала.', details: ['Организация монтажа на площадке', 'Шеф-наладка с участием производителя', 'Пусконаладочные работы', 'Обучение персонала и гарантийная поддержка'], img: 0 },
+];
+
+const images = ['src/public/images/process-1.png', 'src/public/images/process-2.png', 'src/public/images/process-3.png'];
+
+document.querySelectorAll('.tl-step').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tl-step').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const i = parseInt(btn.dataset.index);
+    const d = stageData[i];
+    document.getElementById('tlNumber').textContent = d.num;
+    document.getElementById('tlTitle').textContent = d.title;
+    document.getElementById('tlDesc').textContent = d.desc;
+    document.getElementById('tlImg').src = images[d.img];
+    document.getElementById('tlDetails').innerHTML = d.details.map(item => '<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + item + '</li>').join('');
+  });
+});
+
+const caseData = [
+  { slug: 'smartphones-shenzhen', title: 'Срочная партия смартфонов из Шэньчжэня', client: 'ТехноЛайн', tags: ['Авиа', 'Электроника', 'Топ-кейс'], transport: 'Авиа', route: 'Шэньчжэнь, Китай → Москва, Россия', image: 'src/public/images/case-electronics.png', term: '4 дн.', saving: '−22%', weight: '2,4 т · 12 м³', cargo: '8 600 шт.', task: 'Клиенту нужно было успеть к старту продаж и завезти партию смартфонов за 4 дня вместо запланированных 9.', solution: 'Организовали авиадоставку и таможенное оформление под ключ, согласовав срочную загрузку на заводе.', result: 'Доставили партию к старту продаж за 4 дня, уложившись в маркетинговый дедлайн клиента.', repeats: '14 повторных отгрузок' },
+  { slug: 'textile-guangzhou', title: 'Сезонная коллекция текстиля из Гуанчжоу', client: 'Уют Текстиль', tags: ['Море', 'Текстиль'], transport: 'Море', route: 'Гуанчжоу, Китай → Санкт-Петербург, Россия', image: 'src/public/images/case-textile.png', term: '38 дн.', saving: '−41%', weight: '18 т · 1×40HQ', cargo: '32 000 шт.', task: 'Снизить стоимость логистики при поставке крупной сезонной коллекции текстиля.', solution: 'Полностью загрузили морской контейнер и оптимизировали маршрут, объединив заказы поставщика.', result: 'Стоимость логистики снизилась на 41% по сравнению с прежним поставщиком клиента.', repeats: '9 повторных отгрузок' },
+  { slug: 'cnc-shanghai', title: 'Станки с ЧПУ из Шанхая на ж/д', client: 'ПромРесурс', tags: ['Ж/Д', 'Оборудование'], transport: 'Ж/Д', route: 'Шанхай, Китай → Екатеринбург, Россия', image: 'src/public/images/case-cnc.png', term: '21 дн.', saving: '−28%', weight: '26 т · 64 м³', cargo: '6 ед.', task: 'Перевезти негабаритное станочное оборудование без повреждений и с сертификацией ЕАС.', solution: 'Организовали железнодорожную перевозку с креплением, страхованием и сертификацией.', result: 'Перевезли негабаритное оборудование без единого повреждения и с полным пакетом сертификатов.', repeats: '5 повторных отгрузок' },
+  { slug: 'auto-parts-yiwu', title: 'Сборный груз автозапчастей из Иу', client: 'АвтоДрайв', tags: ['Мультимодал', 'Автозапчасти'], transport: 'Мультимодал', route: 'Иу, Китай → Казань, Россия', image: 'src/public/images/case-auto.png', term: '16 дн.', saving: '−35%', weight: '5,8 т · 22 м³', cargo: '120 артикулов', task: 'Собрать заказ от множества поставщиков и доставить единой партией.', solution: 'Сконсолидировали груз от 14 поставщиков на одном складе и доставили мультимодально.', result: 'Доставили 120 артикулов как единую партию с экономией 35% на логистике.', repeats: '22 повторных отгрузки' },
+  { slug: 'furniture-foshan', title: 'Мебель и декор из Фошаня', client: 'ДомСтиль', tags: ['Авто', 'Мебель'], transport: 'Авто', route: 'Фошань, Китай → Новосибирск, Россия', image: 'src/public/images/case-furniture.png', term: '19 дн.', saving: '−24%', weight: '9,2 т · 48 м³', cargo: '210 мест', task: 'Доставить хрупкую мебель и декор без повреждений и рекламаций.', solution: 'Перевезли автотранспортом с усиленной упаковкой и контролем на приёмке.', result: 'Приёмка прошла без рекламаций, хрупкий груз доставлен в полной сохранности.', repeats: '7 повторных отгрузок' },
+  { slug: 'appliances-ningbo', title: 'Бытовая техника из Нинбо морем', client: 'ГудМаркет', tags: ['Море', 'Бытовая техника'], transport: 'Море', route: 'Нинбо, Китай → Краснодар, Россия', image: 'src/public/images/case-appliances.png', term: '42 дн.', saving: '−47%', weight: '21 т · 2×40HQ', cargo: '15 400 шт.', task: 'Привезти крупную партию бытовой техники с минимальной стоимостью.', solution: 'Загрузили два контейнера и оформили возврат НДС, оптимизировав маршрут до РЦ.', result: 'Техника прошла путь от фабрики до распределительного центра с экономией почти вдвое.', repeats: '11 повторных отгрузок' },
+];
+
+function openCaseModal(el) {
+  const card = el.closest('.case-card');
+  const idx = parseInt(card.dataset.index);
+  const d = caseData[idx];
+  if (!d) return;
+
+  const tagsHtml = d.tags.map(t => `<span class="badge">${t}</span>`).join('');
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="case-detail">
+      <img src="${d.image}" alt="${d.title}" class="case-detail-img">
+      <div class="case-detail-tags">${tagsHtml}</div>
+      <h2 class="case-detail-title">${d.title}</h2>
+      <p class="case-detail-client">Клиент: ${d.client}</p>
+      <div class="case-detail-route"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> ${d.route}</div>
+      <div class="case-detail-metrics">
+        <div><span>Срок</span><strong>${d.term}</strong></div>
+        <div><span>Экономия</span><strong class="accent">${d.saving}</strong></div>
+        <div><span>Вес / объём</span><strong>${d.weight}</strong></div>
+        <div><span>Груз</span><strong>${d.cargo}</strong></div>
+      </div>
+      <div class="case-detail-section">
+        <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Задача</h4>
+        <p>${d.task}</p>
+      </div>
+      <div class="case-detail-section">
+        <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Решение</h4>
+        <p>${d.solution}</p>
+      </div>
+      <div class="case-detail-section">
+        <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Результат</h4>
+        <p>${d.result}</p>
+      </div>
+      <div class="case-detail-repeats"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> ${d.repeats}</div>
+    </div>`;
+  document.getElementById('caseModal').classList.add('open');
+}
+
+function closeCaseModal() {
+  document.getElementById('caseModal').classList.remove('open');
+}
+
+document.getElementById('caseModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeCaseModal();
+});
+</script>
+
+</body>
+</html>
