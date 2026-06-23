@@ -43,9 +43,8 @@
         <a href="#services">Услуги</a>
         <a href="#categories">Категории</a>
         <a href="#transport">Доставка</a>
-        <a href="#cases">Решения</a>
+        <a href="#cases">Кейсы</a>
         <a href="#stages">Этапы</a>
-        <a href="#reviews">Отзывы</a>
         <a href="#contacts">Контакты</a>
       </nav>
 
@@ -90,10 +89,6 @@
       <a href="#stages" class="mobile-nav-link">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
         <span>Этапы</span>
-      </a>
-      <a href="#reviews" class="mobile-nav-link">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l1.81 3.668a.53.53 0 0 0 .399.29l4.047.588a.53.53 0 0 1 .294.904l-2.93 2.856a.53.53 0 0 0-.152.47l.692 4.033a.53.53 0 0 1-.77.559l-3.619-1.903a.53.53 0 0 0-.493 0l-3.619 1.903a.53.53 0 0 1-.77-.56l.692-4.032a.53.53 0 0 0-.152-.47L3.974 7.745a.53.53 0 0 1 .294-.904l4.047-.588a.53.53 0 0 0 .399-.29z"/></svg>
-        <span>Отзывы</span>
       </a>
       <a href="#contacts" class="mobile-nav-link">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -173,9 +168,9 @@
   <div class="container">
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-value">2012</div><div class="stat-label">Год начала работы</div></div>
-      <div class="stat-card"><div class="stat-value">3 млрд ₽</div><div class="stat-label">Доставлено грузов</div></div>
-      <div class="stat-card"><div class="stat-value">50+</div><div class="stat-label">Постоянных клиентов</div></div>
-      <div class="stat-card"><div class="stat-value">18+</div><div class="stat-label">Крупных партнёров</div></div>
+      <div class="stat-card"><div class="stat-value">  <span class="counter" data-target="3" data-suffix=" млрд" data-duration="3000">0</span></div><div class="stat-label">Доставлено грузов на сумму, руб</div></div>
+      <div class="stat-card"><div class="stat-value"><span class="counter" data-target="50" data-suffix="+" data-duration="2000">0</span></div><div class="stat-label">Постоянных клиентов</div></div>
+      <div class="stat-card"><div class="stat-value"><span class="counter" data-target="18" data-suffix="+" data-duration="2000">0</span></div><div class="stat-label">Крупных партнёров</div></div>
     </div>
 
     <div class="tasks-section">
@@ -311,92 +306,191 @@
       <article class="case-card" data-transport="Авиа" data-index="0">
         <div class="case-img">
           <img src="assets/images/case-electronics.png" alt="">
-          <div class="case-overlay">
-            <h3>Смартфоны</h3>
-          </div>
+          <div class="case-overlay"><h3>Смартфоны</h3></div>
         </div>
         <div class="case-body">
           <p class="case-client">Клиент: ТехноЛайн</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шэньчжэнь, Китай → Москва, Россия</div>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шэньчжэнь → Москва</div>
           <div class="case-metrics"><div><span>Срок</span><strong>4 дн.</strong></div><div><span>Экономия</span><strong class="accent">−22%</strong></div><div><span>Вес</span><strong>2,4 т</strong></div><div><span>Груз</span><strong>8 600 шт.</strong></div></div>
         </div>
         <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </article>
-      <article class="case-card" data-transport="Море" data-index="1">
+      <article class="case-card" data-transport="Авиа" data-index="1">
+        <div class="case-img">
+          <img src="assets/images/case-medical.jpg" alt="">
+          <div class="case-overlay"><h3>Медоборудование</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: МедТех</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Пекин → Санкт-Петербург</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>3 дн.</strong></div><div><span>Экономия</span><strong class="accent">−15%</strong></div><div><span>Вес</span><strong>0,8 т</strong></div><div><span>Груз</span><strong>12 мест</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Авиа" data-index="2">
+        <div class="case-img">
+          <img src="assets/images/case-electronics-new.jpg" alt="">
+          <div class="case-overlay"><h3>Микроэлектроника</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ЧипСнаб</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай → Москва</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>5 дн.</strong></div><div><span>Экономия</span><strong class="accent">−18%</strong></div><div><span>Вес</span><strong>0,3 т</strong></div><div><span>Груз</span><strong>50 000 шт.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+
+      <article class="case-card" data-transport="Море" data-index="3">
         <div class="case-img">
           <img src="assets/images/case-textile.png" alt="">
-          <div class="case-overlay">
-            <h3>Текстиль</h3>
-          </div>
+          <div class="case-overlay"><h3>Текстиль</h3></div>
         </div>
         <div class="case-body">
           <p class="case-client">Клиент: Уют Текстиль</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Гуанчжоу, Китай → Санкт-Петербург, Россия</div>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Гуанчжоу → Санкт-Петербург</div>
           <div class="case-metrics"><div><span>Срок</span><strong>38 дн.</strong></div><div><span>Экономия</span><strong class="accent">−41%</strong></div><div><span>Вес</span><strong>18 т</strong></div><div><span>Груз</span><strong>32 000 шт.</strong></div></div>
         </div>
         <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </article>
-      <article class="case-card" data-transport="Ж/Д" data-index="2">
+      <article class="case-card" data-transport="Море" data-index="4">
         <div class="case-img">
-          <img src="assets/images/case-cnc.png" alt="">
-          <div class="case-overlay">
-            <h3>Станки ЧПУ</h3>
-          </div>
+          <img src="assets/images/case-appliances.png" alt="">
+          <div class="case-overlay"><h3>Бытовая техника</h3></div>
         </div>
         <div class="case-body">
-          <p class="case-client">Клиент: ПромРесурс</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай, Китай → Екатеринбург, Россия</div>
-          <div class="case-metrics"><div><span>Срок</span><strong>21 дн.</strong></div><div><span>Экономия</span><strong class="accent">−28%</strong></div><div><span>Вес</span><strong>26 т</strong></div><div><span>Груз</span><strong>6 ед.</strong></div></div>
-        </div>
-        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-      </article>
-      <article class="case-card" data-transport="Мультимодал" data-index="3">
-        <div class="case-img">
-          <img src="assets/images/case-auto.png" alt="">
-          <div class="case-overlay">
-            <h3>Автозапчасти</h3>
-          </div>
-        </div>
-        <div class="case-body">
-          <p class="case-client">Клиент: АвтоДрайв</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Иу, Китай → Казань, Россия</div>
-          <div class="case-metrics"><div><span>Срок</span><strong>16 дн.</strong></div><div><span>Экономия</span><strong class="accent">−35%</strong></div><div><span>Вес</span><strong>5,8 т</strong></div><div><span>Груз</span><strong>120 артикулов</strong></div></div>
-        </div>
-        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-      </article>
-      <article class="case-card" data-transport="Авто" data-index="4">
-        <div class="case-img">
-          <img src="assets/images/case-furniture.png" alt="">
-          <div class="case-overlay">
-            <h3>Мебель</h3>
-          </div>
-        </div>
-        <div class="case-body">
-          <p class="case-client">Клиент: ДомСтиль</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Фошань, Китай → Новосибирск, Россия</div>
-          <div class="case-metrics"><div><span>Срок</span><strong>19 дн.</strong></div><div><span>Экономия</span><strong class="accent">−24%</strong></div><div><span>Вес</span><strong>9,2 т</strong></div><div><span>Груз</span><strong>210 мест</strong></div></div>
+          <p class="case-client">Клиент: ГудМаркет</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Нинбо → Краснодар</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>42 дн.</strong></div><div><span>Экономия</span><strong class="accent">−47%</strong></div><div><span>Вес</span><strong>21 т</strong></div><div><span>Груз</span><strong>15 400 шт.</strong></div></div>
         </div>
         <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </article>
       <article class="case-card" data-transport="Море" data-index="5">
         <div class="case-img">
-          <img src="assets/images/case-appliances.png" alt="">
-          <div class="case-overlay">
-            <h3>Бытовая техника</h3>
-          </div>
+          <img src="assets/images/case-furniture.png" alt="">
+          <div class="case-overlay"><h3>Мебель</h3></div>
         </div>
         <div class="case-body">
-          <p class="case-client">Клиент: ГудМаркет</p>
-          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Нинбо, Китай → Краснодар, Россия</div>
-          <div class="case-metrics"><div><span>Срок</span><strong>42 дн.</strong></div><div><span>Экономия</span><strong class="accent">−47%</strong></div><div><span>Вес</span><strong>21 т</strong></div><div><span>Груз</span><strong>15 400 шт.</strong></div></div>
+          <p class="case-client">Клиент: ДомСтиль</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Фошань → Новосибирск</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>35 дн.</strong></div><div><span>Экономия</span><strong class="accent">−39%</strong></div><div><span>Вес</span><strong>14 т</strong></div><div><span>Груз</span><strong>210 мест</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+
+      <article class="case-card" data-transport="Ж/Д" data-index="6">
+        <div class="case-img">
+          <img src="assets/images/case-cnc.png" alt="">
+          <div class="case-overlay"><h3>Станки ЧПУ</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ПромРесурс</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай → Екатеринбург</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>21 дн.</strong></div><div><span>Экономия</span><strong class="accent">−28%</strong></div><div><span>Вес</span><strong>26 т</strong></div><div><span>Груз</span><strong>6 ед.</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Ж/Д" data-index="7">
+        <div class="case-img">
+          <img src="assets/images/case-construction.jpg" alt="">
+          <div class="case-overlay"><h3>Стройматериалы</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: СтройГрупп</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Тяньцзинь → Ростов-на-Дону</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>24 дн.</strong></div><div><span>Экономия</span><strong class="accent">−32%</strong></div><div><span>Вес</span><strong>44 т</strong></div><div><span>Груз</span><strong>2 вагона</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Ж/Д" data-index="8">
+        <div class="case-img">
+          <img src="assets/images/case-chemicals.jpg" alt="">
+          <div class="case-overlay"><h3>Химическое сырьё</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ХимПром</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Циндао → Казань</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>28 дн.</strong></div><div><span>Экономия</span><strong class="accent">−36%</strong></div><div><span>Вес</span><strong>32 т</strong></div><div><span>Груз</span><strong>80 бочек</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+
+      <article class="case-card" data-transport="Авто" data-index="9">
+        <div class="case-img">
+          <img src="assets/images/case-auto.png" alt="">
+          <div class="case-overlay"><h3>Автозапчасти</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: АвтоДрайв</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Иу → Казань</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>16 дн.</strong></div><div><span>Экономия</span><strong class="accent">−35%</strong></div><div><span>Вес</span><strong>5,8 т</strong></div><div><span>Груз</span><strong>120 артикулов</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Авто" data-index="10">
+        <div class="case-img">
+          <img src="assets/images/case-food.jpg" alt="">
+          <div class="case-overlay"><h3>Продукты</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ФудЛайн</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай → Воронеж</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>14 дн.</strong></div><div><span>Экономия</span><strong class="accent">−20%</strong></div><div><span>Вес</span><strong>12 т</strong></div><div><span>Груз</span><strong>2 рефрижератора</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Авто" data-index="11">
+        <div class="case-img">
+          <img src="assets/images/case-parts.jpg" alt="">
+          <div class="case-overlay"><h3>Складское оборудование</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: СкладТех</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Гуанчжоу → Самара</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>18 дн.</strong></div><div><span>Экономия</span><strong class="accent">−25%</strong></div><div><span>Вес</span><strong>7,5 т</strong></div><div><span>Груз</span><strong>45 мест</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+
+      <article class="case-card" data-transport="Мультимодал" data-index="12">
+        <div class="case-img">
+          <img src="assets/images/case-industrial.jpg" alt="">
+          <div class="case-overlay"><h3>Промоборудование</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ПромИнвест</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шэньчжэнь → Уфа</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>30 дн.</strong></div><div><span>Экономия</span><strong class="accent">−30%</strong></div><div><span>Вес</span><strong>16 т</strong></div><div><span>Груз</span><strong>3 контейнера</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Мультимодал" data-index="13">
+        <div class="case-img">
+          <img src="assets/images/case-consumer.jpg" alt="">
+          <div class="case-overlay"><h3>Товары для маркетплейсов</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: МаркетПРО</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Иу → Москва</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>22 дн.</strong></div><div><span>Экономия</span><strong class="accent">−33%</strong></div><div><span>Вес</span><strong>4,2 т</strong></div><div><span>Груз</span><strong>1 500 товаров</strong></div></div>
+        </div>
+        <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </article>
+      <article class="case-card" data-transport="Мультимодал" data-index="14">
+        <div class="case-img">
+          <img src="assets/images/case-warehouse.jpg" alt="">
+          <div class="case-overlay"><h3>Сборный груз</h3></div>
+        </div>
+        <div class="case-body">
+          <p class="case-client">Клиент: ЛогГрупп</p>
+          <div class="case-route"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Шанхай → Нижний Новгород</div>
+          <div class="case-metrics"><div><span>Срок</span><strong>20 дн.</strong></div><div><span>Экономия</span><strong class="accent">−28%</strong></div><div><span>Вес</span><strong>9,6 т</strong></div><div><span>Груз</span><strong>340 мест</strong></div></div>
         </div>
         <button class="case-btn" onclick="openCaseModal(this)">Смотреть кейс <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </article>
     </div>
+    <button class="cases-more" id="casesMoreBtn">Больше кейсов <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
   </div>
 </section>
-
-<!-- ===== SERVICES ===== -->
 <section class="section" id="services">
   <div class="container">
     <div class="section-header">
@@ -512,15 +606,7 @@
       </div>
     </div>
 
-    <div class="stages-list">
-      <a href="#" class="stage-link"><span class="sl-num">01</span><span>Подбор подходящего оборудования</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">02</span><span>Поиск товара и моделирование поставки</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">03</span><span>Оформление документов</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">04</span><span>Доставка до границы</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">05</span><span>Прохождение таможни и сертификации</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">06</span><span>Доставка до вашего предприятия</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-      <a href="#" class="stage-link"><span class="sl-num">07</span><span>Организация монтажа и пусконаладки</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-    </div>
+
   </div>
 </section>
 
@@ -707,20 +793,43 @@ window.addEventListener('scroll', () => {
 });
 
 // Cases Filter
+let caseDisplayCount = 3;
+let currentFilter = 'all';
+
+document.getElementById('casesMoreBtn').addEventListener('click', () => {
+  caseDisplayCount += 3;
+  applyFilter(currentFilter);
+});
+
+function applyFilter(filter) {
+  currentFilter = filter;
+  let idx = 0;
+  let matchCount = 0;
+  document.querySelectorAll('.case-card').forEach(card => {
+    const match = filter === 'all' || card.dataset.transport === filter;
+    if (!match) {
+      card.style.display = 'none';
+    } else {
+      matchCount++;
+      idx++;
+      card.style.display = idx <= caseDisplayCount ? '' : 'none';
+    }
+  });
+  if (caseDisplayCount > matchCount) caseDisplayCount = matchCount;
+  const btn = document.getElementById('casesMoreBtn');
+  if (btn) btn.style.display = matchCount > caseDisplayCount ? '' : 'none';
+}
+
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filter = btn.dataset.filter;
-    document.querySelectorAll('.case-card').forEach(card => {
-      if (filter === 'all' || card.dataset.transport === filter) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
+    caseDisplayCount = 3;
+    applyFilter(btn.dataset.filter);
   });
 });
+
+applyFilter('all');
 
 // Timeline
 const stageData = [
@@ -741,21 +850,40 @@ document.querySelectorAll('.tl-step').forEach(btn => {
     btn.classList.add('active');
     const i = parseInt(btn.dataset.index);
     const d = stageData[i];
-    document.getElementById('tlNumber').textContent = d.num;
-    document.getElementById('tlTitle').textContent = d.title;
-    document.getElementById('tlDesc').textContent = d.desc;
-    document.getElementById('tlImg').src = images[d.img];
-    document.getElementById('tlDetails').innerHTML = d.details.map(item => '<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + item + '</li>').join('');
+
+    const content = document.querySelector('.tl-content');
+    content.classList.add('tl-exit');
+
+    setTimeout(() => {
+      document.getElementById('tlNumber').textContent = d.num;
+      document.getElementById('tlTitle').textContent = d.title;
+      document.getElementById('tlDesc').textContent = d.desc;
+      document.getElementById('tlImg').src = images[d.img];
+      document.getElementById('tlDetails').innerHTML = d.details.map(item => '<li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + item + '</li>').join('');
+
+      content.classList.remove('tl-exit');
+      content.classList.add('tl-enter');
+      setTimeout(() => content.classList.remove('tl-enter'), 350);
+    }, 250);
   });
 });
 
 const caseData = [
-  { slug: 'smartphones-shenzhen', title: 'Срочная партия смартфонов из Шэньчжэня', client: 'ТехноЛайн', tags: ['Авиа', 'Электроника', 'Топ-кейс'], transport: 'Авиа', route: 'Шэньчжэнь, Китай → Москва, Россия', image: 'assets/images/case-electronics.png', term: '4 дн.', saving: '−22%', weight: '2,4 т · 12 м³', cargo: '8 600 шт.', task: 'Клиенту нужно было успеть к старту продаж и завезти партию смартфонов за 4 дня вместо запланированных 9.', solution: 'Организовали авиадоставку и таможенное оформление под ключ, согласовав срочную загрузку на заводе.', result: 'Доставили партию к старту продаж за 4 дня, уложившись в маркетинговый дедлайн клиента.', repeats: '14 повторных отгрузок' },
-  { slug: 'textile-guangzhou', title: 'Сезонная коллекция текстиля из Гуанчжоу', client: 'Уют Текстиль', tags: ['Море', 'Текстиль'], transport: 'Море', route: 'Гуанчжоу, Китай → Санкт-Петербург, Россия', image: 'assets/images/case-textile.png', term: '38 дн.', saving: '−41%', weight: '18 т · 1×40HQ', cargo: '32 000 шт.', task: 'Снизить стоимость логистики при поставке крупной сезонной коллекции текстиля.', solution: 'Полностью загрузили морской контейнер и оптимизировали маршрут, объединив заказы поставщика.', result: 'Стоимость логистики снизилась на 41% по сравнению с прежним поставщиком клиента.', repeats: '9 повторных отгрузок' },
-  { slug: 'cnc-shanghai', title: 'Станки с ЧПУ из Шанхая на ж/д', client: 'ПромРесурс', tags: ['Ж/Д', 'Оборудование'], transport: 'Ж/Д', route: 'Шанхай, Китай → Екатеринбург, Россия', image: 'assets/images/case-cnc.png', term: '21 дн.', saving: '−28%', weight: '26 т · 64 м³', cargo: '6 ед.', task: 'Перевезти негабаритное станочное оборудование без повреждений и с сертификацией ЕАС.', solution: 'Организовали железнодорожную перевозку с креплением, страхованием и сертификацией.', result: 'Перевезли негабаритное оборудование без единого повреждения и с полным пакетом сертификатов.', repeats: '5 повторных отгрузок' },
-  { slug: 'auto-parts-yiwu', title: 'Сборный груз автозапчастей из Иу', client: 'АвтоДрайв', tags: ['Мультимодал', 'Автозапчасти'], transport: 'Мультимодал', route: 'Иу, Китай → Казань, Россия', image: 'assets/images/case-auto.png', term: '16 дн.', saving: '−35%', weight: '5,8 т · 22 м³', cargo: '120 артикулов', task: 'Собрать заказ от множества поставщиков и доставить единой партией.', solution: 'Сконсолидировали груз от 14 поставщиков на одном складе и доставили мультимодально.', result: 'Доставили 120 артикулов как единую партию с экономией 35% на логистике.', repeats: '22 повторных отгрузки' },
-  { slug: 'furniture-foshan', title: 'Мебель и декор из Фошаня', client: 'ДомСтиль', tags: ['Авто', 'Мебель'], transport: 'Авто', route: 'Фошань, Китай → Новосибирск, Россия', image: 'assets/images/case-furniture.png', term: '19 дн.', saving: '−24%', weight: '9,2 т · 48 м³', cargo: '210 мест', task: 'Доставить хрупкую мебель и декор без повреждений и рекламаций.', solution: 'Перевезли автотранспортом с усиленной упаковкой и контролем на приёмке.', result: 'Приёмка прошла без рекламаций, хрупкий груз доставлен в полной сохранности.', repeats: '7 повторных отгрузок' },
-  { slug: 'appliances-ningbo', title: 'Бытовая техника из Нинбо морем', client: 'ГудМаркет', tags: ['Море', 'Бытовая техника'], transport: 'Море', route: 'Нинбо, Китай → Краснодар, Россия', image: 'assets/images/case-appliances.png', term: '42 дн.', saving: '−47%', weight: '21 т · 2×40HQ', cargo: '15 400 шт.', task: 'Привезти крупную партию бытовой техники с минимальной стоимостью.', solution: 'Загрузили два контейнера и оформили возврат НДС, оптимизировав маршрут до РЦ.', result: 'Техника прошла путь от фабрики до распределительного центра с экономией почти вдвое.', repeats: '11 повторных отгрузок' },
+  { slug: 'smartphones', image: 'assets/images/case-electronics.png', title: 'Срочная партия смартфонов из Шэньчжэня', client: 'ТехноЛайн', tags: ['Авиа'], transport: 'Авиа', route: 'Шэньчжэнь, Китай → Москва, Россия', term: '4 дн.', saving: '−22%', weight: '2,4 т', cargo: '8 600 шт.', task: 'Клиенту нужно было успеть к старту продаж и завезти партию смартфонов за 4 дня.', solution: 'Организовали авиадоставку и таможенное оформление под ключ.', result: 'Доставили партию к старту продаж за 4 дня.', repeats: '14 повторных отгрузок' },
+  { slug: 'medical', image: 'assets/images/case-medical.jpg', title: 'Срочная доставка медицинского оборудования', client: 'МедТех', tags: ['Авиа'], transport: 'Авиа', route: 'Пекин, Китай → Санкт-Петербург, Россия', term: '3 дн.', saving: '−15%', weight: '0,8 т', cargo: '12 мест', task: 'Требовалась экстренная доставка медоборудования в клинику Санкт-Петербурга.', solution: 'Организовали авиаперевозку с приоритетной обработкой в аэропорту прибытия.', result: 'Оборудование доставлено за 3 дня и введено в эксплуатацию.', repeats: '6 повторных отгрузок' },
+  { slug: 'microelectronics', image: 'assets/images/case-electronics-new.jpg', title: 'Партия микроэлектроники из Шанхая', client: 'ЧипСнаб', tags: ['Авиа'], transport: 'Авиа', route: 'Шанхай, Китай → Москва, Россия', term: '5 дн.', saving: '−18%', weight: '0,3 т', cargo: '50 000 шт.', task: 'Критически важная партия микросхем требовала быстрой и бережной доставки.', solution: 'Авиадоставка с термоконтролем и страховкой груза.', result: 'Все компоненты доставлены без повреждений.', repeats: '11 повторных отгрузок' },
+  { slug: 'textile', image: 'assets/images/case-textile.png', title: 'Сезонная коллекция текстиля из Гуанчжоу', client: 'Уют Текстиль', tags: ['Море'], transport: 'Море', route: 'Гуанчжоу, Китай → Санкт-Петербург, Россия', term: '38 дн.', saving: '−41%', weight: '18 т', cargo: '32 000 шт.', task: 'Снизить стоимость логистики при поставке крупной сезонной коллекции.', solution: 'Полностью загрузили морской контейнер, оптимизировав маршрут.', result: 'Стоимость логистики снижена на 41%.', repeats: '9 повторных отгрузок' },
+  { slug: 'appliances', image: 'assets/images/case-appliances.png', title: 'Бытовая техника из Нинбо морем', client: 'ГудМаркет', tags: ['Море'], transport: 'Море', route: 'Нинбо, Китай → Краснодар, Россия', term: '42 дн.', saving: '−47%', weight: '21 т', cargo: '15 400 шт.', task: 'Привезти крупную партию бытовой техники с минимальной стоимостью.', solution: 'Загрузили два контейнера и оформили возврат НДС.', result: 'Экономия почти вдвое против стандартной ставки.', repeats: '11 повторных отгрузок' },
+  { slug: 'furniture', image: 'assets/images/case-furniture.png', title: 'Мебель и декор из Фошаня', client: 'ДомСтиль', tags: ['Море'], transport: 'Море', route: 'Фошань, Китай → Новосибирск, Россия', term: '35 дн.', saving: '−39%', weight: '14 т', cargo: '210 мест', task: 'Доставить хрупкую мебель без повреждений.', solution: 'Морская перевозка с усиленной упаковкой и контролем на каждом этапе.', result: 'Приёмка прошла без единой рекламации.', repeats: '7 повторных отгрузок' },
+  { slug: 'cnc', image: 'assets/images/case-cnc.png', title: 'Станки с ЧПУ из Шанхая на ж/д', client: 'ПромРесурс', tags: ['Ж/Д'], transport: 'Ж/Д', route: 'Шанхай, Китай → Екатеринбург, Россия', term: '21 дн.', saving: '−28%', weight: '26 т', cargo: '6 ед.', task: 'Перевезти негабаритные станки с полной сертификацией ЕАС.', solution: 'Ж/д перевозка с креплением, страхованием и сертификацией.', result: 'Оборудование доставлено без повреждений с пакетом сертификатов.', repeats: '5 повторных отгрузок' },
+  { slug: 'construction', image: 'assets/images/case-construction.jpg', title: 'Стройматериалы из Тяньцзиня', client: 'СтройГрупп', tags: ['Ж/Д'], transport: 'Ж/Д', route: 'Тяньцзинь, Китай → Ростов-на-Дону, Россия', term: '24 дн.', saving: '−32%', weight: '44 т', cargo: '2 вагона', task: 'Обеспечить бесперебойную поставку стройматериалов на крупный объект.', solution: 'Организовали ж/д перевозку двумя вагонами с консолидацией на складе.', result: 'Материалы поступили на объект точно в график.', repeats: '8 повторных отгрузок' },
+  { slug: 'chemicals', image: 'assets/images/case-chemicals.jpg', title: 'Химическое сырьё из Циндао', client: 'ХимПром', tags: ['Ж/Д'], transport: 'Ж/Д', route: 'Циндао, Китай → Казань, Россия', term: '28 дн.', saving: '−36%', weight: '32 т', cargo: '80 бочек', task: 'Безопасная транспортировка опасного химического сырья.', solution: 'Ж/Д перевозка с соблюдением всех требований для опасных грузов.', result: 'Груз доставлен с полным соблюдением регламентов безопасности.', repeats: '4 повторных отгрузки' },
+  { slug: 'auto-parts', image: 'assets/images/case-auto.png', title: 'Автозапчасти из Иу', client: 'АвтоДрайв', tags: ['Авто'], transport: 'Авто', route: 'Иу, Китай → Казань, Россия', term: '16 дн.', saving: '−35%', weight: '5,8 т', cargo: '120 артикулов', task: 'Собрать заказ от множества поставщиков одной партией.', solution: 'Сконсолидировали груз от 14 поставщиков, доставили автотранспортом.', result: '120 артикулов доставлены единой партией с экономией 35%.', repeats: '22 повторных отгрузки' },
+  { slug: 'food', image: 'assets/images/case-food.jpg', title: 'Продукты питания из Шанхая', client: 'ФудЛайн', tags: ['Авто'], transport: 'Авто', route: 'Шанхай, Китай → Воронеж, Россия', term: '14 дн.', saving: '−20%', weight: '12 т', cargo: '2 рефрижератора', task: 'Доставить продукты питания с соблюдением холодовой цепи.', solution: 'Автоперевозка рефрижераторами с терморегистрацией по всему маршруту.', result: 'Продукты доставлены свежими с полным соблюдением температурного режима.', repeats: '15 повторных отгрузок' },
+  { slug: 'warehouse', image: 'assets/images/case-parts.jpg', title: 'Складское оборудование из Гуанчжоу', client: 'СкладТех', tags: ['Авто'], transport: 'Авто', route: 'Гуанчжоу, Китай → Самара, Россия', term: '18 дн.', saving: '−25%', weight: '7,5 т', cargo: '45 мест', task: 'Быстрая доставка крупногабаритного складского оборудования.', solution: 'Автоперевозка с оптимизацией загрузки и маршрута через Казахстан.', result: 'Оборудование доставлено раньше планового срока.', repeats: '10 повторных отгрузок' },
+  { slug: 'industrial', image: 'assets/images/case-industrial.jpg', title: 'Промышленное оборудование мультимодалом', client: 'ПромИнвест', tags: ['Мультимодал'], transport: 'Мультимодал', route: 'Шэньчжэнь, Китай → Уфа, Россия', term: '30 дн.', saving: '−30%', weight: '16 т', cargo: '3 контейнера', task: 'Доставить оборудование в регион с ограниченной транспортной доступностью.', solution: 'Комбинированная схема: море + ж/д + авто.', result: 'Груз доставлен в Уфу с оптимальным соотношением цены и скорости.', repeats: '6 повторных отгрузок' },
+  { slug: 'marketplace', image: 'assets/images/case-consumer.jpg', title: 'Товары для маркетплейсов из Иу', client: 'МаркетПРО', tags: ['Мультимодал'], transport: 'Мультимодал', route: 'Иу, Китай → Москва, Россия', term: '22 дн.', saving: '−33%', weight: '4,2 т', cargo: '1 500 товаров', task: 'Поставка широкого ассортимента товаров для онлайн-площадок.', solution: 'Мультимодальная перевозка с консолидацией и сортировкой под требования маркетплейсов.', result: 'Товары прошли приёмку складов Wildberries и Ozon без замечаний.', repeats: '18 повторных отгрузок' },
+  { slug: 'consolidated', image: 'assets/images/case-warehouse.jpg', title: 'Сборный груз из Шанхая', client: 'ЛогГрупп', tags: ['Мультимодал'], transport: 'Мультимодал', route: 'Шанхай, Китай → Нижний Новгород, Россия', term: '20 дн.', saving: '−28%', weight: '9,6 т', cargo: '340 мест', task: 'Объединить грузы от 7 поставщиков в одну партию.', solution: 'Сборный груз с консолидацией на складе и мультимодальной доставкой.', result: 'Каждый поставщик получил свой товар вовремя без задержек.', repeats: '12 повторных отгрузок' },
 ];
 
 function openCaseModal(el) {
@@ -803,6 +931,45 @@ function closeCaseModal() {
 document.getElementById('caseModal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) closeCaseModal();
 });
+
+// Steps Animation
+const stepsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.step-card').forEach(card => {
+      card.classList.add('visible');
+    });
+    stepsObserver.unobserve(entry.target);
+  });
+}, { threshold: 0, rootMargin: '120px 0px 0px 0px' });
+const stepsSection = document.querySelector('.steps-grid')?.closest('section');
+if (stepsSection) stepsObserver.observe(stepsSection);
+
+// Counter Animation
+function formatNum(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = el.dataset.duration ? parseInt(el.dataset.duration) : 1200;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = formatNum(current) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+    counterObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
 </script>
 
 </body>

@@ -502,6 +502,18 @@ input, textarea { font-family: inherit; }
 .case-btn:hover { background: var(--green-600); color: var(--white); }
 .case-btn:hover svg { transform: translateX(4px); }
 .case-btn:hover svg { stroke: var(--white); }
+.cases-more {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; margin-top: 24px; padding: 14px;
+  font-family: var(--font-heading); font-size: 15px; font-weight: 700;
+  color: var(--green-600); background: var(--white);
+  border: 2px solid var(--green-600); border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.25s;
+}
+.cases-more:hover { background: var(--green-600); color: var(--white); }
+.cases-more:hover svg { stroke: var(--white); }
+.cases-more svg { transition: transform 0.3s; }
+.cases-more:hover svg { transform: rotate(90deg); }
 
 /* ===== SERVICES ===== */
 .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -563,7 +575,19 @@ input, textarea { font-family: inherit; }
   background: var(--white);
   box-shadow: var(--shadow);
   overflow: hidden;
+  opacity: 0;
+  transform: perspective(600px) rotateX(-30deg);
+  transform-origin: top center;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
+.step-card.visible {
+  opacity: 1;
+  transform: perspective(600px) rotateX(0deg);
+}
+.step-card:nth-child(1) { transition-delay: 0s; }
+.step-card:nth-child(2) { transition-delay: 0.15s; }
+.step-card:nth-child(3) { transition-delay: 0.3s; }
+.step-card:nth-child(4) { transition-delay: 0.45s; }
 .step-num-bg {
   position: absolute;
   top: -10px;
@@ -602,7 +626,11 @@ input, textarea { font-family: inherit; }
   gap: 0;
   overflow-x: auto;
   padding-bottom: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
 }
+.timeline-bar::-webkit-scrollbar { display: none; }
 .tl-step {
   display: flex;
   flex-direction: column;
@@ -658,6 +686,18 @@ input, textarea { font-family: inherit; }
   padding: 32px;
   margin-top: 24px;
   align-items: center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.tl-content.tl-exit {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.tl-content.tl-enter {
+  animation: tlFadeIn 0.35s ease forwards;
+}
+@keyframes tlFadeIn {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 .tl-image {
   height: 280px;
